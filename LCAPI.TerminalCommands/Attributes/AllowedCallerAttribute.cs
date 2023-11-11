@@ -6,11 +6,8 @@ namespace LCAPI.TerminalCommands.Attributes
 	/// <summary>
 	/// Specifies what permission level is required for this command
 	/// </summary>
-	/// <remarks>
-	/// This attribute can be inherited, to allow you to implement your own access control decorators. See <seealso cref="AllowedCallerAttribute.CheckAllowed"/>
-	/// </remarks>
 	[AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-	public class AllowedCallerAttribute : Attribute
+	public class AllowedCallerAttribute : AccessControlAttribute
 	{
 		/// <summary>
 		/// The required permission level
@@ -30,7 +27,7 @@ namespace LCAPI.TerminalCommands.Attributes
 		/// Checks if the local player has permission to execute the command
 		/// </summary>
 		/// <returns><see langword="true"/> if the player has permission to execute the command </returns>
-		public virtual bool CheckAllowed()
+		public override bool CheckAllowed()
 		{
 			switch (Caller)
 			{

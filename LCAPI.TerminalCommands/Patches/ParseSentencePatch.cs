@@ -14,7 +14,6 @@ namespace LCAPI.TerminalCommands
 	[HarmonyPatch(typeof(Terminal), "ParsePlayerSentence")]
 	public static class ParseSentencePatch
 	{
-
 		[HarmonyPrefix]
 		public static bool ParsePrefix(Terminal __instance, ref TerminalNode __state)
 		{

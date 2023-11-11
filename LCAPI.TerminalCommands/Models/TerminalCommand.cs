@@ -70,7 +70,7 @@ namespace LCAPI.TerminalCommands.Models
 		/// <returns><see langword="true"/> if the player can execute the command</returns>
 		public bool CheckAllowed()
 		{
-			var accessControl = Method.GetCustomAttributes<AllowedCallerAttribute>();
+			var accessControl = Method.GetCustomAttributes<AccessControlAttribute>();
 
 			foreach (var attribute in accessControl)
 			{
