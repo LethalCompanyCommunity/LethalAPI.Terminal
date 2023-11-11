@@ -1,7 +1,7 @@
 ﻿using BepInEx;
-using CustomTerminalCommands.Commands;
-using CustomTerminalCommands.Models;
 using HarmonyLib;
+using LCAPI.TerminalCommands.Commands;
+using LCAPI.TerminalCommands.Models;
 
 namespace LCAPI.TerminalCommands
 {
@@ -27,7 +27,6 @@ namespace LCAPI.TerminalCommands
 			DontDestroyOnLoad(this);
 
 			Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
-
 		}
 	}
 }

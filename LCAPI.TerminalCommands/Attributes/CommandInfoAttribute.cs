@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CustomTerminalCommands.Attributes
+namespace LCAPI.TerminalCommands.Attributes
 {
 	/// <summary>
 	/// Decorates a terminal command with command info.

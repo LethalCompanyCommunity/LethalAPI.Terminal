@@ -2,7 +2,7 @@
 using HarmonyLib;
 using UnityEngine;
 
-namespace CustomTerminalCommands.Patches
+namespace LCAPI.TerminalCommands.Patches
 {
 	/// <summary>
 	/// Decreases the delay after entering the terminal before you can type by 80%

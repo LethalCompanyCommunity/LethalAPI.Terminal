@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CustomTerminalCommands.Models
+namespace LCAPI.TerminalCommands.Models
 {
 	/// <summary>
 	/// Compares terminal commands to determine preference order. Orders by priority, then parameter count.

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CustomTerminalCommands.Attributes
+namespace LCAPI.TerminalCommands.Attributes
 {
 	/// <summary>
 	/// Designates that a string argument should contain the remaining text in the command

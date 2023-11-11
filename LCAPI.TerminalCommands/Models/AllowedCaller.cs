@@ -1,4 +1,4 @@
-﻿namespace CustomTerminalCommands.Models
+﻿namespace LCAPI.TerminalCommands.Models
 {
 	/// <summary>
 	/// Player permission levels

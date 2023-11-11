@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CustomTerminalCommands.Attributes
+namespace LCAPI.TerminalCommands.Attributes
 {
 	/// <summary>
 	/// Used to decorate methods to auto-register terminal commands

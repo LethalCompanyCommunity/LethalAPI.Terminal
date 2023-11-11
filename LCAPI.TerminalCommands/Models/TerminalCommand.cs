@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Reflection;
 using BepInEx.Logging;
-using CustomTerminalCommands.Attributes;
+using LCAPI.TerminalCommands.Attributes;
 
-namespace CustomTerminalCommands.Models
+namespace LCAPI.TerminalCommands.Models
 {
 	/// <summary>
 	/// Command instance representing a registered terminal command

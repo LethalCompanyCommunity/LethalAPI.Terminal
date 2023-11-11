@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using System.Text;
-using CustomTerminalCommands.Attributes;
-using CustomTerminalCommands.Models;
+using LCAPI.TerminalCommands.Attributes;
+using LCAPI.TerminalCommands.Models;
 
-namespace CustomTerminalCommands.Commands
+namespace LCAPI.TerminalCommands.Commands
 {
 	/// <summary>
 	/// Contains Terminal Command definitions for the built-in help commands

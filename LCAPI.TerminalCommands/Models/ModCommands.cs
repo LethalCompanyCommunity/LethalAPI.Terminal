@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CustomTerminalCommands.Models
+namespace LCAPI.TerminalCommands.Models
 {
 	/// <summary>
 	/// A local terminal command registry for a mod. Allows all commands registered to an instance to be deregistered

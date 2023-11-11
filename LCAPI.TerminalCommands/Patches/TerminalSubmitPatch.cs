@@ -5,7 +5,7 @@ using BepInEx.Logging;
 using HarmonyLib;
 using UnityEngine;
 
-namespace CustomTerminalCommands.Patches
+namespace LCAPI.TerminalCommands.Patches
 {
 	/// <summary>
 	/// Patches the submit method of the Terminal to modify its auto-scroll behaviour
@@ -43,8 +43,7 @@ namespace CustomTerminalCommands.Patches
 
 				if (code[i + 1].opcode != OpCodes.Ldarg_0)
 				{
-					m_LogSource.LogError("Failed to transpile OnSubmit to remove Scroll To Bottom. Did the method get modified in an update? (Ldarg_0 expected after Callvirt, not found)");
-					m_LogSource.LogWarning("This won't break the mod, but it will cause some odd terminal scrolling behaviour");
+					ReportTranspileError("Ldarg_0 expected after final callVirt, not found");
 					return code;
 				}
 
@@ -52,9 +51,15 @@ namespace CustomTerminalCommands.Patches
 				return code;
 			}
 
-			m_LogSource.LogError("Failed to transpile OnSubmit to remove Scroll To Bottom. Did the method get modified in an update? (Failed to find Callvirt in backward scan)");
-			m_LogSource.LogWarning("This won't break the mod, but it will cause some odd terminal scrolling behaviour");
+			ReportTranspileError("Failed to find Callvirt in backward scan");
+
 			return code;
+		}
+
+		private static void ReportTranspileError(string message)
+		{
+			m_LogSource.LogError($"Failed to transpile OnSubmit to remove Scroll To Bottom. Did the method get modified in an update? ({message})");
+			m_LogSource.LogWarning("This won't break the mod, but it will cause some odd terminal scrolling behaviour");
 		}
 
 		[HarmonyPostfix]

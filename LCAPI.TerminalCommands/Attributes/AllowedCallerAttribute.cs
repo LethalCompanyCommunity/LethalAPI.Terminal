@@ -1,7 +1,7 @@
 ﻿using System;
-using CustomTerminalCommands.Models;
+using LCAPI.TerminalCommands.Models;
 
-namespace CustomTerminalCommands.Attributes
+namespace LCAPI.TerminalCommands.Attributes
 {
 	/// <summary>
 	/// Specifies what permission level is required for this command
