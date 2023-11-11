@@ -1,6 +1,4 @@
-﻿using System;
-using BepInEx.Logging;
-using CustomTerminalCommands.Models;
+﻿using CustomTerminalCommands.Models;
 using CustomTerminalCommands.Patches;
 using HarmonyLib;
 using UnityEngine.Video;
@@ -23,10 +21,8 @@ namespace CustomTerminalCommands
 			__state = null;
 			var commandText = __instance.screenText.text.Substring(__instance.screenText.text.Length - __instance.textAdded);
 
-            Console.WriteLine($"Handle execute command: {commandText}");
-            __state = CommandHandler.TryExecute(commandText, __instance);
-            Console.WriteLine($"HasResult: {__state != null}");
-            return __state == null;
+			__state = CommandHandler.TryExecute(commandText, __instance);
+			return __state == null;
 		}
 
 		[HarmonyPostfix]
@@ -34,12 +30,9 @@ namespace CustomTerminalCommands
 		{
 			if (__state != null)
 			{
-                Console.WriteLine($"Replacing terminal node");
-                TerminalSubmitPatch.LastNode = __state;
+				TerminalSubmitPatch.LastNode = __state;
 				return __state;
 			}
-
-			Console.WriteLine($"Replacing falling through to game");
 
 			if (__instance.videoPlayer.source == VideoSource.Url)
 			{

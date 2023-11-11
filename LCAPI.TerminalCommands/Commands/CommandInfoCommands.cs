@@ -39,7 +39,6 @@ namespace CustomTerminalCommands.Commands
 					continue;
 				}
 
-
 				builder.AppendLine($">{command.Name.ToUpper()} {command.Syntax?.ToUpper()}");
 				builder.AppendLine(command.Description);
 				builder.AppendLine();

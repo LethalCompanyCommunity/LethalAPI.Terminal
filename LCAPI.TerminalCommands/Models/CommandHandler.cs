@@ -37,51 +37,35 @@ namespace CustomTerminalCommands.Models
 			var candidateCommands = new List<(TerminalCommand command, Func<TerminalNode> invoker)>();
 
 			var overloads = CommandRegistry.GetCommands(commandName).ToArray();
-            Console.WriteLine($"Overloads for '{commandName}' : {overloads.Length}");
 
-            for (int i = 0; i < overloads.Length; i++)
+			for (int i = 0; i < overloads.Length; i++)
 			{
 				var registeredCommand = overloads[i];
 
 				if (!registeredCommand.CheckAllowed())
 				{
-					Console.WriteLine("Not allowed");
-					continue;
-				}
-
-				if (!registeredCommand.Name.Equals(commandName, StringComparison.InvariantCultureIgnoreCase))
-				{
-					Console.WriteLine("Name not equal!");
 					continue;
 				}
 
 				if (!registeredCommand.TryCreateInvoker(commandArguments, terminal, out var invoker))
 				{
-					Console.WriteLine("Failed to create invoker");
 					continue;
 				}
 
 				candidateCommands.Add((registeredCommand, invoker));
 			}
 
-			Console.WriteLine("Ordering commands.");
 			var ordered = candidateCommands.OrderByDescending(x => x.command, m_Comparer);
-
-			Console.WriteLine($"Ordered count: {ordered.Count()}");
-
 
 			foreach (var (registeredCommand, invoker) in ordered)
 			{
-				Console.WriteLine($"Execute command...");
 				var result = invoker();
 
 				if (result != null)
 				{
-					Console.WriteLine($"Got response");
 					return result;
 				}
 			}
-			Console.WriteLine("No response");
 			return null;
 		}
 	}

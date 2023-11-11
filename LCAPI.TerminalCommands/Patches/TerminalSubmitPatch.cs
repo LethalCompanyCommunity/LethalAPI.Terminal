@@ -52,7 +52,6 @@ namespace CustomTerminalCommands.Patches
 				return code;
 			}
 
-
 			m_LogSource.LogError("Failed to transpile OnSubmit to remove Scroll To Bottom. Did the method get modified in an update? (Failed to find Callvirt in backward scan)");
 			m_LogSource.LogWarning("This won't break the mod, but it will cause some odd terminal scrolling behaviour");
 			return code;

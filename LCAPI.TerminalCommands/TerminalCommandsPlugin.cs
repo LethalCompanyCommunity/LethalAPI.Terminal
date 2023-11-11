@@ -15,19 +15,19 @@ namespace LCAPI.TerminalCommands
 		private void Awake()
 		{
 			Logger.LogInfo($"{PluginInfo.PLUGIN_GUID} is loading...");
+
 			Logger.LogInfo($"Installing patches");
 			HarmonyInstance.PatchAll(typeof(TerminalCommandsPlugin).Assembly);
 
 			Logger.LogInfo($"Installing built-in commands");
+
 			BuiltInCommands = CommandRegistry.CreateModRegistry();
 			BuiltInCommands.RegisterFrom<CommandInfoCommands>();
 
-			Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
-		}
+			DontDestroyOnLoad(this);
 
-		private void OnDisable()
-		{
-			BuiltInCommands?.Deregister();
+			Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
+
 		}
 	}
 }

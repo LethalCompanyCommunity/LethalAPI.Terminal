@@ -54,26 +54,18 @@ namespace CustomTerminalCommands.Models
 		/// <param name="command"></param>
 		public static void RegisterCommand(TerminalCommand command)
 		{
-			Console.WriteLine($"Registering command: {command.Name}");
 			List<TerminalCommand> commands;
 
 			if (!m_RegisteredCommands.TryGetValue(command.Name, out commands))
 			{
-				Console.WriteLine($"Dictionary does not have a list for this command, adding one");
-				commands = new List<TerminalCommand>() { command };
-
-				Console.WriteLine($"Adding list {command.Name} = commands[{commands.Count}]");
-				var added = m_RegisteredCommands.TryAdd(command.Name, commands);
-				Console.WriteLine($"Was added: {added}");
-				return;
+				commands = new List<TerminalCommand>();
+				m_RegisteredCommands[command.Name] = commands;
 			}
 
-			Console.WriteLine($"Dictionary already has a list for this command, appending...");
 			lock (commands)
 			{
 				commands.Add(command);
 			}
-			Console.WriteLine($"New list length: {commands.Count}");
 		}
 
 		/// <summary>
@@ -85,12 +77,14 @@ namespace CustomTerminalCommands.Models
 		/// <param name="command">Command instance to deregister</param>
 		public static void Deregister(TerminalCommand command)
 		{
-			if (m_RegisteredCommands.TryGetValue(command.Name, out var overloads))
+			if (!m_RegisteredCommands.TryGetValue(command.Name, out var overloads))
 			{
-				lock (overloads)
-				{
-					overloads.Remove(command);
-				}
+				return;
+			}
+
+			lock (overloads)
+			{
+				overloads.Remove(command);
 			}
 		}
 
@@ -101,16 +95,10 @@ namespace CustomTerminalCommands.Models
 		/// <returns>List of commands</returns>
 		public static IReadOnlyList<TerminalCommand> GetCommands(string commandName)
 		{
-			Console.WriteLine($"Getting commmands for '{commandName}'...");
-
 			if (m_RegisteredCommands.TryGetValue(commandName, out var commands))
 			{
-				Console.WriteLine($"Dictionary has list registered for that command!");
-				Console.WriteLine($"List length: {commands.Count}");
 				return commands;
 			}
-
-			Console.WriteLine($"No list in registry for that command!");
 
 			return new List<TerminalCommand>();
 		}
