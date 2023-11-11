@@ -9,7 +9,7 @@
 		/// Nil permission level, deny everyone.
 		/// </summary>
 		/// <remarks>
-		/// Intended to be used to satisfy <seealso cref="AllowedCaller"/>'s constructor when inheiritng it
+		/// Intended to be used to satisfy <seealso cref="AllowedCaller"/>'s constructor when inheriting it
 		/// </remarks>
 		None = -1,
 

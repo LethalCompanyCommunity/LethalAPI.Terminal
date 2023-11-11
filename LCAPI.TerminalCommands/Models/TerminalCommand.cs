@@ -184,7 +184,7 @@ namespace LCAPI.TerminalCommands.Models
 		/// <summary>
 		/// Executes this command with the specified arguments
 		/// </summary>
-		/// <param name="arguments">Arguments used to execute this command. Must precicely match the parameters of <seealso cref="Method"/></param>
+		/// <param name="arguments">Arguments used to execute this command. Must precisely match the parameters of <seealso cref="Method"/></param>
 		/// <returns>Resulting <seealso cref="TerminalNode"/> response, or <see langword="null"/></returns>
 		private TerminalNode ExecuteCommand(object[] arguments)
 		{
@@ -217,7 +217,6 @@ namespace LCAPI.TerminalCommands.Models
 				displayText = result.ToString() + '\n',
 				clearPreviousText = ClearConsole
 			};
-
 		}
 	}
 }

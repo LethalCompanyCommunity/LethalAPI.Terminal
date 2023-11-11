@@ -8,7 +8,7 @@ using UnityEngine;
 namespace LCAPI.TerminalCommands.Patches
 {
 	/// <summary>
-	/// Patches the submit method of the Terminal to modify its auto-scroll behaviour
+	/// Patches the submit method of the Terminal to modify its auto-scroll behavior
 	/// </summary>
 	/// <remarks>
 	/// By default, the game always scrolls to the top on command execution, this patch makes it so it only scrolls to the top on terminal clearance
@@ -29,6 +29,7 @@ namespace LCAPI.TerminalCommands.Patches
 			LastNode = null;
 		}
 
+		[HarmonyTranspiler]
 		public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
 		{
 			var code = instructions.ToArray();
@@ -59,7 +60,7 @@ namespace LCAPI.TerminalCommands.Patches
 		private static void ReportTranspileError(string message)
 		{
 			m_LogSource.LogError($"Failed to transpile OnSubmit to remove Scroll To Bottom. Did the method get modified in an update? ({message})");
-			m_LogSource.LogWarning("This won't break the mod, but it will cause some odd terminal scrolling behaviour");
+			m_LogSource.LogWarning("This won't break the mod, but it will cause some odd terminal scrolling behavior");
 		}
 
 		[HarmonyPostfix]

@@ -13,7 +13,7 @@ namespace LCAPI.TerminalCommands.Models
 		public List<TerminalCommand> Commands { get; } = new List<TerminalCommand>();
 
 		/// <summary>
-		/// Creates a new instance of the speci specified type, and registers all commands from it
+		/// Creates a new instance of the specified type, and registers all commands from it
 		/// </summary>
 		/// <typeparam name="T">The type to register commands from</typeparam>
 		public void RegisterFrom<T>() where T : class, new()
@@ -42,7 +42,7 @@ namespace LCAPI.TerminalCommands.Models
 		}
 
 		/// <summary>
-		/// Deregisters all commands that were previously registered to this container.
+		/// De-registers all commands that were previously registered to this container.
 		/// </summary>
 		public void Deregister()
 		{

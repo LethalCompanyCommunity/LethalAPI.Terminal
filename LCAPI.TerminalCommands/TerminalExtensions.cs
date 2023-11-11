@@ -53,7 +53,7 @@ namespace LCAPI.TerminalCommands
 		/// <summary>
 		/// Plays the video file on the next fixed update, to skip the built-in video clip video player that only supports instances of <seealso cref="VideoClip"/>, and not URIs
 		/// </summary>
-		/// <param name="url">URI to send to teh video player</param>
+		/// <param name="url">URI to send to the video player</param>
 		/// <param name="terminal">Terminal instance</param>
 		private static IEnumerator PlayVideoLink(string url, Terminal terminal)
 		{

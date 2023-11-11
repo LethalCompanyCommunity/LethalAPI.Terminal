@@ -23,7 +23,7 @@ namespace LCAPI.TerminalCommands.Models
 		/// </summary>
 		/// <typeparam name="T">Instance type</typeparam>
 		/// <param name="instance">Instance to execute commands in</param>
-		/// <returns>Token that can be used to register further commands, and also deregister commands when your mod unlaods</returns>
+		/// <returns>Token that can be used to register further commands, and also deregister commands when your mod unloads</returns>
 		public static ModCommands RegisterFrom<T>(T instance)
 		{
 			var token = new ModCommands();
@@ -49,7 +49,7 @@ namespace LCAPI.TerminalCommands.Models
 		}
 
 		/// <summary>
-		/// Registers a command instance. <seealso cref="RegisterFrom{T}(T)"/> is preffered. This method is primarily intended for internal use 
+		/// Registers a command instance. <seealso cref="RegisterFrom{T}(T)"/> is preferred. This method is primarily intended for internal use 
 		/// </summary>
 		/// <param name="command"></param>
 		public static void RegisterCommand(TerminalCommand command)
@@ -69,7 +69,7 @@ namespace LCAPI.TerminalCommands.Models
 		}
 
 		/// <summary>
-		/// Deregisters a command instance. You should call <seealso cref="ModCommands.Deregister"/> (returned by <seealso cref="RegisterFrom{T}(T)"/>) instead.
+		/// De-registers a command instance. You should call <seealso cref="ModCommands.Deregister"/> (returned by <seealso cref="RegisterFrom{T}(T)"/>) instead.
 		/// </summary>
 		/// <remarks>
 		/// Primarily intended for internal use
