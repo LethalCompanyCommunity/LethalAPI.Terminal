@@ -1,0 +1,169 @@
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using CustomTerminalCommands.Attributes;
+
+namespace CustomTerminalCommands.Models
+{
+	/// <summary>
+	/// Manages instances of terminal commands
+	/// </summary>
+	public class CommandRegistry
+	{
+		/// <summary>
+		/// Dictionary containing all registered commands. You shouldn't be interfacing with this directly, instead use the APIs exposed by this class, or <seealso cref="ModCommands"/>.
+		/// You can enumerate registered commands using <seealso cref="EnumerateCommands()"/> and <seealso cref="EnumerateCommands(string)"/>
+		/// </summary>
+		private static readonly ConcurrentDictionary<string, List<TerminalCommand>> m_RegisteredCommands = new ConcurrentDictionary<string, List<TerminalCommand>>(StringComparer.InvariantCultureIgnoreCase);
+
+		/// <summary>
+		/// Automatically registers all terminal commands from an instance, and returns a commands <seealso cref="ModCommands"/> token, which should be used to deregister all terminal commands when your mod unloads.
+		/// </summary>
+		/// <typeparam name="T">Instance type</typeparam>
+		/// <param name="instance">Instance to execute commands in</param>
+		/// <returns>Token that can be used to register further commands, and also deregister commands when your mod unlaods</returns>
+		public static ModCommands RegisterFrom<T>(T instance)
+		{
+			var token = new ModCommands();
+
+			foreach (var method in GetCommandMethods<T>())
+			{
+				var command = TerminalCommand.FromMethod(method, instance);
+				RegisterCommand(command);
+
+				token.Commands.Add(command);
+			}
+
+			return token;
+		}
+
+		/// <summary>
+		/// Creates a mod-specific terminal command registry, to allow registration and deregistration of commands
+		/// </summary>
+		/// <returns>Mod terminal command registry</returns>
+		public static ModCommands CreateModRegistry()
+		{
+			return new ModCommands();
+		}
+
+		/// <summary>
+		/// Registers a command instance. <seealso cref="RegisterFrom{T}(T)"/> is preffered. This method is primarily intended for internal use 
+		/// </summary>
+		/// <param name="command"></param>
+		public static void RegisterCommand(TerminalCommand command)
+		{
+			Console.WriteLine($"Registering command: {command.Name}");
+			List<TerminalCommand> commands;
+
+			if (!m_RegisteredCommands.TryGetValue(command.Name, out commands))
+			{
+				Console.WriteLine($"Dictionary does not have a list for this command, adding one");
+				commands = new List<TerminalCommand>() { command };
+
+				Console.WriteLine($"Adding list {command.Name} = commands[{commands.Count}]");
+				var added = m_RegisteredCommands.TryAdd(command.Name, commands);
+				Console.WriteLine($"Was added: {added}");
+				return;
+			}
+
+			Console.WriteLine($"Dictionary already has a list for this command, appending...");
+			lock (commands)
+			{
+				commands.Add(command);
+			}
+			Console.WriteLine($"New list length: {commands.Count}");
+		}
+
+		/// <summary>
+		/// Deregisters a command instance. You should call <seealso cref="ModCommands.Deregister"/> (returned by <seealso cref="RegisterFrom{T}(T)"/>) instead.
+		/// </summary>
+		/// <remarks>
+		/// Primarily intended for internal use
+		/// </remarks>
+		/// <param name="command">Command instance to deregister</param>
+		public static void Deregister(TerminalCommand command)
+		{
+			if (m_RegisteredCommands.TryGetValue(command.Name, out var overloads))
+			{
+				lock (overloads)
+				{
+					overloads.Remove(command);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Fetches all commands by a command name
+		/// </summary>
+		/// <param name="commandName">Name of the commands to fetch</param>
+		/// <returns>List of commands</returns>
+		public static IReadOnlyList<TerminalCommand> GetCommands(string commandName)
+		{
+			Console.WriteLine($"Getting commmands for '{commandName}'...");
+
+			if (m_RegisteredCommands.TryGetValue(commandName, out var commands))
+			{
+				Console.WriteLine($"Dictionary has list registered for that command!");
+				Console.WriteLine($"List length: {commands.Count}");
+				return commands;
+			}
+
+			Console.WriteLine($"No list in registry for that command!");
+
+			return new List<TerminalCommand>();
+		}
+
+		/// <summary>
+		/// Enumerates registered commands/overloads for a specific command name
+		/// </summary>
+		/// <param name="name">Name of the command/s to enumerate</param>
+		/// <returns>Command enumerable</returns>
+		public static IEnumerable<TerminalCommand> EnumerateCommands(string name)
+		{
+			if (!m_RegisteredCommands.TryGetValue(name, out var overloads))
+			{
+				return Enumerable.Empty<TerminalCommand>();
+			}
+			return overloads;
+		}
+
+		/// <summary>
+		/// Enumerates all commands registered to the container
+		/// </summary>
+		/// <returns>All terminal command instances</returns>
+		public static IEnumerable<TerminalCommand> EnumerateCommands()
+		{
+			var keys = m_RegisteredCommands.Keys.ToArray();
+
+			for (int i = 0; i < keys.Length; i++)
+			{
+				var overloads = m_RegisteredCommands[keys[i]];
+
+				for (int c = 0; c < overloads.Count; c++)
+				{
+					yield return overloads[c];
+				}
+			}
+		}
+
+		/// <summary>
+		/// Enumerates all methods decorated with <seealso cref="TerminalCommandAttribute"/> from a type
+		/// </summary>
+		/// <typeparam name="T">Type of enumerate command methods from</typeparam>
+		/// <returns>Enumerable of valid terminal command methods</returns>
+		public static IEnumerable<MethodInfo> GetCommandMethods<T>()
+		{
+			foreach (var method in typeof(T).GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+			{
+				if (method.GetCustomAttribute<TerminalCommandAttribute>() == null)
+				{
+					continue;
+				}
+
+				yield return method;
+			}
+		}
+	}
+}
