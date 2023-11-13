@@ -2,6 +2,7 @@
 using System.Reflection;
 using BepInEx.Logging;
 using LCAPI.TerminalCommands.Attributes;
+using UnityEngine;
 
 namespace LCAPI.TerminalCommands.Models
 {
@@ -212,11 +213,11 @@ namespace LCAPI.TerminalCommands.Models
 				return (TerminalNode)result;
 			}
 
-			return new TerminalNode()
-			{
-				displayText = result.ToString() + '\n',
-				clearPreviousText = ClearConsole
-			};
+			var response = ScriptableObject.CreateInstance<TerminalNode>();
+			response.displayText = result.ToString() + '\n';
+			response.clearPreviousText = ClearConsole;
+
+			return response;
 		}
 	}
 }
