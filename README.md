@@ -1,4 +1,4 @@
-# LCAPI.TerminalCommands
+# LethalAPI.TerminalCommands
 Terminal Commands API for the Lethal Company Modding API
 
 ## Misc Changes
