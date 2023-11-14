@@ -1,4 +1,4 @@
-﻿namespace LCAPI.TerminalCommands.Models
+﻿namespace LethalAPI.TerminalCommands.Models
 {
 	/// <summary>
 	/// Player permission levels

@@ -2,12 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <AssemblyName>LCAPI.TerminalCommands</AssemblyName>
+    <AssemblyName>LethalAPI.TerminalCommands</AssemblyName>
     <Description>A library that allows the creation of custom terminal commands for Lethal Company mods</Description>
     <Version>1.0.0</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
-    <Authors>ShimmyMySherbet, LCAPI Modding Team</Authors>
+    <Authors>ShimmyMySherbet, LethalAPI Modding Team</Authors>
     <Company />
     <RepositoryUrl>https://github.com/ShimmyMySherbet/LCAPI.TerminalCommands</RepositoryUrl>
     <PackageTags>LethalCompany LethalCompanyMods</PackageTags>

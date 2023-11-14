@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Video;
 
-namespace LCAPI.TerminalCommands
+namespace LethalAPI.TerminalCommands
 {
 	/// <summary>
 	/// Provides a collection of extension methods for the <seealso cref="Terminal"/> class

@@ -1,6 +1,6 @@
 ﻿using HarmonyLib;
 
-namespace LCAPI.TerminalCommands.Patches
+namespace LethalAPI.TerminalCommands.Patches
 {
 	/// <summary>
 	/// Removes trailing newlines from the start of terminal responses.

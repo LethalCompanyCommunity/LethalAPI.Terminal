@@ -5,7 +5,7 @@ using BepInEx.Logging;
 using HarmonyLib;
 using UnityEngine;
 
-namespace LCAPI.TerminalCommands.Patches
+namespace LethalAPI.TerminalCommands.Patches
 {
 	/// <summary>
 	/// Patches the submit method of the Terminal to modify its auto-scroll behavior
@@ -21,7 +21,7 @@ namespace LCAPI.TerminalCommands.Patches
 		/// </summary>
 		public static TerminalNode LastNode { get; set; }
 
-		private static ManualLogSource m_LogSource = new ManualLogSource("LCAPI.TerminalCommands");
+		private static ManualLogSource m_LogSource = new ManualLogSource("LethalAPI.TerminalCommands");
 
 		[HarmonyPrefix]
 		public static void Prefix()

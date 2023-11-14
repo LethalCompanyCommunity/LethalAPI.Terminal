@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LCAPI.TerminalCommands.Attributes
+namespace LethalAPI.TerminalCommands.Attributes
 {
 	/// <summary>
 	/// The base attribute type for decorating terminal command methods with access restrictions.

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace LCAPI.TerminalCommands.Models
+namespace LethalAPI.TerminalCommands.Models
 {
 	/// <summary>
 	/// Compares terminal commands to determine preference order. Orders by priority, then parameter count.

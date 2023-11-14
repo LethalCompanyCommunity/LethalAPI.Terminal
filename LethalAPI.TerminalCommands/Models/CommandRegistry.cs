@@ -3,9 +3,9 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using LCAPI.TerminalCommands.Attributes;
+using LethalAPI.TerminalCommands.Attributes;
 
-namespace LCAPI.TerminalCommands.Models
+namespace LethalAPI.TerminalCommands.Models
 {
 	/// <summary>
 	/// Manages instances of terminal commands
@@ -43,7 +43,7 @@ namespace LCAPI.TerminalCommands.Models
 		/// Creates a mod-specific terminal command registry, to allow registration and deregistration of commands
 		/// </summary>
 		/// <returns>Mod terminal command registry</returns>
-		public static ModCommands CreateModRegistry()
+		public static ModCommands CreateTerminalRegistry()
 		{
 			return new ModCommands();
 		}

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LCAPI.TerminalCommands.Attributes
+namespace LethalAPI.TerminalCommands.Attributes
 {
 	/// <summary>
 	/// Specifies the priority of a command.

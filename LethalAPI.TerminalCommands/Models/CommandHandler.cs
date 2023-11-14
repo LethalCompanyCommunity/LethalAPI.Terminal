@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace LCAPI.TerminalCommands.Models
+namespace LethalAPI.TerminalCommands.Models
 {
 	/// <summary>
 	/// Handles terminal command execution

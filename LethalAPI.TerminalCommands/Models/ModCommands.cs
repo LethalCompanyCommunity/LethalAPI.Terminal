@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace LCAPI.TerminalCommands.Models
+namespace LethalAPI.TerminalCommands.Models
 {
 	/// <summary>
 	/// A local terminal command registry for a mod. Allows all commands registered to an instance to be deregistered
@@ -12,13 +12,16 @@ namespace LCAPI.TerminalCommands.Models
 		/// </summary>
 		public List<TerminalCommand> Commands { get; } = new List<TerminalCommand>();
 
+
+
+
 		/// <summary>
 		/// Creates a new instance of the specified type, and registers all commands from it
 		/// </summary>
 		/// <typeparam name="T">The type to register commands from</typeparam>
-		public void RegisterFrom<T>() where T : class, new()
+		public T RegisterFrom<T>() where T : class, new()
 		{
-			RegisterFrom(new T());
+			return RegisterFrom(new T());
 		}
 
 		/// <summary>
@@ -26,7 +29,7 @@ namespace LCAPI.TerminalCommands.Models
 		/// </summary>
 		/// <typeparam name="T">Generic class type</typeparam>
 		/// <param name="instance">Instance to execute commands in</param>
-		public void RegisterFrom<T>(T instance) where T : class
+		public T RegisterFrom<T>(T instance) where T : class
 		{
 			foreach (var method in CommandRegistry.GetCommandMethods<T>())
 			{
@@ -39,6 +42,7 @@ namespace LCAPI.TerminalCommands.Models
 					Commands.Add(commandInstance);
 				}
 			}
+			return instance;
 		}
 
 		/// <summary>

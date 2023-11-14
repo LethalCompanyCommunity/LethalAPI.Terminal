@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Reflection;
 using BepInEx.Logging;
-using LCAPI.TerminalCommands.Attributes;
+using LethalAPI.TerminalCommands.Attributes;
 using UnityEngine;
 
-namespace LCAPI.TerminalCommands.Models
+namespace LethalAPI.TerminalCommands.Models
 {
 	/// <summary>
 	/// Command instance representing a registered terminal command
@@ -51,7 +51,7 @@ namespace LCAPI.TerminalCommands.Models
 		/// </summary>
 		public int Priority { get; }
 
-		private ManualLogSource m_LogSource = new ManualLogSource("LCAPI.TerminalCommands");
+		private ManualLogSource m_LogSource = new ManualLogSource("LethalAPI.TerminalCommands");
 
 		public TerminalCommand(string name, MethodInfo method, object instance, bool clearConsole, string syntax = null, string description = null, int priority = 0)
 		{

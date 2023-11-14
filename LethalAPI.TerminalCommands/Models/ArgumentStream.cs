@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace LCAPI.TerminalCommands.Models
+namespace LethalAPI.TerminalCommands.Models
 {
 	/// <summary>
 	/// Provides an easy interface for forward parsing an array of string arguments

@@ -2,7 +2,7 @@
 using System.Linq;
 using GameNetcodeStuff;
 
-namespace LCAPI.TerminalCommands.Models
+namespace LethalAPI.TerminalCommands.Models
 {
 	/// <summary>
 	/// Provides services for parsing user-entered strings into types, including custom game types.

@@ -1,7 +1,7 @@
 ﻿using System;
-using LCAPI.TerminalCommands.Models;
+using LethalAPI.TerminalCommands.Models;
 
-namespace LCAPI.TerminalCommands.Attributes
+namespace LethalAPI.TerminalCommands.Attributes
 {
 	/// <summary>
 	/// Specifies what permission level is required for this command
