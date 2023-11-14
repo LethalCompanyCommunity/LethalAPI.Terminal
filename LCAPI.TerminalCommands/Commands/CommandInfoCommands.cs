@@ -17,10 +17,13 @@ namespace LCAPI.TerminalCommands.Commands
 
 			builder.AppendLine("Other commands:");
 			builder.AppendLine();
-			builder.AppendLine(">VIEW RADAR");
+			builder.AppendLine(">VIEW MONITOR");
 			builder.AppendLine("To toggle on/off the main monitor's map cam");
 			builder.AppendLine();
-			builder.AppendLine(">SWITCH");
+			builder.AppendLine(">SWITCH {RADAR}");
+			builder.AppendLine("To switch the player view on the main monitor");
+			builder.AppendLine();
+			builder.AppendLine(">PING [Radar booster name]");
 			builder.AppendLine("To switch the player view on the main monitor");
 			builder.AppendLine();
 			builder.AppendLine(">SCAN");

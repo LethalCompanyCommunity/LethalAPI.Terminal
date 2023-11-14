@@ -43,7 +43,7 @@ namespace LCAPI.TerminalCommands.Models
 		/// Creates a mod-specific terminal command registry, to allow registration and deregistration of commands
 		/// </summary>
 		/// <returns>Mod terminal command registry</returns>
-		public static ModCommands CreateModRegistry()
+		public static ModCommands CreateTerminalRegistry()
 		{
 			return new ModCommands();
 		}
