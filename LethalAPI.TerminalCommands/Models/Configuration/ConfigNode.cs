@@ -16,7 +16,7 @@ namespace LethalAPI.TerminalCommands.Models.Configuration
 
 		public List<ConfigNode> Children { get; } = new List<ConfigNode>();
 
-		public List<ConfigItem> Items { get; } = new List<ConfigItem>();
+		public List<ConfigItem> Options { get; } = new List<ConfigItem>();
 
 		public ConfigNode(string name, string description, AccessControlAttribute accessControl = null)
 		{
@@ -57,9 +57,9 @@ namespace LethalAPI.TerminalCommands.Models.Configuration
 		{
 			var newNode = new ConfigItem(name, description, property, persist, instance);
 
-			lock (Items)
+			lock (Options)
 			{
-				Items.Add(newNode);
+				Options.Add(newNode);
 			}
 		}
 
@@ -68,6 +68,15 @@ namespace LethalAPI.TerminalCommands.Models.Configuration
 			lock (Children)
 			{
 				node = Children.FirstOrDefault(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+				return node != null;
+			}
+		}
+
+		public bool TryGetValue(string name, out ConfigItem node)
+		{
+			lock (Children)
+			{
+				node = Options.FirstOrDefault(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
 				return node != null;
 			}
 		}
