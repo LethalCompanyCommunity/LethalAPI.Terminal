@@ -27,7 +27,7 @@ namespace LethalAPI.TerminalCommands
 			Logger.LogInfo($"Registering built-in Commands");
 
 			// Create registry for the Terminals API
-			Terminal = CommandRegistry.CreateTerminalRegistry();
+			Terminal = TerminalRegistry.CreateTerminalRegistry();
 
 			// Register commands, don't care about the instance
 			Terminal.RegisterFrom<CommandInfoCommands>();

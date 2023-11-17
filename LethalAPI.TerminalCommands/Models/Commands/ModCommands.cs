@@ -31,11 +31,11 @@ namespace LethalAPI.TerminalCommands.Models
 		/// <param name="instance">Instance to execute commands in</param>
 		public T RegisterFrom<T>(T instance) where T : class
 		{
-			foreach (var method in CommandRegistry.GetCommandMethods<T>())
+			foreach (var method in TerminalRegistry.GetCommandMethods<T>())
 			{
 				var commandInstance = TerminalCommand.FromMethod(method, instance);
 
-				CommandRegistry.RegisterCommand(commandInstance);
+				TerminalRegistry.RegisterCommand(commandInstance);
 
 				lock (Commands)
 				{
@@ -57,7 +57,7 @@ namespace LethalAPI.TerminalCommands.Models
 
 			for (int i = 0; i < Commands.Count; i++)
 			{
-				CommandRegistry.Deregister(Commands[i]);
+				TerminalRegistry.Deregister(Commands[i]);
 			}
 		}
 	}

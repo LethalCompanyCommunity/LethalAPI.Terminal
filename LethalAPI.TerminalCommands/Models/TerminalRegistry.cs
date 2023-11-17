@@ -4,14 +4,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using LethalAPI.TerminalCommands.Attributes;
+using LethalAPI.TerminalCommands.Models.Configuration;
 
 namespace LethalAPI.TerminalCommands.Models
 {
 	/// <summary>
 	/// Manages instances of terminal commands
 	/// </summary>
-	public class CommandRegistry
+	public class TerminalRegistry
 	{
+		/// <summary>
+		/// Config node tree representing all configuration options in the terminal
+		/// </summary>
+		public static ConfigTree ConfigTree { get; } = new ConfigTree();
+
 		/// <summary>
 		/// Dictionary containing all registered commands. You shouldn't be interfacing with this directly, instead use the APIs exposed by this class, or <seealso cref="ModCommands"/>.
 		/// You can enumerate registered commands using <seealso cref="EnumerateCommands()"/> and <seealso cref="EnumerateCommands(string)"/>

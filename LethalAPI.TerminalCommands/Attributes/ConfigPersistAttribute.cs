@@ -1,12 +1,12 @@
 ﻿using System;
-using LethalAPI.TerminalCommands.Models;
+using LethalAPI.TerminalCommands.Models.Configuration;
 
 namespace LethalAPI.TerminalCommands.Attributes
 {
-	/// <summary>
-	/// Marks a config to persist using BepinEx's config bindings
-	/// </summary>
-	public class ConfigPersistAttribute : Attribute
+    /// <summary>
+    /// Marks a config to persist using BepinEx's config bindings
+    /// </summary>
+    public class ConfigPersistAttribute : Attribute
 	{
 		/// <summary>
 		/// The type of config persist
