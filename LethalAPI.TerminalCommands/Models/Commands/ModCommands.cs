@@ -12,9 +12,6 @@ namespace LethalAPI.TerminalCommands.Models
 		/// </summary>
 		public List<TerminalCommand> Commands { get; } = new List<TerminalCommand>();
 
-
-
-
 		/// <summary>
 		/// Creates a new instance of the specified type, and registers all commands from it
 		/// </summary>
@@ -42,6 +39,9 @@ namespace LethalAPI.TerminalCommands.Models
 					Commands.Add(commandInstance);
 				}
 			}
+
+			TerminalRegistry.ConfigTree.RegisterFrom(typeof(T), instance);
+
 			return instance;
 		}
 

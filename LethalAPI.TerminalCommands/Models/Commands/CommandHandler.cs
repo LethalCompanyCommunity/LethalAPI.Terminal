@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using UnityEngine;
 
 namespace LethalAPI.TerminalCommands.Models
 {
@@ -42,23 +43,33 @@ namespace LethalAPI.TerminalCommands.Models
 			{
 				var registeredCommand = overloads[i];
 
+				Console.WriteLine($"Checking candidate: {registeredCommand.Name}({registeredCommand.ArgumentCount})");
+
 				if (!registeredCommand.CheckAllowed())
 				{
+					Console.WriteLine($"Checking Not Allowed");
+
 					continue;
 				}
 
 				if (!registeredCommand.TryCreateInvoker(commandArguments, terminal, out var invoker))
 				{
+					Console.WriteLine($"Failed to create invoker");
 					continue;
 				}
+				Console.WriteLine($"Valid!");
 
 				candidateCommands.Add((registeredCommand, invoker));
 			}
+
+			Console.WriteLine($"Candidates: {candidateCommands.Count}");
 
 			var ordered = candidateCommands.OrderByDescending(x => x.command, m_Comparer);
 
 			foreach (var (registeredCommand, invoker) in ordered)
 			{
+				Console.WriteLine($"Invoking {registeredCommand.Name}({registeredCommand.ArgumentCount})");
+
 				var result = invoker();
 
 				if (result != null)

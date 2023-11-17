@@ -130,6 +130,8 @@ namespace LethalAPI.TerminalCommands.Models
 		/// <returns><see langword="true"/> if the provided arguments match the signature for this command, and could be parsed correctly.</returns>
 		public bool TryCreateInvoker(string[] arguments, Terminal terminal, out Func<TerminalNode> invoker)
 		{
+			Console.WriteLine("Creating invoker");
+
 			var parameters = Method.GetParameters();
 
 			var values = new object[parameters.Length];
@@ -145,16 +147,19 @@ namespace LethalAPI.TerminalCommands.Models
 
 				if (type == typeof(Terminal))
 				{
+					Console.WriteLine("provided terminal");
 					values[i] = terminal;
 					continue;
 				}
 				else if (type == typeof(ArgumentStream))
 				{
+					Console.WriteLine("provided argstream");
 					values[i] = argumentStream;
 					continue;
 				}
 				else if (type == typeof(string[]))
 				{
+					Console.WriteLine("provided string[]");
 					values[i] = arguments;
 					continue;
 				}
@@ -162,13 +167,15 @@ namespace LethalAPI.TerminalCommands.Models
 				{
 					if (argumentStream.TryReadRemaining(out var remaining))
 					{
+						Console.WriteLine("provided remaining text");
+
 						values[i] = remaining;
 						continue;
 					}
+					Console.WriteLine("!failed to provide remaining text");
 
 					return false;
 				}
-
 				if (argumentStream.TryReadNext(type, out var value))
 				{
 					values[i] = value;

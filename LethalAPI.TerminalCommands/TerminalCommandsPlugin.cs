@@ -13,34 +13,39 @@ namespace LethalAPI.TerminalCommands
 
 		private ModCommands Terminal;
 
-		private TerminalConfig TerminalConfig;
+		private TerminalConfig m_Config;
 
 		private void Awake()
 		{
-			Logger.LogInfo($"{PluginInfo.PLUGIN_GUID} is loading...");
+			try
+			{
+				Logger.LogInfo($"{PluginInfo.PLUGIN_GUID} is loading...");
 
+				Logger.LogInfo($"Installing patches");
+				HarmonyInstance.PatchAll(typeof(TerminalCommandsPlugin).Assembly);
 
+				Logger.LogInfo($"Registering built-in Commands");
 
-			Logger.LogInfo($"Installing patches");
-			HarmonyInstance.PatchAll(typeof(TerminalCommandsPlugin).Assembly);
+				// Create registry for the Terminals API
+				Terminal = TerminalRegistry.CreateTerminalRegistry();
 
-			Logger.LogInfo($"Registering built-in Commands");
+				// Register commands, don't care about the instance
+				Terminal.RegisterFrom<CommandInfoCommands>();
+				Terminal.RegisterFrom<ConfigurationCommands>();
 
-			// Create registry for the Terminals API
-			Terminal = TerminalRegistry.CreateTerminalRegistry();
+				// Register configs, and load saved values
+				m_Config = Terminal.RegisterFrom<TerminalConfig>();
 
-			// Register commands, don't care about the instance
-			Terminal.RegisterFrom<CommandInfoCommands>();
-			
-			// Register configs, and load saved values
-			TerminalConfig = Terminal.RegisterFrom<TerminalConfig>();
+				DontDestroyOnLoad(this);
 
-
-
-
-			DontDestroyOnLoad(this);
-
-			Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
+				Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
+			}
+			catch (System.Exception ex)
+			{
+				Logger.LogError(ex.Message);
+				Logger.LogError(ex.StackTrace);
+				throw;
+			}
 		}
 	}
 }

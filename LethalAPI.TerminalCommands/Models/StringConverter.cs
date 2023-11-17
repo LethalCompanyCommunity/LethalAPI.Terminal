@@ -1,18 +1,34 @@
 ﻿using System;
-using System.Linq;
-using GameNetcodeStuff;
+using System.Collections.Concurrent;
+using System.Reflection;
+using LethalAPI.TerminalCommands.Attributes;
 
 namespace LethalAPI.TerminalCommands.Models
 {
+	/// <summary>
+	/// Delegate that converts a string to a given object, or thows <seealso cref="ArgumentException"/> if the value cannot be converted
+	/// </summary>
+	/// <param name="value">String value to convert</param>
+	/// <returns></returns>
+	public delegate object StringConversionHandler(string value);
+
 	/// <summary>
 	/// Provides services for parsing user-entered strings into types, including custom game types.
 	/// </summary>
 	public static class StringConverter
 	{
 		/// <summary>
-		/// Underlying string converter used to parse primitive values
+		/// Registry of string converters
 		/// </summary>
-		public static System.ComponentModel.StringConverter Converter { get; } = new System.ComponentModel.StringConverter();
+		/// <remarks>
+		/// Register new converters using <seealso cref="RegisterFrom{T}(object, bool)"/>
+		/// </remarks>
+		public static ConcurrentDictionary<Type, StringConversionHandler> StringConverters { get; } = new ConcurrentDictionary<Type, StringConversionHandler>();
+
+		/// <summary>
+		/// Specifies if the default string conveters have been registered yet
+		/// </summary>
+		private static bool m_Initialized = false;
 
 		/// <summary>
 		/// Attempts to convert the specified string to the specified type
@@ -23,21 +39,22 @@ namespace LethalAPI.TerminalCommands.Models
 		/// <returns><see langword="true"/> if the string could be parsed as the specified type</returns>
 		public static bool TryConvert(string value, Type type, out object result)
 		{
-			// Custom type converters here
-
-			if (type == typeof(PlayerControllerB))
+			if (!m_Initialized)
 			{
-				return TryParsePlayerB(value, out result);
+				m_Initialized = true;
+				RegisterFromType(typeof(DefaultStringConverters), replaceExisting: false);
+			}
+
+			if (!StringConverters.TryGetValue(type, out var converter))
+			{
+				result = null;
+				return false;
 			}
 
 			try
 			{
-				// Fallback primitive type converter
-				if (Converter.CanConvertTo(type))
-				{
-					result = Converter.ConvertTo(value, type);
-					return true;
-				}
+				result = converter(value);
+				return true;
 			}
 			catch (ArgumentException)
 			{
@@ -48,29 +65,61 @@ namespace LethalAPI.TerminalCommands.Models
 			return false;
 		}
 
-		private static bool TryParsePlayerB(string value, out object result)
+		/// <summary>
+		/// Registers all string converters from a class instance
+		/// </summary>
+		/// <remarks>
+		/// String converters return any type, have only a string as a parameter, and are decorated with <seealso cref="StringConverterAttribute"/>.
+		/// </remarks>
+		/// <typeparam name="T">Type to register from</typeparam>
+		/// <param name="instance">Class instance</param>
+		/// <param name="replaceExisting">When <see langword="true"/>, existing converters for types will be replaced</param>
+		public static void RegisterFrom<T>(T instance, bool replaceExisting = true) where T : class
 		{
-			if (StartOfRound.Instance == null) // Game not started
-			{
-				result = null;
-				return false;
-			}
+			RegisterFromType(typeof(T), instance, replaceExisting);
+		}
 
-			PlayerControllerB player = null;
-			if (ulong.TryParse(value, out var steamID))
+		/// <summary>
+		/// Registers all string converters from a class instance or static class
+		/// </summary>
+		/// <remarks>
+		/// String converters return any type, have only a string as a parameter, and are decorated with <seealso cref="StringConverterAttribute"/>.
+		/// </remarks>
+		/// <param name="type">The class type to register from</param>
+		/// <param name="instance">Class instance, or null if the class is static</param>
+		/// <param name="replaceExisting">When <see langword="true"/>, existing converters for types will be replaced</param>
+		public static void RegisterFromType(Type type, object instance = null, bool replaceExisting = true)
+		{
+			foreach (var method in type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static))
 			{
-				player = StartOfRound.Instance.allPlayerScripts
-										.FirstOrDefault(x => x.playerSteamId == steamID);
-			}
+				if (method.GetCustomAttribute<StringConverterAttribute>() == null)
+				{
+					continue;
+				}
 
-			if (player == null)
-			{
-				player = StartOfRound.Instance.allPlayerScripts
-										.FirstOrDefault(x => x.playerUsername.IndexOf(value, StringComparison.InvariantCultureIgnoreCase) != -1);
-			}
+				var parameters = method.GetParameters();
 
-			result = player;
-			return player != null;
+				if (parameters.Length != 1)
+				{
+					continue;
+				}
+
+				if (parameters[0].ParameterType != typeof(string))
+				{
+					continue;
+				}
+
+				var resultingType = method.ReturnType;
+
+				var converter = new StringConversionHandler(
+					(value) => method.Invoke(instance, new object[] { value })
+				);
+
+				if (replaceExisting || !StringConverters.ContainsKey(resultingType))
+				{
+					StringConverters[resultingType] = converter;
+				}
+			}
 		}
 	}
 }
