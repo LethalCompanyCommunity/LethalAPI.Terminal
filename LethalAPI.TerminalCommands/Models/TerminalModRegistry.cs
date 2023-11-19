@@ -5,15 +5,12 @@ namespace LethalAPI.TerminalCommands.Models
 	/// <summary>
 	/// A local terminal command registry for a mod. Allows all commands registered to an instance to be deregistered
 	/// </summary>
-	public class ModCommands
+	public class TerminalModRegistry
 	{
 		/// <summary>
 		/// Command instances registered to this instance
 		/// </summary>
 		public List<TerminalCommand> Commands { get; } = new List<TerminalCommand>();
-
-
-
 
 		/// <summary>
 		/// Creates a new instance of the specified type, and registers all commands from it
@@ -31,17 +28,20 @@ namespace LethalAPI.TerminalCommands.Models
 		/// <param name="instance">Instance to execute commands in</param>
 		public T RegisterFrom<T>(T instance) where T : class
 		{
-			foreach (var method in CommandRegistry.GetCommandMethods<T>())
+			foreach (var method in TerminalRegistry.GetCommandMethods<T>())
 			{
 				var commandInstance = TerminalCommand.FromMethod(method, instance);
 
-				CommandRegistry.RegisterCommand(commandInstance);
+				TerminalRegistry.RegisterCommand(commandInstance);
 
 				lock (Commands)
 				{
 					Commands.Add(commandInstance);
 				}
 			}
+
+			StringConverter.RegisterFrom(instance);
+
 			return instance;
 		}
 
@@ -57,7 +57,7 @@ namespace LethalAPI.TerminalCommands.Models
 
 			for (int i = 0; i < Commands.Count; i++)
 			{
-				CommandRegistry.Deregister(Commands[i]);
+				TerminalRegistry.Deregister(Commands[i]);
 			}
 		}
 	}
