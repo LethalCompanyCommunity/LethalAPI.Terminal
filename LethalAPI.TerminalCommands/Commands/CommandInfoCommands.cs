@@ -30,7 +30,7 @@ namespace LethalAPI.TerminalCommands.Commands
 			builder.AppendLine("To scan for the number of items left on the current planet");
 			builder.AppendLine();
 
-			foreach (var command in CommandRegistry.EnumerateCommands())
+			foreach (var command in TerminalRegistry.EnumerateCommands())
 			{
 				if (command.Description == null)
 				{
@@ -55,7 +55,7 @@ namespace LethalAPI.TerminalCommands.Commands
 		public string HelpCommand(string name)
 		{
 			var builder = new StringBuilder();
-			var commands = CommandRegistry.EnumerateCommands(name).ToArray();
+			var commands = TerminalRegistry.EnumerateCommands(name).ToArray();
 
 			if (commands.Length == 0)
 			{

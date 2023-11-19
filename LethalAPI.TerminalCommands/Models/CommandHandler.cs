@@ -36,7 +36,7 @@ namespace LethalAPI.TerminalCommands.Models
 
 			var candidateCommands = new List<(TerminalCommand command, Func<TerminalNode> invoker)>();
 
-			var overloads = CommandRegistry.GetCommands(commandName).ToArray();
+			var overloads = TerminalRegistry.GetCommands(commandName).ToArray();
 
 			for (int i = 0; i < overloads.Length; i++)
 			{

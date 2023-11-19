@@ -10,23 +10,23 @@ namespace LethalAPI.TerminalCommands.Models
 	/// <summary>
 	/// Manages instances of terminal commands
 	/// </summary>
-	public class CommandRegistry
+	public class TerminalRegistry
 	{
 		/// <summary>
-		/// Dictionary containing all registered commands. You shouldn't be interfacing with this directly, instead use the APIs exposed by this class, or <seealso cref="ModCommands"/>.
+		/// Dictionary containing all registered commands. You shouldn't be interfacing with this directly, instead use the APIs exposed by this class, or <seealso cref="TerminalModRegistry"/>.
 		/// You can enumerate registered commands using <seealso cref="EnumerateCommands()"/> and <seealso cref="EnumerateCommands(string)"/>
 		/// </summary>
 		private static readonly ConcurrentDictionary<string, List<TerminalCommand>> m_RegisteredCommands = new ConcurrentDictionary<string, List<TerminalCommand>>(StringComparer.InvariantCultureIgnoreCase);
 
 		/// <summary>
-		/// Automatically registers all terminal commands from an instance, and returns a commands <seealso cref="ModCommands"/> token, which should be used to deregister all terminal commands when your mod unloads.
+		/// Automatically registers all terminal commands from an instance, and returns a commands <seealso cref="TerminalModRegistry"/> token, which should be used to deregister all terminal commands when your mod unloads.
 		/// </summary>
 		/// <typeparam name="T">Instance type</typeparam>
 		/// <param name="instance">Instance to execute commands in</param>
 		/// <returns>Token that can be used to register further commands, and also deregister commands when your mod unloads</returns>
-		public static ModCommands RegisterFrom<T>(T instance)
+		public static TerminalModRegistry RegisterFrom<T>(T instance) where T : class
 		{
-			var token = new ModCommands();
+			var token = new TerminalModRegistry();
 
 			foreach (var method in GetCommandMethods<T>())
 			{
@@ -36,6 +36,8 @@ namespace LethalAPI.TerminalCommands.Models
 				token.Commands.Add(command);
 			}
 
+			StringConverter.RegisterFrom(instance);
+
 			return token;
 		}
 
@@ -43,9 +45,9 @@ namespace LethalAPI.TerminalCommands.Models
 		/// Creates a mod-specific terminal command registry, to allow registration and deregistration of commands
 		/// </summary>
 		/// <returns>Mod terminal command registry</returns>
-		public static ModCommands CreateTerminalRegistry()
+		public static TerminalModRegistry CreateTerminalRegistry()
 		{
-			return new ModCommands();
+			return new TerminalModRegistry();
 		}
 
 		/// <summary>
@@ -69,7 +71,7 @@ namespace LethalAPI.TerminalCommands.Models
 		}
 
 		/// <summary>
-		/// De-registers a command instance. You should call <seealso cref="ModCommands.Deregister"/> (returned by <seealso cref="RegisterFrom{T}(T)"/>) instead.
+		/// De-registers a command instance. You should call <seealso cref="TerminalModRegistry.Deregister"/> (returned by <seealso cref="RegisterFrom{T}(T)"/>) instead.
 		/// </summary>
 		/// <remarks>
 		/// Primarily intended for internal use
