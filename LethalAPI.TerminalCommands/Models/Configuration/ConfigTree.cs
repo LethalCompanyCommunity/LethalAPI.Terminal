@@ -42,7 +42,7 @@ namespace LethalAPI.TerminalCommands.Models.Configuration
 					continue;
 				}
 
-				node.CreateConfigItem(configAttribute.Name, configAttribute.Description, property, instance, PersistType.None);
+				node.CreateConfigItem(configAttribute.Name ?? property.Name, configAttribute.Description, property, instance, PersistType.None);
 			}
 		}
 
