@@ -1,12 +1,12 @@
 ﻿using System;
-using LethalAPI.TerminalCommands.Models;
+using LethalAPI.TerminalCommands.Models.Enums;
 
 namespace LethalAPI.TerminalCommands.Attributes
 {
-	/// <summary>
-	/// Specifies what permission level is required for this command
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+    /// <summary>
+    /// Specifies what permission level is required for this command
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
 	public class AllowedCallerAttribute : AccessControlAttribute
 	{
 		/// <summary>

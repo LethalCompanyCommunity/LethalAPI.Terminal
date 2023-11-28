@@ -23,7 +23,7 @@
 		Error = 1,
 
 		/// <summary>
-		/// Plays the telegraph-like broadcast effect played when loading some log entires
+		/// Plays the telegraph-like broadcast effect played when loading some log entries
 		/// </summary>
 		/// <remarks>
 		/// Network synced audio effect
