@@ -2,6 +2,7 @@
 using System.Reflection;
 using BepInEx.Logging;
 using LethalAPI.TerminalCommands.Attributes;
+using LethalAPI.TerminalCommands.Interfaces;
 using UnityEngine;
 
 namespace LethalAPI.TerminalCommands.Models
@@ -128,7 +129,7 @@ namespace LethalAPI.TerminalCommands.Models
 		/// <param name="terminal">Terminal instance that raised the command</param>
 		/// <param name="invoker">Delegate that executes the command using the specified arguments</param>
 		/// <returns><see langword="true"/> if the provided arguments match the signature for this command, and could be parsed correctly.</returns>
-		public bool TryCreateInvoker(string[] arguments, Terminal terminal, out Func<TerminalNode> invoker)
+		public bool TryCreateInvoker(string[] arguments, Terminal terminal, out Func<object> invoker)
 		{
 			var parameters = Method.GetParameters();
 
@@ -186,8 +187,8 @@ namespace LethalAPI.TerminalCommands.Models
 		/// Executes this command with the specified arguments
 		/// </summary>
 		/// <param name="arguments">Arguments used to execute this command. Must precisely match the parameters of <seealso cref="Method"/></param>
-		/// <returns>Resulting <seealso cref="TerminalNode"/> response, or <see langword="null"/></returns>
-		private TerminalNode ExecuteCommand(object[] arguments)
+		/// <returns>Resulting <seealso cref="TerminalNode"/> response, an <seealso cref="Interfaces.ITerminalInteraction"/>, or <see langword="null"/></returns>
+		private object ExecuteCommand(object[] arguments)
 		{
 			object result;
 			try
@@ -208,10 +209,16 @@ namespace LethalAPI.TerminalCommands.Models
 
 			var type = result.GetType();
 
+
 			if (typeof(TerminalNode).IsAssignableFrom(type))
 			{
-				return (TerminalNode)result;
+				return result; // Return manual terminal node response
+			} else if (typeof(ITerminalInteraction).IsAssignableFrom(type))
+			{
+				return result; // Return terminal interaction
 			}
+
+			// Convert to auto-text response
 
 			var response = ScriptableObject.CreateInstance<TerminalNode>();
 			response.displayText = result.ToString() + '\n';
