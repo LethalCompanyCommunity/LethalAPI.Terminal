@@ -13,7 +13,7 @@ namespace LethalAPI.TerminalCommands
 		/// Sets the display/response text of a terminal node
 		/// </summary>
 		/// <param name="node">Terminal node to modify</param>
-		/// <param name="displayText">New display text</param>
+		/// <param name="displayText">Text to display to the user, as the response of the command</param>
 		/// <returns>Original terminal node</returns>
 		public static TerminalNode WithDisplayText(this TerminalNode node, object displayText)
 		{
@@ -46,14 +46,16 @@ namespace LethalAPI.TerminalCommands
 		}
 
 		/// <summary>
-		/// Enables accept anything
+		/// Enables redirecting the next terminal response to the item at index 0 in <seealso cref="TerminalNode.terminalOptions"/> 
 		/// </summary>
 		/// <param name="node">Terminal node to modify</param>
-		/// <param name="acceptsAnything">accepts anything value</param>
 		/// <returns>Original terminal node</returns>
-		public static TerminalNode WithAcceptsAnything(this TerminalNode node, bool acceptsAnything) // TODO: Further research on what this value does
+		/// <remarks>
+		/// This method is intended for the game's built-in Confirm/Deny system, which in modding is superseded by the Terminal Interactions system
+		/// </remarks>
+		public static TerminalNode WithAcceptsAnything(this TerminalNode node)
 		{
-			node.acceptAnything = acceptsAnything;
+			node.acceptAnything = true;
 			return node;
 		}
 
