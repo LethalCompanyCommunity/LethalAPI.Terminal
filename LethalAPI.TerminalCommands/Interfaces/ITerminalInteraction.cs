@@ -6,6 +6,8 @@ namespace LethalAPI.TerminalCommands.Interfaces
 	{
 		TerminalNode Prompt { get; }
 
-		object HandleTerminalResponse(Terminal terminal, ArgumentStream arguments);
+		ServiceCollection Services { get; }
+
+		object HandleTerminalResponse(ArgumentStream arguments);
 	}
 }

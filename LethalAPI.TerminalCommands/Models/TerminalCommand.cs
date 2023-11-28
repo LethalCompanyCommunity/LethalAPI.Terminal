@@ -2,8 +2,6 @@
 using System.Reflection;
 using BepInEx.Logging;
 using LethalAPI.TerminalCommands.Attributes;
-using LethalAPI.TerminalCommands.Interfaces;
-using UnityEngine;
 
 namespace LethalAPI.TerminalCommands.Models
 {
@@ -129,102 +127,18 @@ namespace LethalAPI.TerminalCommands.Models
 		/// <param name="terminal">Terminal instance that raised the command</param>
 		/// <param name="invoker">Delegate that executes the command using the specified arguments</param>
 		/// <returns><see langword="true"/> if the provided arguments match the signature for this command, and could be parsed correctly.</returns>
-		public bool TryCreateInvoker(string[] arguments, Terminal terminal, out Func<object> invoker)
+		public bool TryCreateInvoker(ArgumentStream arguments, ServiceCollection services, out Func<object> invoker)
 		{
-			var parameters = Method.GetParameters();
+			arguments.Reset();
 
-			var values = new object[parameters.Length];
-
-			var argumentStream = new ArgumentStream(arguments);
+			if (CommandActivator.TryCreateInvoker(arguments, services, Method, out var activatedInvoker))
+			{
+				invoker = () => activatedInvoker(Instance);
+				return true;
+			}
 
 			invoker = null;
-
-			for (int i = 0; i < parameters.Length; i++)
-			{
-				var parameter = parameters[i];
-				var type = parameter.ParameterType;
-
-				if (type == typeof(Terminal))
-				{
-					values[i] = terminal;
-					continue;
-				}
-				else if (type == typeof(ArgumentStream))
-				{
-					values[i] = argumentStream;
-					continue;
-				}
-				else if (type == typeof(string[]))
-				{
-					values[i] = arguments;
-					continue;
-				}
-				else if (type == typeof(string) && parameter.GetCustomAttribute<RemainingTextAttribute>() != null)
-				{
-					if (argumentStream.TryReadRemaining(out var remaining))
-					{
-						values[i] = remaining;
-						continue;
-					}
-
-					return false;
-				}
-
-				if (argumentStream.TryReadNext(type, out var value))
-				{
-					values[i] = value;
-					continue;
-				}
-
-				return false;
-			}
-			argumentStream.Reset();
-			invoker = () => ExecuteCommand(values);
-			return true;
-		}
-
-		/// <summary>
-		/// Executes this command with the specified arguments
-		/// </summary>
-		/// <param name="arguments">Arguments used to execute this command. Must precisely match the parameters of <seealso cref="Method"/></param>
-		/// <returns>Resulting <seealso cref="TerminalNode"/> response, an <seealso cref="Interfaces.ITerminalInteraction"/>, or <see langword="null"/></returns>
-		private object ExecuteCommand(object[] arguments)
-		{
-			object result;
-			try
-			{
-				result = Method.Invoke(Instance, arguments);
-			}
-			catch (Exception ex)
-			{
-				m_LogSource.LogError($"Error caught while invoking command hander: {ex.Message}");
-				m_LogSource.LogError(ex.StackTrace);
-				return null;
-			}
-
-			if (result == null)
-			{
-				return null;
-			}
-
-			var type = result.GetType();
-
-
-			if (typeof(TerminalNode).IsAssignableFrom(type))
-			{
-				return result; // Return manual terminal node response
-			} else if (typeof(ITerminalInteraction).IsAssignableFrom(type))
-			{
-				return result; // Return terminal interaction
-			}
-
-			// Convert to auto-text response
-
-			var response = ScriptableObject.CreateInstance<TerminalNode>();
-			response.displayText = result.ToString() + '\n';
-			response.clearPreviousText = ClearConsole;
-
-			return response;
+			return false;
 		}
 	}
 }

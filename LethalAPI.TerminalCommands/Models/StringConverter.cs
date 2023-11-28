@@ -26,7 +26,7 @@ namespace LethalAPI.TerminalCommands.Models
 		public static ConcurrentDictionary<Type, StringConversionHandler> StringConverters { get; } = new ConcurrentDictionary<Type, StringConversionHandler>();
 
 		/// <summary>
-		/// Specifies if the default string conveters have been registered yet
+		/// Specifies if the default string converters have been registered yet
 		/// </summary>
 		private static bool m_Initialized = false;
 
@@ -56,9 +56,9 @@ namespace LethalAPI.TerminalCommands.Models
 				result = converter(value);
 				return true;
 			}
-			catch (ArgumentException)
+			catch (Exception)
 			{
-				// Incorrect string format, return false
+				// Failed to parse as type, return null
 			}
 
 			result = null;

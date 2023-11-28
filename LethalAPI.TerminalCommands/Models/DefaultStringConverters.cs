@@ -126,9 +126,10 @@ namespace LethalAPI.TerminalCommands.Models
 			throw new ArgumentException();
 		}
 
+		[StringConverter]
 		public static PlayerControllerB ParsePlayerControllerB(string value)
 		{
-			if (StartOfRound.Instance == null) // Game not started
+			if (StartOfRound.Instance == null)
 			{
 				throw new ArgumentException("Game has not started");
 			}
@@ -139,7 +140,6 @@ namespace LethalAPI.TerminalCommands.Models
 				player = StartOfRound.Instance.allPlayerScripts
 										.FirstOrDefault(x => x.playerSteamId == steamID);
 			}
-
 			if (player == null)
 			{
 				player = StartOfRound.Instance.allPlayerScripts

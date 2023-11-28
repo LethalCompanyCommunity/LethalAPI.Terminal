@@ -1,7 +1,6 @@
 ﻿using BepInEx;
 using HarmonyLib;
 using LethalAPI.TerminalCommands.Commands;
-using LethalAPI.TerminalCommands.Configs;
 using LethalAPI.TerminalCommands.Models;
 
 namespace LethalAPI.TerminalCommands
@@ -13,13 +12,9 @@ namespace LethalAPI.TerminalCommands
 
 		private TerminalModRegistry Terminal;
 
-		private TerminalConfig TerminalConfig;
-
 		private void Awake()
 		{
 			Logger.LogInfo($"{PluginInfo.PLUGIN_GUID} is loading...");
-
-
 
 			Logger.LogInfo($"Installing patches");
 			HarmonyInstance.PatchAll(typeof(TerminalCommandsPlugin).Assembly);
@@ -31,11 +26,7 @@ namespace LethalAPI.TerminalCommands
 
 			// Register commands, don't care about the instance
 			Terminal.RegisterFrom<CommandInfoCommands>();
-			
-			// Register configs, and load saved values
-			TerminalConfig = Terminal.RegisterFrom<TerminalConfig>();
-
-
+			Terminal.RegisterFrom<TestCommands>();  // temp
 
 
 			DontDestroyOnLoad(this);

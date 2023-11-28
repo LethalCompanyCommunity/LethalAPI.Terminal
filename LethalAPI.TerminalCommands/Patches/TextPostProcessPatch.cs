@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using LethalAPI.TerminalCommands.Models;
 
 namespace LethalAPI.TerminalCommands.Patches
 {
@@ -12,14 +13,9 @@ namespace LethalAPI.TerminalCommands.Patches
 	public static class TextPostProcessPatch
 	{
 		[HarmonyPrefix]
-		public static void Prefix(ref string modifiedDisplayText)
+		public static void Prefix(Terminal __instance, ref string modifiedDisplayText)
 		{
-			modifiedDisplayText = modifiedDisplayText.TrimStart('\n', ' ');
-
-			if (!modifiedDisplayText.EndsWith('\n'))
-			{
-				modifiedDisplayText += "\n";
-			}
+			modifiedDisplayText = TextUtil.SetEndPadding(modifiedDisplayText.TrimStart('\n', ' '), '\n', 2);
 		}
 	}
 }
