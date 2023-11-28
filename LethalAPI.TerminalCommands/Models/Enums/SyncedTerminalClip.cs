@@ -4,32 +4,8 @@
 	/// Provides a list of audio effects that can be played from a <seealso cref="TerminalNode"/>
 	/// </summary>
 
-	public enum TerminalAudioClip : int
+	public enum SyncedTerminalClip : int
 	{
-		///// <summary>
-		///// The entered terminal sound effect
-		///// </summary>
-		///// <remarks>
-		///// Client-side only
-		///// </remarks>
-		//EnterTerminal = -3,
-
-		///// <summary>
-		///// The leave terminal sound effect
-		///// </summary>
-		///// <remarks>
-		///// Client-side only
-		///// </remarks>
-		//LeaveTerminal = -2,
-
-		///// <summary>
-		///// The code broadcasted sound effect
-		///// </summary>
-		///// <remarks>
-		///// Client-side only
-		///// </remarks>
-		//CodeBroadcast = -1,
-
 		/// <summary>
 		/// Plays a random item purchased sound effect
 		/// </summary>
@@ -47,11 +23,11 @@
 		Error = 1,
 
 		/// <summary>
-		/// The original purpose of this clip is currently unknown
+		/// Plays the telegraph-like broadcast effect played when loading some log entires
 		/// </summary>
 		/// <remarks>
 		/// Network synced audio effect
 		/// </remarks>
-		UnknownEffect = 2
+		BroadcastEffect = 2
 	}
 }
