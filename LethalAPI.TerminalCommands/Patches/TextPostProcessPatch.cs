@@ -10,7 +10,7 @@ namespace LethalAPI.TerminalCommands.Patches
 	/// This is to address newlines that the game adds to the start of all terminal responses, that slowly forces the terminal window down and off-screen
 	/// </remarks>
 	[HarmonyPatch(typeof(Terminal), "TextPostProcess")]
-	public static class TextPostProcessPatch
+	internal static class TextPostProcessPatch
 	{
 		[HarmonyPrefix]
 		public static void Prefix(Terminal __instance, ref string modifiedDisplayText)

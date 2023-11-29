@@ -14,7 +14,7 @@ namespace LethalAPI.TerminalCommands.Patches
 	/// By default, the game always scrolls to the top on command execution, this patch makes it so it only scrolls to the top on terminal clearance
 	/// </remarks>
 	[HarmonyPatch(typeof(Terminal), "OnSubmit")]
-	public static class TerminalSubmitPatch
+	internal static class TerminalSubmitPatch
 	{
 		/// <summary>
 		/// Set by the <seealso cref="ParseSentencePatch"/>, to allow the postfix to access the last parsed node
