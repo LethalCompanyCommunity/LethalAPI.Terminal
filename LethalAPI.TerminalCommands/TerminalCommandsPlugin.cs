@@ -26,8 +26,6 @@ namespace LethalAPI.TerminalCommands
 
 			// Register commands, don't care about the instance
 			Terminal.RegisterFrom<CommandInfoCommands>();
-			Terminal.RegisterFrom<TestCommands>();  // temp
-
 
 			DontDestroyOnLoad(this);
 

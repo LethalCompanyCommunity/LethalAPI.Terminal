@@ -11,6 +11,9 @@ namespace LethalAPI.TerminalCommands.Interactions
 	/// <summary>
 	/// A basic terminal interaction, supporting custom services/context, and null cascading handlers
 	/// </summary>
+	/// <remarks>
+	/// You can return this interaction from a Terminal Command to implement follow-ups/prompt the user for more information.
+	/// </remarks>
 	public class TerminalInteraction : ITerminalInteraction
 	{
 		/// <summary>

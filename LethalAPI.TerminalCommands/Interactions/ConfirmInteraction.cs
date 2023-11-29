@@ -9,6 +9,9 @@ namespace LethalAPI.TerminalCommands.Interactions
 	/// <summary>
 	/// Provides a Confirm/Deny terminal interaction 
 	/// </summary>
+	/// <remarks>
+	/// You can return this interaction from a Terminal Command to implement a Confirm/Deny action pattern
+	/// </remarks>
 	public class ConfirmInteraction : ITerminalInteraction
 	{
 		/// <summary>

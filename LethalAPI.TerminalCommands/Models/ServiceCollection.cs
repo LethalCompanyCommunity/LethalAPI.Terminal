@@ -8,6 +8,9 @@ namespace LethalAPI.TerminalCommands.Models
 	/// </summary>
 	public struct ServiceCollection
 	{
+		/// <summary>
+		/// Type -> Service Instance mapping for services registered to this container
+		/// </summary>
 		private Dictionary<Type, object> m_Services = new Dictionary<Type, object>();
 
 		/// <summary>
@@ -34,6 +37,12 @@ namespace LethalAPI.TerminalCommands.Models
 		/// <returns><see langword="true"/> if the service could be fetched from the container</returns>
 		public bool TryGetService(Type t, out object service)
 		{
+			if (m_Services == null)
+			{
+				service = null;
+				return false;
+			}
+
 			return m_Services.TryGetValue(t, out service);
 		}
 
@@ -44,6 +53,11 @@ namespace LethalAPI.TerminalCommands.Models
 		/// <param name="instance">Service instance to register</param>
 		public void WithService<T>(T instance)
 		{
+			if (m_Services == null)
+			{
+				return;
+			}
+
 			m_Services[typeof(T)] = instance;
 		}
 
@@ -53,6 +67,11 @@ namespace LethalAPI.TerminalCommands.Models
 		/// <param name="services">Services to register</param>
 		public void WithServices(params object[] services)
 		{
+			if (m_Services == null)
+			{
+				return;
+			}
+
 			foreach (var service in services)
 			{
 				if (service == null)
