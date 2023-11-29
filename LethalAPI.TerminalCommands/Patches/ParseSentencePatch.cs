@@ -20,7 +20,7 @@ namespace LethalAPI.TerminalCommands
 			__state = null;
 			var commandText = __instance.screenText.text.Substring(__instance.screenText.text.Length - __instance.textAdded);
 
-			__state = CommandHandler.TryExecute(commandText, __instance);
+			__state = CommandHandler.HandleCommandInput(commandText, __instance);
 			return __state == null;
 		}
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace LethalAPI.TerminalCommands.Models
@@ -30,6 +31,15 @@ namespace LethalAPI.TerminalCommands.Models
 		public ArgumentStream(string[] arguments)
 		{
 			Arguments = arguments;
+		}
+
+		/// <summary>
+		/// Creates a new argument stream from an array
+		/// </summary>
+		/// <param name="arguments">Arguments to read</param>
+		public ArgumentStream(IEnumerable<string> arguments)
+		{
+			Arguments = arguments.ToArray();
 		}
 
 		/// <summary>

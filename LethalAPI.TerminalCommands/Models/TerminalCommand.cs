@@ -129,7 +129,6 @@ namespace LethalAPI.TerminalCommands.Models
 		/// <returns><see langword="true"/> if the provided arguments match the signature for this command, and could be parsed correctly.</returns>
 		public bool TryCreateInvoker(ArgumentStream arguments, ServiceCollection services, out Func<object> invoker)
 		{
-			arguments.Reset();
 
 			if (CommandActivator.TryCreateInvoker(arguments, services, Method, out var activatedInvoker))
 			{
