@@ -8,7 +8,7 @@ namespace LethalAPI.TerminalCommands.Patches
 	/// Decreases the delay after entering the terminal before you can type by 80%
 	/// </summary>
 	[HarmonyPatch(typeof(Terminal), "selectTextFieldDelayed")]
-	public static class SelectTextFieldPatch
+	internal static class SelectTextFieldPatch
 	{
 		[HarmonyPrefix]
 		public static bool Prefix()

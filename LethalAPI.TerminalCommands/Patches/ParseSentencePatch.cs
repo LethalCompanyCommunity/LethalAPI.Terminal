@@ -12,7 +12,7 @@ namespace LethalAPI.TerminalCommands
 	/// Execution may fall back through to the game if no commands are found, or commands let execution fall through
 	/// </remarks>
 	[HarmonyPatch(typeof(Terminal), "ParsePlayerSentence")]
-	public static class ParseSentencePatch
+	internal static class ParseSentencePatch
 	{
 		[HarmonyPrefix]
 		public static bool ParsePrefix(Terminal __instance, ref TerminalNode __state)
