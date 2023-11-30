@@ -143,7 +143,7 @@ public class ConfirmInteraction : ITerminalInteraction
     /// <summary>
     /// Gets services to provide to the interaction handlers.
     /// </summary>
-    public ServiceCollection Services { get; } = new ServiceCollection();
+    public ServiceCollection Services { get; } = new ();
 
     /// <summary>
     /// Gets or sets delegate executed when the action is confirmed.

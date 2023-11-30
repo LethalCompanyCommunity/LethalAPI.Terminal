@@ -18,7 +18,7 @@ public class TerminalModRegistry
     /// <summary>
     /// Gets the command instances registered to this instance.
     /// </summary>
-    public List<TerminalCommand> Commands { get; } = new List<TerminalCommand>();
+    public List<TerminalCommand> Commands { get; } = new ();
 
     /// <summary>
     /// Creates a new instance of the specified type, and registers all commands from it.

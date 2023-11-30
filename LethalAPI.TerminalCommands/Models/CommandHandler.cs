@@ -23,17 +23,17 @@ public static class CommandHandler
     /// <summary>
     /// The interaction stack, for handling interaction layers.
     /// </summary>
-    private static readonly Stack<ITerminalInteraction> Interactions = new Stack<ITerminalInteraction>();
+    private static readonly Stack<ITerminalInteraction> Interactions = new ();
 
     /// <summary>
     /// Regex to split a command by spaces, while grouping sections of a command in quotations (").
     /// </summary>
-    private static readonly Regex SplitRegex = new Regex(@"[\""](.+?)[\""]|([^ ]+)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase);
+    private static readonly Regex SplitRegex = new (@"[\""](.+?)[\""]|([^ ]+)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase);
 
     /// <summary>
     /// Orders <see cref="TerminalCommand"/> instances by descending by priority, then by argument count.
     /// </summary>
-    private static readonly CommandComparer Comparer = new CommandComparer();
+    private static readonly CommandComparer Comparer = new ();
 
     /// <summary>
     /// Finds a list of matching command candidates, then tries to execute them in weighted order, returning the first response provided.
@@ -52,7 +52,7 @@ public static class CommandHandler
             try
             {
                 // Argument stream specifically for interactions, that provide the initial command name as part of arguments
-                ArgumentStream interactionStream = new ArgumentStream(commandParts.ToArray());
+                ArgumentStream interactionStream = new (commandParts.ToArray());
 
                 // Fetch the service collection provided by the interaction, and add default services to it
                 ServiceCollection interactServices = interaction.Services;

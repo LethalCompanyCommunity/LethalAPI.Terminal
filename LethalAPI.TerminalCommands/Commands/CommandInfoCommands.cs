@@ -25,7 +25,7 @@ public class CommandInfoCommands
     [TerminalCommand("Other", clearText: true)]
     public string CommandList()
     {
-        StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new ();
 
         builder.AppendLine("Other commands:");
         builder.AppendLine();
@@ -71,7 +71,7 @@ public class CommandInfoCommands
     [CommandInfo("Shows further information about a command", "[Command]")]
     public string HelpCommand(string name)
     {
-        StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new ();
         TerminalCommand[] commands = TerminalRegistry.EnumerateCommands(name).ToArray();
 
         if (commands.Length == 0)

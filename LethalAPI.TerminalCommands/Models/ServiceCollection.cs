@@ -19,7 +19,7 @@ public struct ServiceCollection
     /// <summary>
     /// Type -> Service Instance mapping for services registered to this container.
     /// </summary>
-    private readonly Dictionary<Type, object> services = new Dictionary<Type, object>();
+    private readonly Dictionary<Type, object> services = new ();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ServiceCollection"/> struct.

@@ -24,7 +24,7 @@ public class TerminalRegistry
     /// Dictionary containing all registered commands. You shouldn't be interfacing with this directly, instead use the APIs exposed by this class, or <see cref="TerminalModRegistry"/>.
     /// You can enumerate registered commands using <see cref="EnumerateCommands()"/> and <see cref="EnumerateCommands(string)"/>.
     /// </summary>
-    private static readonly ConcurrentDictionary<string, List<TerminalCommand>> RegisteredCommands = new ConcurrentDictionary<string, List<TerminalCommand>>(StringComparer.InvariantCultureIgnoreCase);
+    private static readonly ConcurrentDictionary<string, List<TerminalCommand>> RegisteredCommands = new (StringComparer.InvariantCultureIgnoreCase);
 
     /// <summary>
     /// Automatically registers all terminal commands from an instance, and returns a commands <see cref="TerminalModRegistry"/> token, which should be used to deregister all terminal commands when your mod unloads.

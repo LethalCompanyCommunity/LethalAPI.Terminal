@@ -59,12 +59,12 @@ public class TerminalInteraction : ITerminalInteraction
     /// <summary>
     /// Gets the service collection containing the context for the handlers.
     /// </summary>
-    public ServiceCollection Services { get; } = new ServiceCollection();
+    public ServiceCollection Services { get; } = new ();
 
     /// <summary>
     /// Gets a list of interaction handlers.
     /// </summary>
-    public List<Delegate> Handlers { get; } = new List<Delegate>();
+    public List<Delegate> Handlers { get; } = new ();
 
     /// <summary>
     /// Adds a number of services to the container used to invoke the handlers.
