@@ -16,16 +16,17 @@ using System;
 public class TerminalCommandAttribute : Attribute
 {
     /// <summary>
-    /// The name of the command.
+    /// Gets the name of the command.
     /// </summary>
     public string CommandName { get; }
 
     /// <summary>
-    /// Specifies if the terminal text should be cleared on command execution.
+    /// Gets a value indicating whether the terminal text should be cleared on command execution.
     /// </summary>
     public bool ClearText { get; }
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="TerminalCommandAttribute"/> class.
     /// Used to decorate methods to auto-register terminal commands.
     /// </summary>
     /// <param name="name">The case-insensitive command name.</param>

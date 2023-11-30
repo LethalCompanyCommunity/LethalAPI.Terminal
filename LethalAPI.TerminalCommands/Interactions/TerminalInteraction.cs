@@ -25,17 +25,17 @@ using UnityEngine;
 public class TerminalInteraction : ITerminalInteraction
 {
     /// <summary>
-    /// The prompt displayed to the user.
+    /// Gets the prompt displayed to the user.
     /// </summary>
     public TerminalNode Prompt { get; private set; }
 
     /// <summary>
-    /// Services containing the context for the handlers.
+    /// Gets the service collection containing the context for the handlers.
     /// </summary>
     public ServiceCollection Services { get; } = new ServiceCollection();
 
     /// <summary>
-    /// List of interaction handlers.
+    /// Gets a list of interaction handlers.
     /// </summary>
     public List<Delegate> Handlers { get; } = new List<Delegate>();
 
@@ -48,6 +48,7 @@ public class TerminalInteraction : ITerminalInteraction
     }
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="TerminalInteraction"/> class.
     /// Creates an interaction with the specified prompt and handler.
     /// </summary>
     /// <param name="prompt">The response/prompt shown to the user.</param>
@@ -59,6 +60,7 @@ public class TerminalInteraction : ITerminalInteraction
     }
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="TerminalInteraction"/> class.
     /// Creates an interaction with the specified prompt and handler.
     /// </summary>
     /// <param name="promptBuilder">Builder method to create the <see cref="TerminalNode"/> interaction prompt.</param>

@@ -21,6 +21,7 @@ public struct ServiceCollection
     private Dictionary<Type, object> m_Services = new Dictionary<Type, object>();
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="ServiceCollection"/> struct.
     /// Creates a new container with the specified services.
     /// </summary>
     /// <param name="services"></param>
@@ -30,6 +31,7 @@ public struct ServiceCollection
     }
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="ServiceCollection"/> struct.
     /// Creates a new instance of the service collection with no services.
     /// </summary>
     public ServiceCollection()

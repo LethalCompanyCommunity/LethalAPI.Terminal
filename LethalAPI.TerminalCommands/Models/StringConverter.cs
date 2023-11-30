@@ -25,7 +25,7 @@ public delegate object StringConversionHandler(string value);
 public static class StringConverter
 {
     /// <summary>
-    /// Registry of string converters.
+    /// Gets the registry of string converters.
     /// </summary>
     /// <remarks>
     /// Register new converters using <see cref="RegisterFrom{T}(object, bool)"/>.

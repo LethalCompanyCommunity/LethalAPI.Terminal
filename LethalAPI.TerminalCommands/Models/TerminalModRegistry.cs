@@ -15,7 +15,7 @@ using System.Collections.Generic;
 public class TerminalModRegistry
 {
     /// <summary>
-    /// Command instances registered to this instance.
+    /// Gets the command instances registered to this instance.
     /// </summary>
     public List<TerminalCommand> Commands { get; } = new List<TerminalCommand>();
 

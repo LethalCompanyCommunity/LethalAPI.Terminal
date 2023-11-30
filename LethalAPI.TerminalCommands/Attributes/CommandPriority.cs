@@ -18,7 +18,7 @@ using System;
 public sealed class CommandPriority : Attribute
 {
     /// <summary>
-    /// Priority value, higher the value, the greater the priority.
+    /// Gets priority value, higher the value, the greater the priority.
     /// </summary>
     /// <remarks>
     /// A priority of 0 is default.
@@ -26,6 +26,7 @@ public sealed class CommandPriority : Attribute
     public int Priority { get; }
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="CommandPriority"/> class.
     /// Sets the command priority. Do not use this unless you are intending to override another custom command.
     /// </summary>
     /// <param name="priority">Priority value, higher the value, the greater the priority.</param>

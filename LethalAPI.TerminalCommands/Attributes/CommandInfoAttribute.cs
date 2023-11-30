@@ -19,16 +19,17 @@ using System;
 public class CommandInfoAttribute : Attribute
 {
     /// <summary>
-    /// The syntax/usage of the command.
+    /// Gets the syntax/usage of the command.
     /// </summary>
     public string Syntax { get; }
 
     /// <summary>
-    /// A short description of what the command does.
+    /// Gets a short description of what the command does.
     /// </summary>
     public string Description { get; }
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="CommandInfoAttribute"/> class.
     /// Registers a terminal command to be listed in the help/other command list.
     /// </summary>
     /// <param name="syntax">The usage pattern of the command.</param>
