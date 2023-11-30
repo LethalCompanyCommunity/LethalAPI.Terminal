@@ -10,7 +10,7 @@ namespace LethalAPI.TerminalCommands.Models.Enums;
 /// <summary>
 /// Provides a list of audio effects that can be played from a <see cref="TerminalNode"/>.
 /// </summary>
-public enum SyncedTerminalClip : int
+public enum SyncedTerminalClip
 {
     /// <summary>
     /// Plays a random item purchased sound effect.
