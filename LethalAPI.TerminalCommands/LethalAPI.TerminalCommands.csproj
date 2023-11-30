@@ -92,5 +92,7 @@
     <AdditionalFiles Include="../stylecop.json" Link="Resources/stylecop.json" />
     <None Remove="FodyWeavers.xml" />
     <None Include="FodyWeavers.xml" Link="Resources/FodyWeavers.xml" />
+    <Compile Remove="System/*" />
+    <Compile Include="System/*" Visible="False" />
   </ItemGroup>
 </Project>
