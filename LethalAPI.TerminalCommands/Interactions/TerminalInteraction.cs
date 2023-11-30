@@ -9,7 +9,6 @@ namespace LethalAPI.TerminalCommands.Interactions;
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 
 using Interfaces;
@@ -144,11 +143,11 @@ public class TerminalInteraction : ITerminalInteraction
     public object? HandleTerminalResponse(ArgumentStream arguments)
     {
         // Converts all delegates into a list of Method Info and instances, ordered descending by parameter count (execution order)
-        List<(MethodInfo info, object instance)> handlers =
+        /*List<(MethodInfo Info, object Instance)> handlers =
             Handlers
                 .Select(x => (info: x.GetMethodInfo(), instance: x.Target))
                 .OrderByDescending(x => x.info.GetParameters().Length)
-                .ToList();
+                .ToList();*/
 
         foreach (Delegate handler in Handlers)
         {

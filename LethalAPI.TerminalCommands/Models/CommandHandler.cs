@@ -44,7 +44,7 @@ public static class CommandHandler
     public static TerminalNode? TryExecute(string command, Terminal terminal)
     {
         MatchCollection matches = SplitRegex.Matches(command.Trim());
-        IEnumerable<string> commandParts = matches.Cast<Match>().Select(x => x.Value.Trim('"', ' '));
+        List<string> commandParts = matches.Cast<Match>().Select(x => x.Value.Trim('"', ' ')).ToList();
 
         // Handle interactions if any
         if (Interactions.TryPop(out var interaction))
@@ -109,7 +109,7 @@ public static class CommandHandler
         // Execute candidates
         IOrderedEnumerable<(TerminalCommand Command, Func<TerminalNode> Invoker)> ordered = candidateCommands.OrderByDescending(x => x.command, Comparer); // Order candidates descending by priority, then argument count
 
-        foreach (var (registeredCommand, invoker) in ordered)
+        foreach (var (_, invoker) in ordered)
         {
             TerminalNode? result = invoker();
 
