@@ -62,7 +62,7 @@ public class TerminalRegistry
     /// <summary>
     /// Registers a command instance. <see cref="RegisterFrom{T}(T)"/> is preferred. This method is primarily intended for internal use.
     /// </summary>
-    /// <param name="command"></param>
+    /// <param name="command">The terminal command to register.</param>
     public static void RegisterCommand(TerminalCommand command)
     {
         List<TerminalCommand> commands;

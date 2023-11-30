@@ -14,6 +14,7 @@ using System.Collections.Generic;
 /// </summary>
 public class CommandComparer : IComparer<TerminalCommand>
 {
+    /// <inheritdoc />
     public int Compare(TerminalCommand x, TerminalCommand y)
     {
         if (x.Priority > y.Priority)

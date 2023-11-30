@@ -75,7 +75,10 @@ public static class CommandActivator
     /// <summary>
     /// Executes this command with the specified arguments.
     /// </summary>
+    /// <param name="method">The method to invoke.</param>
+    /// <param name="instance">The instance to execute the method with.</param>
     /// <param name="arguments">Arguments used to execute this command. Must precisely match the parameters of <see cref="Method"/>.</param>
+    /// <param name="clearConsole">Indicates whether the console should be cleared after execution.</param>
     /// <returns>Resulting <see cref="TerminalNode"/> response, an <see cref="Interfaces.ITerminalInteraction"/>, or <see langword="null"/>.</returns>
     private static object ExecuteCommand(MethodInfo method, object instance, object[] arguments, bool clearConsole)
     {

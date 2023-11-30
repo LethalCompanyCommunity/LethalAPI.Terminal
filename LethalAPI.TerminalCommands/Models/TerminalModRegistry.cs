@@ -24,6 +24,7 @@ public class TerminalModRegistry
     /// Creates a new instance of the specified type, and registers all commands from it.
     /// </summary>
     /// <typeparam name="T">The type to register commands from.</typeparam>
+    /// <returns>The registered instance.</returns>
     public T RegisterFrom<T>()
         where T : class, new()
     {
@@ -35,6 +36,7 @@ public class TerminalModRegistry
     /// </summary>
     /// <typeparam name="T">Generic class type.</typeparam>
     /// <param name="instance">Instance to execute commands in.</param>
+    /// <returns>The registered instance.</returns>
     public T RegisterFrom<T>(T instance)
         where T : class
     {

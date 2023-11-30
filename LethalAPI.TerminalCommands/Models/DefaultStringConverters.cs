@@ -18,12 +18,23 @@ using GameNetcodeStuff;
 /// </summary>
 public static class DefaultStringConverters
 {
+    /// <summary>
+    /// Parses a string and returns the value as a <see cref="string"/>.
+    /// </summary>
+    /// <param name="input">The string input to parse.</param>
+    /// <returns>The parsed <see cref="string"/> value.</returns>
     [StringConverter]
     public static string ParseString(string input)
     {
         return input;
     }
 
+    /// <summary>
+    /// Parses a string and returns the value as a <see cref="sbyte"/>.
+    /// </summary>
+    /// <param name="input">The string input to parse.</param>
+    /// <returns>The parsed <see cref="sbyte"/> value.</returns>
+    /// <exception cref="ArgumentException">Thrown if the input is invalid for this converter.</exception>
     [StringConverter]
     public static sbyte ParseSByte(string input)
     {
@@ -35,6 +46,12 @@ public static class DefaultStringConverters
         throw new ArgumentException();
     }
 
+    /// <summary>
+    /// Parses a string and returns the value as a <see cref="byte"/>.
+    /// </summary>
+    /// <param name="input">The string input to parse.</param>
+    /// <returns>The parsed <see cref="byte"/> value.</returns>
+    /// <exception cref="ArgumentException">Thrown if the input is invalid for this converter.</exception>
     [StringConverter]
     public static byte ParseByte(string input)
     {
@@ -46,6 +63,12 @@ public static class DefaultStringConverters
         throw new ArgumentException();
     }
 
+    /// <summary>
+    /// Parses a string and returns the value as a <see cref="short"/>.
+    /// </summary>
+    /// <param name="input">The string input to parse.</param>
+    /// <returns>The parsed <see cref="short"/> value.</returns>
+    /// <exception cref="ArgumentException">Thrown if the input is invalid for this converter.</exception>
     [StringConverter]
     public static short ParseShort(string input)
     {
@@ -57,6 +80,12 @@ public static class DefaultStringConverters
         throw new ArgumentException();
     }
 
+    /// <summary>
+    /// Parses a string and returns the value as a <see cref="ushort"/>.
+    /// </summary>
+    /// <param name="input">The string input to parse.</param>
+    /// <returns>The parsed <see cref="ushort"/> value.</returns>
+    /// <exception cref="ArgumentException">Thrown if the input is invalid for this converter.</exception>
     [StringConverter]
     public static ushort ParseUShort(string input)
     {
@@ -68,6 +97,12 @@ public static class DefaultStringConverters
         throw new ArgumentException();
     }
 
+    /// <summary>
+    /// Parses a string and returns the value as an <see cref="int"/>.
+    /// </summary>
+    /// <param name="input">The string input to parse.</param>
+    /// <returns>The parsed <see cref="int"/> value.</returns>
+    /// <exception cref="ArgumentException">Thrown if the input is invalid for this converter.</exception>
     [StringConverter]
     public static int ParseInt(string input)
     {
@@ -79,6 +114,12 @@ public static class DefaultStringConverters
         throw new ArgumentException();
     }
 
+    /// <summary>
+    /// Parses a string and returns the value as a <see cref="uint"/>.
+    /// </summary>
+    /// <param name="input">The string input to parse.</param>
+    /// <returns>The parsed <see cref="uint"/> value.</returns>
+    /// <exception cref="ArgumentException">Thrown if the input is invalid for this converter.</exception>
     [StringConverter]
     public static uint ParseUInt(string input)
     {
@@ -90,6 +131,12 @@ public static class DefaultStringConverters
         throw new ArgumentException();
     }
 
+    /// <summary>
+    /// Parses a string and returns the value as a <see cref="long"/>.
+    /// </summary>
+    /// <param name="input">The string input to parse.</param>
+    /// <returns>The parsed <see cref="long"/> value.</returns>
+    /// <exception cref="ArgumentException">Thrown if the input is invalid for this converter.</exception>
     [StringConverter]
     public static long ParseLong(string input)
     {
@@ -101,6 +148,12 @@ public static class DefaultStringConverters
         throw new ArgumentException();
     }
 
+    /// <summary>
+    /// Parses a string and returns the value as a <see cref="ulong"/>.
+    /// </summary>
+    /// <param name="input">The string input to parse.</param>
+    /// <returns>The parsed <see cref="ulong"/> value.</returns>
+    /// <exception cref="ArgumentException">Thrown if the input is invalid for this converter.</exception>
     [StringConverter]
     public static ulong ParseULong(string input)
     {
@@ -112,6 +165,12 @@ public static class DefaultStringConverters
         throw new ArgumentException();
     }
 
+    /// <summary>
+    /// Parses a string and returns the value as a <see cref="float"/>.
+    /// </summary>
+    /// <param name="input">The string input to parse.</param>
+    /// <returns>The parsed <see cref="float"/> value.</returns>
+    /// <exception cref="ArgumentException">Thrown if the input is invalid for this converter.</exception>
     [StringConverter]
     public static float ParseFloat(string input)
     {
@@ -123,6 +182,12 @@ public static class DefaultStringConverters
         throw new ArgumentException();
     }
 
+    /// <summary>
+    /// Parses a string and returns the value as a <see cref="double"/>.
+    /// </summary>
+    /// <param name="input">The string input to parse.</param>
+    /// <returns>The parsed <see cref="double"/> value.</returns>
+    /// <exception cref="ArgumentException">Thrown if the input is invalid for this converter.</exception>
     [StringConverter]
     public static double ParseDouble(string input)
     {
@@ -134,6 +199,12 @@ public static class DefaultStringConverters
         throw new ArgumentException();
     }
 
+    /// <summary>
+    /// Parses a string and returns the value as a <see cref="decimal"/>.
+    /// </summary>
+    /// <param name="input">The string input to parse.</param>
+    /// <returns>The parsed <see cref="decimal"/> value.</returns>
+    /// <exception cref="ArgumentException">Thrown if the input is invalid for this converter.</exception>
     [StringConverter]
     public static decimal ParseDecimal(string input)
     {
@@ -145,8 +216,14 @@ public static class DefaultStringConverters
         throw new ArgumentException();
     }
 
+    /// <summary>
+    /// Parses a string and returns the value as a <see cref="PlayerControllerB"/>.
+    /// </summary>
+    /// <param name="input">The string input to parse.</param>
+    /// <returns>The parsed <see cref="PlayerControllerB"/> value.</returns>
+    /// <exception cref="ArgumentException">Thrown if the input is invalid for this converter.</exception>
     [StringConverter]
-    public static PlayerControllerB ParsePlayerControllerB(string value)
+    public static PlayerControllerB ParsePlayerControllerB(string input)
     {
         if (StartOfRound.Instance == null)
         {
@@ -154,16 +231,14 @@ public static class DefaultStringConverters
         }
 
         PlayerControllerB player = null;
-        if (ulong.TryParse(value, out ulong steamID))
+        if (ulong.TryParse(input, out ulong steamID))
         {
-            player = StartOfRound.Instance.allPlayerScripts
-                .FirstOrDefault(x => x.playerSteamId == steamID);
+            player = StartOfRound.Instance.allPlayerScripts.FirstOrDefault(x => x.playerSteamId == steamID);
         }
 
         if (player == null)
         {
-            player = StartOfRound.Instance.allPlayerScripts
-                .FirstOrDefault(x => x.playerUsername.IndexOf(value, StringComparison.InvariantCultureIgnoreCase) != -1);
+            player = StartOfRound.Instance.allPlayerScripts.FirstOrDefault(x => x.playerUsername.IndexOf(input, StringComparison.InvariantCultureIgnoreCase) != -1);
         }
 
         if (player == null)

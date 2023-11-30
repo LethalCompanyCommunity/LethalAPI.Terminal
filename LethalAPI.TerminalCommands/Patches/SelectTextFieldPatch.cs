@@ -15,17 +15,17 @@ using UnityEngine;
 /// <summary>
 /// Decreases the delay after entering the terminal before you can type by 80%.
 /// </summary>
-[HarmonyPatch(typeof(Terminal), "selectTextFieldDelayed")]
+[HarmonyPatch(typeof(Terminal), nameof(Terminal.selectTextFieldDelayed))]
 internal static class SelectTextFieldPatch
 {
     [HarmonyPrefix]
-    public static bool Prefix()
+    private static bool Prefix()
     {
         return false;
     }
 
     [HarmonyPostfix]
-    public static void Postfix(Terminal __instance, ref IEnumerator __result)
+    private static void Postfix(Terminal __instance, ref IEnumerator __result)
     {
         __result = Patch(__instance);
     }

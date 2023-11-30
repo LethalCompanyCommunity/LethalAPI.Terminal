@@ -82,7 +82,7 @@ public static class TerminalNodeExtensions
     /// Sets the route to moon index. This is how the vanilla route command works.
     /// </summary>
     /// <param name="node">Terminal node to modify.</param>
-    /// <param name="index">Index of the moon to route to./param>.
+    /// <param name="index">Index of the moon to route to.</param>.
     /// <returns>Original terminal node.</returns>
     public static TerminalNode WithMoonIndex(this TerminalNode node, int index)
     {
@@ -140,7 +140,7 @@ public static class TerminalNodeExtensions
     /// </summary>
     /// <param name="node">Terminal node to modify.</param>
     /// <param name="audio">Audio clip to play.</param>
-    /// <returns></returns>
+    /// <returns>The terminal node which audio is being played with.</returns>
     public static TerminalNode WithAudio(this TerminalNode node, AudioClip audio)
     {
         node.playClip = audio;

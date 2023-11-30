@@ -14,11 +14,12 @@ using System.Reflection;
 using Attributes;
 
 /// <summary>
-/// Delegate that converts a string to a given object, or thows <see cref="ArgumentException"/> if the value cannot be converted.
+/// Delegate that converts a string to a given object, or thows <see cref="ArgumentException"/> if the input cannot be converted.
 /// </summary>
-/// <param name="value">String value to convert.</param>
-/// <returns></returns>
-public delegate object StringConversionHandler(string value);
+/// <param name="input">String input to convert.</param>
+/// <returns>The parsed value.</returns>
+/// <exception cref="ArgumentException">Thrown if the input cannot be parsed.</exception>
+public delegate object StringConversionHandler(string input);
 
 /// <summary>
 /// Provides services for parsing user-entered strings into types, including custom game types.
@@ -29,9 +30,9 @@ public static class StringConverter
     /// Gets the registry of string converters.
     /// </summary>
     /// <remarks>
-    /// Register new converters using <see cref="RegisterFrom{T}(object, bool)"/>.
+    /// Register new converters using <see cref="RegisterFrom{T}(T, bool)"/>.
     /// </remarks>
-    public static ConcurrentDictionary<Type, StringConversionHandler> StringConverters { get; } = new ConcurrentDictionary<Type, StringConversionHandler>();
+    public static ConcurrentDictionary<Type, StringConversionHandler> StringConverters { get; } = new ();
 
     /// <summary>
     /// Specifies if the default string converters have been registered yet.

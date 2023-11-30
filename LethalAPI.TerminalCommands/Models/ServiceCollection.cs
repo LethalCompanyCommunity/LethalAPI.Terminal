@@ -24,7 +24,7 @@ public struct ServiceCollection
     /// Initializes a new instance of the <see cref="ServiceCollection"/> struct.
     /// Creates a new container with the specified services.
     /// </summary>
-    /// <param name="services"></param>
+    /// <param name="services">The services to register.</param>
     public ServiceCollection(params object[] services)
     {
         WithServices(services);

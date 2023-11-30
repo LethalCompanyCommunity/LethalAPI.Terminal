@@ -118,6 +118,9 @@ public class TerminalInteraction : ITerminalInteraction
     /// <summary>
     /// Sets the command response. This is the response message to prompt the user for further input.
     /// </summary>
+    /// <param name="prompt">
+    /// The prompt to show players.
+    /// </param>
     /// <returns>Parent terminal interaction.</returns>
     public TerminalInteraction WithPrompt(string prompt)
     {
