@@ -125,6 +125,15 @@ public static class CommandHandler
     }
 
     /// <summary>
+    /// Pushes an interaction onto the terminal interaction stack, to execute next.
+    /// </summary>
+    /// <param name="interaction">Interaction to run.</param>
+    public static void SetInteraction(ITerminalInteraction interaction)
+    {
+        Interactions.Push(interaction);
+    }
+
+    /// <summary>
     /// Handles the responses from commands, executing actions as needed.
     /// </summary>
     /// <param name="result">Result to parse into a <see cref="TerminalNode"/>.</param>
@@ -144,14 +153,5 @@ public static class CommandHandler
 
         return ScriptableObject.CreateInstance<TerminalNode>()
             .WithDisplayText(result);
-    }
-
-    /// <summary>
-    /// Pushes an interaction onto the terminal interaction stack, to execute next.
-    /// </summary>
-    /// <param name="interaction">Interaction to run.</param>
-    public static void SetInteraction(ITerminalInteraction interaction)
-    {
-        Interactions.Push(interaction);
     }
 }

@@ -23,11 +23,9 @@ using UnityEngine;
 internal static class TerminalSubmitPatch
 {
     /// <summary>
-    /// Set by the <see cref="ParseSentencePatch"/>, to allow the postfix to access the last parsed node.
+    /// Gets or sets set by the <see cref="ParseSentencePatch"/>, to allow the postfix to access the last parsed node.
     /// </summary>
     public static TerminalNode LastNode { get; set; }
-
-    private static ManualLogSource m_LogSource = new ManualLogSource("LethalAPI.TerminalCommands");
 
     [HarmonyPrefix]
     public static void Prefix()

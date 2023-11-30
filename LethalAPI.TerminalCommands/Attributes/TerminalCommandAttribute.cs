@@ -16,16 +16,6 @@ using System;
 public class TerminalCommandAttribute : Attribute
 {
     /// <summary>
-    /// Gets the name of the command.
-    /// </summary>
-    public string CommandName { get; }
-
-    /// <summary>
-    /// Gets a value indicating whether the terminal text should be cleared on command execution.
-    /// </summary>
-    public bool ClearText { get; }
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="TerminalCommandAttribute"/> class.
     /// Used to decorate methods to auto-register terminal commands.
     /// </summary>
@@ -39,4 +29,14 @@ public class TerminalCommandAttribute : Attribute
         CommandName = name;
         ClearText = clearText;
     }
+
+    /// <summary>
+    /// Gets the name of the command.
+    /// </summary>
+    public string CommandName { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether the terminal text should be cleared on command execution.
+    /// </summary>
+    public bool ClearText { get; }
 }

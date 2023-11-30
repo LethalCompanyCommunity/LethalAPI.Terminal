@@ -25,21 +25,6 @@ using UnityEngine;
 public class TerminalInteraction : ITerminalInteraction
 {
     /// <summary>
-    /// Gets the prompt displayed to the user.
-    /// </summary>
-    public TerminalNode Prompt { get; private set; }
-
-    /// <summary>
-    /// Gets the service collection containing the context for the handlers.
-    /// </summary>
-    public ServiceCollection Services { get; } = new ServiceCollection();
-
-    /// <summary>
-    /// Gets a list of interaction handlers.
-    /// </summary>
-    public List<Delegate> Handlers { get; } = new List<Delegate>();
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="TerminalInteraction"/> class.
     /// Creates a blank terminal interaction.
     /// </summary>
@@ -74,6 +59,21 @@ public class TerminalInteraction : ITerminalInteraction
 
         Handlers.Add(handler);
     }
+
+    /// <summary>
+    /// Gets the prompt displayed to the user.
+    /// </summary>
+    public TerminalNode Prompt { get; private set; }
+
+    /// <summary>
+    /// Gets the service collection containing the context for the handlers.
+    /// </summary>
+    public ServiceCollection Services { get; } = new ServiceCollection();
+
+    /// <summary>
+    /// Gets a list of interaction handlers.
+    /// </summary>
+    public List<Delegate> Handlers { get; } = new List<Delegate>()
 
     /// <summary>
     /// Adds a number of services to the container used to invoke the handlers.
