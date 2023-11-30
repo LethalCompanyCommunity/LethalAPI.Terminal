@@ -5,11 +5,15 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+// ReSharper disable UnusedMember.Local
+// ReSharper disable StringLiteralTypo
+#pragma warning disable SA1313 // parameter name shouldn't begin with a '_'.
 namespace LethalAPI.TerminalCommands.Patches;
 
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
+
 using HarmonyLib;
 using UnityEngine;
 
@@ -19,24 +23,24 @@ using UnityEngine;
 /// <remarks>
 /// By default, the game always scrolls to the top on command execution, this patch makes it so it only scrolls to the top on terminal clearance.
 /// </remarks>
-[HarmonyPatch(typeof(Terminal), "OnSubmit")]
+[HarmonyPatch(typeof(Terminal), nameof(Terminal.OnSubmit))]
 internal static class TerminalSubmitPatch
 {
     /// <summary>
     /// Gets or sets set by the <see cref="ParseSentencePatch"/>, to allow the postfix to access the last parsed node.
     /// </summary>
-    public static TerminalNode LastNode { get; set; }
+    internal static TerminalNode? LastNode { get; set; }
 
     [HarmonyPrefix]
-    public static void Prefix()
+    private static void Prefix()
     {
         LastNode = null;
     }
 
     [HarmonyTranspiler]
-    public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+    private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        var code = instructions.ToArray();
+        CodeInstruction[] code = instructions.ToArray();
 
         // Backward scan for the reference to Select()
         for (int i = code.Length - 1; i >= 0; i--)
@@ -63,12 +67,12 @@ internal static class TerminalSubmitPatch
 
     private static void ReportTranspileError(string message)
     {
-        m_LogSource.LogError($"Failed to transpile OnSubmit to remove Scroll To Bottom. Did the method get modified in an update? ({message})");
-        m_LogSource.LogWarning("This won't break the mod, but it will cause some odd terminal scrolling behavior");
+        Log.Error($"Failed to transpile OnSubmit to remove Scroll To Bottom. Did the method get modified in an update? ({message})");
+        Log.Warn("This won't break the mod, but it will cause some odd terminal scrolling behavior");
     }
 
     [HarmonyPostfix]
-    public static void Postfix(Terminal __instance, ref Coroutine ___forceScrollbarCoroutine)
+    private static void Postfix(Terminal __instance, ref Coroutine? ___forceScrollbarCoroutine)
     {
         if (LastNode == null || LastNode.clearPreviousText)
         {
@@ -76,16 +80,16 @@ internal static class TerminalSubmitPatch
             return;
         }
 
-        __instance.StartCoroutine("forceScrollbarDown");
+        __instance.StartCoroutine(nameof(Terminal.forceScrollbarDown));
     }
 
-    private static void ExecuteScrollCoroutine(Terminal terminal, ref Coroutine forceScrollbarCoroutine)
+    private static void ExecuteScrollCoroutine(Terminal terminal, ref Coroutine? forceScrollbarCoroutine)
     {
         if (forceScrollbarCoroutine != null)
         {
             terminal.StopCoroutine(forceScrollbarCoroutine);
         }
 
-        forceScrollbarCoroutine = terminal.StartCoroutine("forceScrollbarUp");
+        forceScrollbarCoroutine = terminal.StartCoroutine(nameof(Terminal.forceScrollbarUp));
     }
 }
