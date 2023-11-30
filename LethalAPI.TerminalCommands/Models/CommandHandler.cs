@@ -47,7 +47,7 @@ public static class CommandHandler
         List<string> commandParts = matches.Cast<Match>().Select(x => x.Value.Trim('"', ' ')).ToList();
 
         // Handle interactions if any
-        if (Interactions.TryPop(out var interaction))
+        if (Interactions.Count != 0 && Interactions.Pop() is { } interaction)
         {
             try
             {
@@ -55,11 +55,11 @@ public static class CommandHandler
                 ArgumentStream interactionStream = new ArgumentStream(commandParts.ToArray());
 
                 // Fetch the service collection provided by the interaction, and add default services to it
-                var interactServices = interaction.Services;
+                ServiceCollection interactServices = interaction.Services;
                 interactServices.WithServices(interactionStream, terminal, interactionStream.Arguments);
 
                 // Handle execution of the interaction
-                var interactionResult = interaction.HandleTerminalResponse(interactionStream);
+                object? interactionResult = interaction.HandleTerminalResponse(interactionStream);
 
                 // Return result, or null cascade
                 if (interactionResult != null)
@@ -69,8 +69,9 @@ public static class CommandHandler
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.GetType().Name);
-                Console.WriteLine($"Error executing interaction: {ex.Message}, {ex.StackTrace}");
+                Log.Warn($"An error has occured while executing an interaction.");
+                if(Plugin.Instance.Config.Debug)
+                    Log.Exception(ex);
             }
         }
 
@@ -107,7 +108,7 @@ public static class CommandHandler
         }
 
         // Execute candidates
-        IOrderedEnumerable<(TerminalCommand Command, Func<TerminalNode> Invoker)> ordered = candidateCommands.OrderByDescending(x => x.command, Comparer); // Order candidates descending by priority, then argument count
+        IOrderedEnumerable<(TerminalCommand Command, Func<TerminalNode> Invoker)> ordered = candidateCommands.OrderByDescending(x => x.Command, Comparer); // Order candidates descending by priority, then argument count
 
         foreach (var (_, invoker) in ordered)
         {
