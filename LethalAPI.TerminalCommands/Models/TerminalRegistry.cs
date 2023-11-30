@@ -12,6 +12,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+
 using Attributes;
 
 /// <summary>
@@ -31,7 +32,8 @@ public class TerminalRegistry
     /// <typeparam name="T">Instance type.</typeparam>
     /// <param name="instance">Instance to execute commands in.</param>
     /// <returns>Token that can be used to register further commands, and also deregister commands when your mod unloads.</returns>
-    public static TerminalModRegistry RegisterFrom<T>(T instance) where T : class
+    public static TerminalModRegistry RegisterFrom<T>(T instance)
+        where T : class
     {
         var token = new TerminalModRegistry();
 
@@ -58,7 +60,7 @@ public class TerminalRegistry
     }
 
     /// <summary>
-    /// Registers a command instance. <see cref="RegisterFrom{T}(T)"/> is preferred. This method is primarily intended for internal use. 
+    /// Registers a command instance. <see cref="RegisterFrom{T}(T)"/> is preferred. This method is primarily intended for internal use.
     /// </summary>
     /// <param name="command"></param>
     public static void RegisterCommand(TerminalCommand command)
@@ -123,6 +125,7 @@ public class TerminalRegistry
         {
             return Enumerable.Empty<TerminalCommand>();
         }
+
         return overloads;
     }
 

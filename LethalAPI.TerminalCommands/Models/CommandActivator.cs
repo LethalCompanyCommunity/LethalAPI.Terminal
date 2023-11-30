@@ -9,6 +9,7 @@ namespace LethalAPI.TerminalCommands.Models;
 
 using System;
 using System.Reflection;
+
 using Attributes;
 using Interfaces;
 using UnityEngine;
@@ -18,7 +19,6 @@ using UnityEngine;
 /// </summary>
 public static class CommandActivator
 {
-
     /// <summary>
     /// Attempts to create a command invoker from a MethodInfo.
     /// </summary>
@@ -108,7 +108,6 @@ public static class CommandActivator
         }
 
         // Convert to auto-text response
-
         var response = ScriptableObject.CreateInstance<TerminalNode>();
         response.displayText = result.ToString() + '\n';
         response.clearPreviousText = clearConsole;

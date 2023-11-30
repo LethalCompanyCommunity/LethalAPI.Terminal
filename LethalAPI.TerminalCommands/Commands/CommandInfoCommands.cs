@@ -9,6 +9,7 @@ namespace LethalAPI.TerminalCommands.Commands;
 
 using System.Linq;
 using System.Text;
+
 using Attributes;
 using Models;
 
@@ -56,7 +57,6 @@ public class CommandInfoCommands
             builder.AppendLine($">{command.Name.ToUpper()} {command.Syntax?.ToUpper()}");
             builder.AppendLine(command.Description);
             builder.AppendLine();
-
         }
 
         return builder.ToString();

@@ -9,6 +9,7 @@ namespace LethalAPI.TerminalCommands.Models;
 
 using System;
 using System.Linq;
+
 using Attributes;
 using GameNetcodeStuff;
 
@@ -30,6 +31,7 @@ public static class DefaultStringConverters
         {
             return value;
         }
+
         throw new ArgumentException();
     }
 
@@ -40,6 +42,7 @@ public static class DefaultStringConverters
         {
             return value;
         }
+
         throw new ArgumentException();
     }
 
@@ -50,6 +53,7 @@ public static class DefaultStringConverters
         {
             return value;
         }
+
         throw new ArgumentException();
     }
 
@@ -60,6 +64,7 @@ public static class DefaultStringConverters
         {
             return value;
         }
+
         throw new ArgumentException();
     }
 
@@ -70,6 +75,7 @@ public static class DefaultStringConverters
         {
             return value;
         }
+
         throw new ArgumentException();
     }
 
@@ -80,6 +86,7 @@ public static class DefaultStringConverters
         {
             return value;
         }
+
         throw new ArgumentException();
     }
 
@@ -90,6 +97,7 @@ public static class DefaultStringConverters
         {
             return value;
         }
+
         throw new ArgumentException();
     }
 
@@ -100,6 +108,7 @@ public static class DefaultStringConverters
         {
             return value;
         }
+
         throw new ArgumentException();
     }
 
@@ -110,6 +119,7 @@ public static class DefaultStringConverters
         {
             return value;
         }
+
         throw new ArgumentException();
     }
 
@@ -120,6 +130,7 @@ public static class DefaultStringConverters
         {
             return value;
         }
+
         throw new ArgumentException();
     }
 
@@ -130,6 +141,7 @@ public static class DefaultStringConverters
         {
             return value;
         }
+
         throw new ArgumentException();
     }
 
@@ -147,6 +159,7 @@ public static class DefaultStringConverters
             player = StartOfRound.Instance.allPlayerScripts
                 .FirstOrDefault(x => x.playerSteamId == steamID);
         }
+
         if (player == null)
         {
             player = StartOfRound.Instance.allPlayerScripts

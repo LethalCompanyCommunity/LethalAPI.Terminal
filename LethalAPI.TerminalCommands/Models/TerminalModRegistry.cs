@@ -23,7 +23,8 @@ public class TerminalModRegistry
     /// Creates a new instance of the specified type, and registers all commands from it.
     /// </summary>
     /// <typeparam name="T">The type to register commands from.</typeparam>
-    public T RegisterFrom<T>() where T : class, new()
+    public T RegisterFrom<T>()
+        where T : class, new()
     {
         return RegisterFrom(new T());
     }
@@ -33,7 +34,8 @@ public class TerminalModRegistry
     /// </summary>
     /// <typeparam name="T">Generic class type.</typeparam>
     /// <param name="instance">Instance to execute commands in.</param>
-    public T RegisterFrom<T>(T instance) where T : class
+    public T RegisterFrom<T>(T instance)
+        where T : class
     {
         foreach (var method in TerminalRegistry.GetCommandMethods<T>())
         {

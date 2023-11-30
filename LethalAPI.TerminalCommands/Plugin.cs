@@ -8,6 +8,7 @@
 namespace LethalAPI.TerminalCommands;
 
 using System;
+
 using Commands;
 using Core;
 using HarmonyLib;

@@ -100,7 +100,6 @@ public class TerminalInteraction : ITerminalInteraction
         return this;
     }
 
-
     /// <summary>
     /// Sets the command response. This is the response message to prompt the user for further input.
     /// </summary>
@@ -115,7 +114,6 @@ public class TerminalInteraction : ITerminalInteraction
 
         return this;
     }
-
 
     /// <summary>
     /// Sets the command response. This is the response message to prompt the user for further input.

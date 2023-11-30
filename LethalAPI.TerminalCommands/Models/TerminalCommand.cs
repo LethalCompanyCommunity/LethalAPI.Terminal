@@ -1,4 +1,4 @@
-﻿.// -----------------------------------------------------------------------
+﻿// -----------------------------------------------------------------------
 // <copyright file="TerminalCommand.cs" company="LethalAPI Modding Community">
 // Copyright (c) LethalAPI Modding Community. All rights reserved.
 // Licensed under the LGPL-3.0 license.
@@ -11,6 +11,7 @@ namespace LethalAPI.TerminalCommands.Models;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+
 using Attributes;
 
 /// <summary>
@@ -79,7 +80,6 @@ public class TerminalCommand
     /// Gets command execution priority, with a default of 0.
     /// </summary>
     public int Priority { get; }
-
 
     /// <summary>
     /// Parses a command from an instance, optionally overriding the command name.

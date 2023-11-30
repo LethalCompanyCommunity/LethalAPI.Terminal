@@ -10,6 +10,7 @@ namespace LethalAPI.TerminalCommands.Models;
 using System;
 using System.Collections.Concurrent;
 using System.Reflection;
+
 using Attributes;
 
 /// <summary>
@@ -81,7 +82,8 @@ public static class StringConverter
     /// <typeparam name="T">Type to register from.</typeparam>
     /// <param name="instance">Class instance.</param>
     /// <param name="replaceExisting">When <see langword="true"/>, existing converters for types will be replaced.</param>
-    public static void RegisterFrom<T>(T instance, bool replaceExisting = true) where T : class
+    public static void RegisterFrom<T>(T instance, bool replaceExisting = true)
+        where T : class
     {
         RegisterFromType(typeof(T), instance, replaceExisting);
     }

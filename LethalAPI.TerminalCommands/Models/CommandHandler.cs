@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+
 using Interfaces;
 using UnityEngine;
 
@@ -46,7 +47,6 @@ public static class CommandHandler
         var commandParts = matches.Cast<Match>().Select(x => x.Value.Trim('"', ' '));
 
         // Handle interactions if any
-
         if (Interactions.TryPop(out var interaction))
         {
             try
@@ -75,7 +75,6 @@ public static class CommandHandler
         }
 
         // Handle command interpretation
-
         var commandName = commandParts.First();
         var commandArguments = commandParts.Skip(1).ToArray();
 
@@ -87,7 +86,6 @@ public static class CommandHandler
         var services = new ServiceCollection(commandArguments, argumentStream, terminal);
 
         // Evaluate candidates
-
         for (int i = 0; i < overloads.Length; i++)
         {
             var registeredCommand = overloads[i];
