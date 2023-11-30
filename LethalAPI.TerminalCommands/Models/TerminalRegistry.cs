@@ -24,7 +24,7 @@ public class TerminalRegistry
     /// Dictionary containing all registered commands. You shouldn't be interfacing with this directly, instead use the APIs exposed by this class, or <see cref="TerminalModRegistry"/>.
     /// You can enumerate registered commands using <see cref="EnumerateCommands()"/> and <see cref="EnumerateCommands(string)"/>.
     /// </summary>
-    private static readonly ConcurrentDictionary<string, List<TerminalCommand>> m_RegisteredCommands = new ConcurrentDictionary<string, List<TerminalCommand>>(StringComparer.InvariantCultureIgnoreCase);
+    private static readonly ConcurrentDictionary<string, List<TerminalCommand>> RegisteredCommands = new ConcurrentDictionary<string, List<TerminalCommand>>(StringComparer.InvariantCultureIgnoreCase);
 
     /// <summary>
     /// Automatically registers all terminal commands from an instance, and returns a commands <see cref="TerminalModRegistry"/> token, which should be used to deregister all terminal commands when your mod unloads.
@@ -67,10 +67,10 @@ public class TerminalRegistry
     {
         List<TerminalCommand> commands;
 
-        if (!m_RegisteredCommands.TryGetValue(command.Name, out commands))
+        if (!RegisteredCommands.TryGetValue(command.Name, out commands))
         {
             commands = new List<TerminalCommand>();
-            m_RegisteredCommands[command.Name] = commands;
+            RegisteredCommands[command.Name] = commands;
         }
 
         lock (commands)
@@ -88,7 +88,7 @@ public class TerminalRegistry
     /// <param name="command">Command instance to deregister.</param>
     public static void Deregister(TerminalCommand command)
     {
-        if (!m_RegisteredCommands.TryGetValue(command.Name, out List<TerminalCommand>? overloads))
+        if (!RegisteredCommands.TryGetValue(command.Name, out List<TerminalCommand>? overloads))
         {
             return;
         }
@@ -106,7 +106,7 @@ public class TerminalRegistry
     /// <returns>List of commands.</returns>
     public static IReadOnlyList<TerminalCommand> GetCommands(string commandName)
     {
-        if (m_RegisteredCommands.TryGetValue(commandName, out List<TerminalCommand>? commands))
+        if (RegisteredCommands.TryGetValue(commandName, out List<TerminalCommand>? commands))
         {
             return commands;
         }
@@ -121,7 +121,7 @@ public class TerminalRegistry
     /// <returns>Command enumerable.</returns>
     public static IEnumerable<TerminalCommand> EnumerateCommands(string name)
     {
-        if (!m_RegisteredCommands.TryGetValue(name, out List<TerminalCommand>? overloads))
+        if (!RegisteredCommands.TryGetValue(name, out List<TerminalCommand>? overloads))
         {
             return Enumerable.Empty<TerminalCommand>();
         }
@@ -135,11 +135,11 @@ public class TerminalRegistry
     /// <returns>All terminal command instances.</returns>
     public static IEnumerable<TerminalCommand> EnumerateCommands()
     {
-        string[] keys = m_RegisteredCommands.Keys.ToArray();
+        string[] keys = RegisteredCommands.Keys.ToArray();
 
         for (int i = 0; i < keys.Length; i++)
         {
-            List<TerminalCommand> overloads = m_RegisteredCommands[keys[i]];
+            List<TerminalCommand> overloads = RegisteredCommands[keys[i]];
 
             for (int c = 0; c < overloads.Count; c++)
             {

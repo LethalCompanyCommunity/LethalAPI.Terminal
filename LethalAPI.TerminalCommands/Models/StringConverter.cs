@@ -27,17 +27,17 @@ public delegate object StringConversionHandler(string input);
 public static class StringConverter
 {
     /// <summary>
+    /// Specifies if the default string converters have been registered yet.
+    /// </summary>
+    private static bool initialized;
+
+    /// <summary>
     /// Gets the registry of string converters.
     /// </summary>
     /// <remarks>
     /// Register new converters using <see cref="RegisterFrom{T}(T, bool)"/>.
     /// </remarks>
     public static ConcurrentDictionary<Type, StringConversionHandler> StringConverters { get; } = new ();
-
-    /// <summary>
-    /// Specifies if the default string converters have been registered yet.
-    /// </summary>
-    private static bool m_Initialized = false;
 
     /// <summary>
     /// Attempts to convert the specified string to the specified type.
@@ -48,9 +48,9 @@ public static class StringConverter
     /// <returns><see langword="true"/> if the string could be parsed as the specified type.</returns>
     public static bool TryConvert(string value, Type type, out object result)
     {
-        if (!m_Initialized)
+        if (!initialized)
         {
-            m_Initialized = true;
+            initialized = true;
             RegisterFromType(typeof(DefaultStringConverters), replaceExisting: false);
         }
 

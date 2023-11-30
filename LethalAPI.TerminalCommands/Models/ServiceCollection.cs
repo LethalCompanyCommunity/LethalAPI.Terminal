@@ -18,7 +18,7 @@ public struct ServiceCollection
     /// <summary>
     /// Type -> Service Instance mapping for services registered to this container.
     /// </summary>
-    private Dictionary<Type, object> m_Services = new Dictionary<Type, object>();
+    private readonly Dictionary<Type, object> services = new Dictionary<Type, object>();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ServiceCollection"/> struct.
@@ -46,13 +46,13 @@ public struct ServiceCollection
     /// <returns><see langword="true"/> if the service could be fetched from the container.</returns>
     public bool TryGetService(Type t, out object service)
     {
-        if (m_Services == null)
+        if (services == null)
         {
             service = null;
             return false;
         }
 
-        return m_Services.TryGetValue(t, out service);
+        return services.TryGetValue(t, out service);
     }
 
     /// <summary>
@@ -62,33 +62,33 @@ public struct ServiceCollection
     /// <param name="instance">Service instance to register.</param>
     public void WithService<T>(T instance)
     {
-        if (m_Services == null)
+        if (services == null)
         {
             return;
         }
 
-        m_Services[typeof(T)] = instance;
+        services[typeof(T)] = instance;
     }
 
     /// <summary>
     /// Copies an array of services into the container, overriding any existing services of the same time.
     /// </summary>
-    /// <param name="services">Services to register.</param>
-    public void WithServices(params object[] services)
+    /// <param name="servicesToRegister">Services to register.</param>
+    public void WithServices(params object[] servicesToRegister)
     {
-        if (m_Services == null)
+        if (this.services == null)
         {
             return;
         }
 
-        foreach (object? service in services)
+        foreach (object? service in servicesToRegister)
         {
             if (service == null)
             {
                 continue;
             }
 
-            m_Services.Add(service.GetType(), service);
+            this.services.Add(service.GetType(), service);
         }
     }
 }

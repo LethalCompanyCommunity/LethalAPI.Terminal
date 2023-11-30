@@ -28,12 +28,12 @@ public static class CommandHandler
     /// <summary>
     /// Regex to split a command by spaces, while grouping sections of a command in quotations (").
     /// </summary>
-    private static readonly Regex m_SplitRegex = new Regex(@"[\""](.+?)[\""]|([^ ]+)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase);
+    private static readonly Regex SplitRegex = new Regex(@"[\""](.+?)[\""]|([^ ]+)", RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase);
 
     /// <summary>
     /// Orders <see cref="TerminalCommand"/> instances by descending by priority, then by argument count.
     /// </summary>
-    private static readonly CommandComparer m_Comparer = new CommandComparer();
+    private static readonly CommandComparer Comparer = new CommandComparer();
 
     /// <summary>
     /// Finds a list of matching command candidates, then tries to execute them in weighted order, returning the first response provided.
@@ -43,7 +43,7 @@ public static class CommandHandler
     /// <returns>A <see cref="TerminalNode"/> response, or <see langword="null"/> if execution should fall-through to the game's command handler.</returns>
     public static TerminalNode TryExecute(string command, Terminal terminal)
     {
-        MatchCollection matches = m_SplitRegex.Matches(command.Trim());
+        MatchCollection matches = SplitRegex.Matches(command.Trim());
         IEnumerable<string> commandParts = matches.Cast<Match>().Select(x => x.Value.Trim('"', ' '));
 
         // Handle interactions if any
@@ -107,7 +107,7 @@ public static class CommandHandler
         }
 
         // Execute candidates
-        IOrderedEnumerable<(TerminalCommand Command, Func<TerminalNode> Invoker)> ordered = candidateCommands.OrderByDescending(x => x.command, m_Comparer); // Order candidates descending by priority, then argument count
+        IOrderedEnumerable<(TerminalCommand Command, Func<TerminalNode> Invoker)> ordered = candidateCommands.OrderByDescending(x => x.command, Comparer); // Order candidates descending by priority, then argument count
 
         foreach (var (registeredCommand, invoker) in ordered)
         {
