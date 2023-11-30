@@ -187,6 +187,25 @@ dotnet_style_qualification_for_event = false:silent
 
 resharper_comment_typo_highlighting=none
 
+[LethalAPI.TerminalCommands/Patches/**.cs]
+# SA1202: Internal members before private members. - Patches should always come before helper methods.
+dotnet_diagnostic.SA1202.severity = none
+
+# SA1313: 
+dotnet_diagnostic.SA1313.severity = none
+
+# SA1649: Filename should match class name.
+dotnet_diagnostic.SA1649.severity = none
+
+# SA1402: Only one class should be in a file.
+dotnet_diagnostic.SA1402.severity = none
+
+resharper_unused_parameter_local_highlighting=none
+resharper_unused_member_local_highlighting=none
+resharper_string_literal_typo_highlighting=none
+resharper_identifier_typo_highlighting=none
+resharper_comment_typo_highlighting=none
+
 [Plugin.cs]
 resharper_unused_auto_property_accessor_global_highlighting = none
 
