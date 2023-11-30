@@ -28,5 +28,5 @@ public enum AllowedCaller
     /// <remarks>
     /// Beyond access control, this permission level can be useful to restrict commands that can only execute on the host system.
     /// </remarks>
-    Host = 1
+    Host = 1,
 }

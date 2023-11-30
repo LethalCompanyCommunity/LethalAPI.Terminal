@@ -24,6 +24,7 @@ internal static class SelectTextFieldPatch
         return false;
     }
 
+    // ReSharper disable once RedundantAssignment
     [HarmonyPostfix]
     private static void Postfix(Terminal __instance, ref IEnumerator __result)
     {

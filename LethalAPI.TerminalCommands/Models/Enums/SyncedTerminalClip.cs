@@ -34,5 +34,5 @@ public enum SyncedTerminalClip
     /// <remarks>
     /// Network synced audio effect.
     /// </remarks>
-    BroadcastEffect = 2
+    BroadcastEffect = 2,
 }
