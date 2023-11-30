@@ -5,11 +5,10 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace LethalAPI.TerminalCommands;
+namespace LethalAPI.TerminalCommands.Patches;
 
 using HarmonyLib;
-using Models;
-using Patches;
+using LethalAPI.TerminalCommands.Models;
 using UnityEngine.Video;
 
 /// <summary>
