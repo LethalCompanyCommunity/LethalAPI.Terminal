@@ -40,7 +40,7 @@
       <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
       <Copyright>Copyright (c) LethalAPI Modding Community. All rights reserved. Licensed under the LGPL-3.0 license.</Copyright>
       <PackageProjectUrl>https://github.com/LethalCompany/LethalCompanyModdingWiki/wiki</PackageProjectUrl>
-      <PackageLicense>https://github.com/LethalCompany/LethalAPI.TerminalCommands/LICENSE</PackageLicense>
+      <PackageLicense>https://github.com/LethalCompany/LethalAPI.TerminalCommands/blob/master/LICENSE.txt</PackageLicense>
       <PackageIcon>LethalAPITemplateIcon.png</PackageIcon>
       <RepositoryUrl>https://github.com/LethalCompany/LethalAPI.TerminalCommands</RepositoryUrl>
       <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
