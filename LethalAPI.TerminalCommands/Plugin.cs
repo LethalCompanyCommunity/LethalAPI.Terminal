@@ -65,6 +65,6 @@ public class Plugin : LethalAPI.Core.Features.Plugin<Config>
         // Register commands, don't care about the instance
         this.Terminal.RegisterFrom<CommandInfoCommands>();
 
-        Log.Info($"Started plugin &3LethalAPI.TerminalCommands &gv1.0.0 &rby &7LethalAPI Modding Community&r.{(this.Config.Debug ? " [&2Debug&r]" : string.Empty)}");
+        Log.Debug($"Started {this.Name} successfully.");
     }
 }
