@@ -73,7 +73,7 @@ public class ArgumentStream
     /// </summary>
     /// <param name="result">The remaining text in the stream.</param>
     /// <returns><see langword="true"/> if there was next to read, otherwise the end of the stream has been reached.</returns>
-    public bool TryReadRemaining(out string? result)
+    public bool TryReadRemaining([NotNullWhen(true)]out string? result)
     {
         if (EndOfStream)
         {

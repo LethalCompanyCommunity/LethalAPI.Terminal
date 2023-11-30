@@ -9,6 +9,7 @@ namespace LethalAPI.TerminalCommands.Models;
 
 using System;
 using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 using Attributes;
@@ -46,7 +47,7 @@ public static class StringConverter
     /// <param name="type">The type to parse the string as.</param>
     /// <param name="result">Resulting object instance, or <see langword="null"/>.</param>
     /// <returns><see langword="true"/> if the string could be parsed as the specified type.</returns>
-    public static bool TryConvert(string value, Type type, out object result)
+    public static bool TryConvert(string value, Type type, [NotNullWhen(true)] out object? result)
     {
         if (!initialized)
         {
@@ -98,7 +99,7 @@ public static class StringConverter
     /// <param name="type">The class type to register from.</param>
     /// <param name="instance">Class instance, or null if the class is static.</param>
     /// <param name="replaceExisting">When <see langword="true"/>, existing converters for types will be replaced.</param>
-    public static void RegisterFromType(Type type, object instance = null, bool replaceExisting = true)
+    public static void RegisterFromType(Type type, object? instance = null, bool replaceExisting = true)
     {
         foreach (MethodInfo method in type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static))
         {

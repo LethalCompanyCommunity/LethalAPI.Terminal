@@ -62,11 +62,6 @@ public class TerminalModRegistry
     /// </summary>
     public void Deregister()
     {
-        if (Commands == null)
-        {
-            return;
-        }
-
         for (int i = 0; i < Commands.Count; i++)
         {
             TerminalRegistry.Deregister(Commands[i]);

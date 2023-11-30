@@ -230,7 +230,7 @@ public static class DefaultStringConverters
             throw new ArgumentException("Game has not started");
         }
 
-        PlayerControllerB player = null;
+        PlayerControllerB? player = null;
         if (ulong.TryParse(input, out ulong steamID))
         {
             player = StartOfRound.Instance.allPlayerScripts.FirstOrDefault(x => x.playerSteamId == steamID);

@@ -41,7 +41,7 @@ public static class CommandHandler
     /// <param name="command">Command text to parse and execute.</param>
     /// <param name="terminal">Terminal instance that raised the command.</param>
     /// <returns>A <see cref="TerminalNode"/> response, or <see langword="null"/> if execution should fall-through to the game's command handler.</returns>
-    public static TerminalNode TryExecute(string command, Terminal terminal)
+    public static TerminalNode? TryExecute(string command, Terminal terminal)
     {
         MatchCollection matches = SplitRegex.Matches(command.Trim());
         IEnumerable<string> commandParts = matches.Cast<Match>().Select(x => x.Value.Trim('"', ' '));

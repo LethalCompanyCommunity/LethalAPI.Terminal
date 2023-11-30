@@ -8,6 +8,7 @@
 namespace LethalAPI.TerminalCommands.Models;
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 using Attributes;
@@ -27,7 +28,7 @@ public static class CommandActivator
     /// <param name="method">Method info that represents the terminal command.</param>
     /// <param name="invoker">Resulting invoker for the terminal command.</param>
     /// <returns><see langword="true"/> if the provided arguments and services are sufficient to invoke the command.</returns>
-    public static bool TryCreateInvoker(ArgumentStream arguments, ServiceCollection services, MethodInfo method, out Func<object, object> invoker)
+    public static bool TryCreateInvoker(ArgumentStream arguments, ServiceCollection services, MethodInfo method, [NotNullWhen(true)] out Func<object, object>? invoker)
     {
         TerminalCommandAttribute? commandAttribute = method.GetCustomAttribute<TerminalCommandAttribute>();
 
@@ -42,7 +43,7 @@ public static class CommandActivator
             ParameterInfo parameter = parameters[i];
             Type type = parameter.ParameterType;
 
-            if (services.TryGetService(type, out object service))
+            if (services.TryGetService(type, out object? service))
             {
                 values[i] = service;
                 continue;
@@ -68,7 +69,7 @@ public static class CommandActivator
         }
 
         arguments.Reset();
-        invoker = (instance) => ExecuteCommand(method, instance, values, commandAttribute?.ClearText ?? false);
+        invoker = (instance) => ExecuteCommand(method, instance, values, commandAttribute?.ClearText ?? false)!;
         return true;
     }
 
@@ -77,10 +78,10 @@ public static class CommandActivator
     /// </summary>
     /// <param name="method">The method to invoke.</param>
     /// <param name="instance">The instance to execute the method with.</param>
-    /// <param name="arguments">Arguments used to execute this command. Must precisely match the parameters of <see cref="Method"/>.</param>
+    /// <param name="arguments">Arguments used to execute this command. Must precisely match the parameters of <see cref="method"/>.</param>
     /// <param name="clearConsole">Indicates whether the console should be cleared after execution.</param>
     /// <returns>Resulting <see cref="TerminalNode"/> response, an <see cref="Interfaces.ITerminalInteraction"/>, or <see langword="null"/>.</returns>
-    private static object ExecuteCommand(MethodInfo method, object instance, object[] arguments, bool clearConsole)
+    private static object? ExecuteCommand(MethodInfo method, object instance, object[] arguments, bool clearConsole)
     {
         object result;
         try

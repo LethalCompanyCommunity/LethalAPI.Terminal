@@ -9,6 +9,7 @@ namespace LethalAPI.TerminalCommands.Models;
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 /// <summary>
 /// A light-weight temporal service collection to provide services for command execution.
@@ -44,7 +45,7 @@ public struct ServiceCollection
     /// <param name="t">Type of the service to fetch.</param>
     /// <param name="service">Service instance, or <see langword="null"/>.</param>
     /// <returns><see langword="true"/> if the service could be fetched from the container.</returns>
-    public bool TryGetService(Type t, out object service)
+    public bool TryGetService(Type t, [NotNullWhen(true)] out object? service)
     {
         if (services == null)
         {
@@ -67,6 +68,11 @@ public struct ServiceCollection
             return;
         }
 
+        if (instance is null)
+        {
+            return;
+        }
+
         services[typeof(T)] = instance;
     }
 
@@ -83,11 +89,6 @@ public struct ServiceCollection
 
         foreach (object? service in servicesToRegister)
         {
-            if (service == null)
-            {
-                continue;
-            }
-
             this.services.Add(service.GetType(), service);
         }
     }

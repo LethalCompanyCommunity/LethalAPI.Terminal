@@ -277,7 +277,7 @@ public class ConfirmInteraction : ITerminalInteraction
             return string.Empty;
         }
 
-        if (CommandActivator.TryCreateInvoker(arguments, Services, ConfirmHandler.GetMethodInfo(), out Func<object, object> invoker))
+        if (CommandActivator.TryCreateInvoker(arguments, Services, ConfirmHandler.GetMethodInfo(), out Func<object, object>? invoker))
         {
             return invoker(this.ConfirmHandler!.Target);
         }
@@ -297,7 +297,7 @@ public class ConfirmInteraction : ITerminalInteraction
             return string.Empty;
         }
 
-        if (CommandActivator.TryCreateInvoker(arguments, this.Services, this.DenyHandler.GetMethodInfo(), out Func<object, object> invoker))
+        if (CommandActivator.TryCreateInvoker(arguments, this.Services, this.DenyHandler.GetMethodInfo(), out Func<object, object>? invoker))
         {
             return invoker(DenyHandler.Target);
         }

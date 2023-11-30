@@ -21,7 +21,7 @@ using UnityEngine.Video;
 internal static class ParseSentencePatch
 {
     [HarmonyPrefix]
-    private static bool ParsePrefix(Terminal __instance, ref TerminalNode __state)
+    private static bool ParsePrefix(Terminal __instance, out TerminalNode? __state)
     {
         __state = null;
         string commandText = __instance.screenText.text.Substring(__instance.screenText.text.Length - __instance.textAdded);

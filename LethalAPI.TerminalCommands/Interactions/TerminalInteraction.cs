@@ -26,14 +26,6 @@ public class TerminalInteraction : ITerminalInteraction
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="TerminalInteraction"/> class.
-    /// Creates a blank terminal interaction.
-    /// </summary>
-    public TerminalInteraction()
-    {
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="TerminalInteraction"/> class.
     /// Creates an interaction with the specified prompt and handler.
     /// </summary>
     /// <param name="prompt">The response/prompt shown to the user.</param>
@@ -63,7 +55,7 @@ public class TerminalInteraction : ITerminalInteraction
     /// <summary>
     /// Gets the prompt displayed to the user.
     /// </summary>
-    public TerminalNode Prompt { get; private set; }
+    public TerminalNode Prompt { get; private set; } = null!;
 
     /// <summary>
     /// Gets the service collection containing the context for the handlers.
@@ -73,7 +65,7 @@ public class TerminalInteraction : ITerminalInteraction
     /// <summary>
     /// Gets a list of interaction handlers.
     /// </summary>
-    public List<Delegate> Handlers { get; } = new List<Delegate>()
+    public List<Delegate> Handlers { get; } = new List<Delegate>();
 
     /// <summary>
     /// Adds a number of services to the container used to invoke the handlers.
@@ -96,7 +88,7 @@ public class TerminalInteraction : ITerminalInteraction
     /// <returns>Parent terminal interaction.</returns>
     public TerminalInteraction WithPrompt(TerminalNode prompt)
     {
-        Prompt = prompt;
+        this.Prompt = prompt;
         return this;
     }
 
@@ -149,7 +141,7 @@ public class TerminalInteraction : ITerminalInteraction
     /// </summary>
     /// <param name="arguments">User provided arguments.</param>
     /// <returns>Object representing the response of this interaction, or <see langword="null"/> if execution should fall through to the parent interaction, or command handler.</returns>
-    public object HandleTerminalResponse(ArgumentStream arguments)
+    public object? HandleTerminalResponse(ArgumentStream arguments)
     {
         // Converts all delegates into a list of Method Info and instances, ordered descending by parameter count (execution order)
         List<(MethodInfo info, object instance)> handlers =
@@ -163,7 +155,7 @@ public class TerminalInteraction : ITerminalInteraction
             MethodInfo method = handler.GetMethodInfo();
 
             arguments.Reset();
-            if (CommandActivator.TryCreateInvoker(arguments, Services, method, out Func<object, object> invoker))
+            if (CommandActivator.TryCreateInvoker(arguments, Services, method, out Func<object, object>? invoker))
             {
                 object result = invoker(handler.Target);
 

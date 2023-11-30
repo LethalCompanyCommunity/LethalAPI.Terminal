@@ -10,6 +10,7 @@ namespace LethalAPI.TerminalCommands.Models;
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 using Attributes;
@@ -145,11 +146,11 @@ public class TerminalCommand
     /// <param name="services">The light-weight temporal service collection to provide services for command execution.</param>
     /// <param name="invoker">Delegate that executes the command using the specified arguments.</param>
     /// <returns><see langword="true"/> if the provided arguments match the signature for this command, and could be parsed correctly.</returns>
-    public bool TryCreateInvoker(ArgumentStream arguments, ServiceCollection services, out Func<object>? invoker)
+    public bool TryCreateInvoker(ArgumentStream arguments, ServiceCollection services, [NotNullWhen(true)] out Func<object>? invoker)
     {
         arguments.Reset();
 
-        if (CommandActivator.TryCreateInvoker(arguments, services, Method, out Func<object, object> activatedInvoker))
+        if (CommandActivator.TryCreateInvoker(arguments, services, Method, out Func<object, object>? activatedInvoker))
         {
             invoker = () => activatedInvoker(Instance);
             return true;
