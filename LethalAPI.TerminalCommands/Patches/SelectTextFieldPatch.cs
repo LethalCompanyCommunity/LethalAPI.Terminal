@@ -35,6 +35,5 @@ internal static class SelectTextFieldPatch
         yield return new WaitForSeconds(0.2f);
         terminal.screenText.ActivateInputField();
         terminal.screenText.Select();
-        yield break;
     }
 }
