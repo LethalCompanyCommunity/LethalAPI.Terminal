@@ -28,7 +28,7 @@ public static class TerminalExtensions
     /// <param name="filePath">Path to the video to play.</param>
     public static void PlayVideoFile(this Terminal terminal, string filePath)
     {
-        var uri = "file:///" + filePath.Replace('\\', '/');
+        string uri = "file:///" + filePath.Replace('\\', '/');
         terminal.PlayVideoLink(uri);
     }
 

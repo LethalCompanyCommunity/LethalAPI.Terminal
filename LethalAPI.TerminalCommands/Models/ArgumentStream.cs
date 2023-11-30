@@ -10,6 +10,7 @@
 namespace LethalAPI.TerminalCommands.Models;
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 /// <summary>
@@ -56,7 +57,7 @@ public class ArgumentStream
     /// <param name="type">The type to parse the string as.</param>
     /// <param name="value">Resulting object instance.</param>
     /// <returns><see langword="true"/> if the string could be parsed as the specified type.</returns>
-    public bool TryReadNext(Type type, out object? value)
+    public bool TryReadNext(Type type, [NotNullWhen(true)]out object? value)
     {
         if (EndOfStream)
         {

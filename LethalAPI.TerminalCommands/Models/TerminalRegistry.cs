@@ -35,11 +35,11 @@ public class TerminalRegistry
     public static TerminalModRegistry RegisterFrom<T>(T instance)
         where T : class
     {
-        var token = new TerminalModRegistry();
+        TerminalModRegistry token = new TerminalModRegistry();
 
-        foreach (var method in GetCommandMethods<T>())
+        foreach (MethodInfo? method in GetCommandMethods<T>())
         {
-            var command = TerminalCommand.FromMethod(method, instance);
+            TerminalCommand command = TerminalCommand.FromMethod(method, instance);
             RegisterCommand(command);
 
             token.Commands.Add(command);
@@ -88,7 +88,7 @@ public class TerminalRegistry
     /// <param name="command">Command instance to deregister.</param>
     public static void Deregister(TerminalCommand command)
     {
-        if (!m_RegisteredCommands.TryGetValue(command.Name, out var overloads))
+        if (!m_RegisteredCommands.TryGetValue(command.Name, out List<TerminalCommand>? overloads))
         {
             return;
         }
@@ -106,7 +106,7 @@ public class TerminalRegistry
     /// <returns>List of commands.</returns>
     public static IReadOnlyList<TerminalCommand> GetCommands(string commandName)
     {
-        if (m_RegisteredCommands.TryGetValue(commandName, out var commands))
+        if (m_RegisteredCommands.TryGetValue(commandName, out List<TerminalCommand>? commands))
         {
             return commands;
         }
@@ -121,7 +121,7 @@ public class TerminalRegistry
     /// <returns>Command enumerable.</returns>
     public static IEnumerable<TerminalCommand> EnumerateCommands(string name)
     {
-        if (!m_RegisteredCommands.TryGetValue(name, out var overloads))
+        if (!m_RegisteredCommands.TryGetValue(name, out List<TerminalCommand>? overloads))
         {
             return Enumerable.Empty<TerminalCommand>();
         }
@@ -135,11 +135,11 @@ public class TerminalRegistry
     /// <returns>All terminal command instances.</returns>
     public static IEnumerable<TerminalCommand> EnumerateCommands()
     {
-        var keys = m_RegisteredCommands.Keys.ToArray();
+        string[] keys = m_RegisteredCommands.Keys.ToArray();
 
         for (int i = 0; i < keys.Length; i++)
         {
-            var overloads = m_RegisteredCommands[keys[i]];
+            List<TerminalCommand> overloads = m_RegisteredCommands[keys[i]];
 
             for (int c = 0; c < overloads.Count; c++)
             {
@@ -155,7 +155,7 @@ public class TerminalRegistry
     /// <returns>Enumerable of valid terminal command methods.</returns>
     public static IEnumerable<MethodInfo> GetCommandMethods<T>()
     {
-        foreach (var method in typeof(T).GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+        foreach (MethodInfo method in typeof(T).GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
         {
             if (method.GetCustomAttribute<TerminalCommandAttribute>() == null)
             {

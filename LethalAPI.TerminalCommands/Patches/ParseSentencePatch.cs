@@ -25,7 +25,7 @@ internal static class ParseSentencePatch
     public static bool ParsePrefix(Terminal __instance, ref TerminalNode __state)
     {
         __state = null;
-        var commandText = __instance.screenText.text.Substring(__instance.screenText.text.Length - __instance.textAdded);
+        string commandText = __instance.screenText.text.Substring(__instance.screenText.text.Length - __instance.textAdded);
 
         __state = CommandHandler.TryExecute(commandText, __instance);
         return __state == null;

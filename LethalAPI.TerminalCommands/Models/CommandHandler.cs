@@ -43,8 +43,8 @@ public static class CommandHandler
     /// <returns>A <see cref="TerminalNode"/> response, or <see langword="null"/> if execution should fall-through to the game's command handler.</returns>
     public static TerminalNode TryExecute(string command, Terminal terminal)
     {
-        var matches = m_SplitRegex.Matches(command.Trim());
-        var commandParts = matches.Cast<Match>().Select(x => x.Value.Trim('"', ' '));
+        MatchCollection matches = m_SplitRegex.Matches(command.Trim());
+        IEnumerable<string> commandParts = matches.Cast<Match>().Select(x => x.Value.Trim('"', ' '));
 
         // Handle interactions if any
         if (Interactions.TryPop(out var interaction))
@@ -52,7 +52,7 @@ public static class CommandHandler
             try
             {
                 // Argument stream specifically for interactions, that provide the initial command name as part of arguments
-                var interactionStream = new ArgumentStream(commandParts.ToArray());
+                ArgumentStream interactionStream = new ArgumentStream(commandParts.ToArray());
 
                 // Fetch the service collection provided by the interaction, and add default services to it
                 var interactServices = interaction.Services;
@@ -75,43 +75,43 @@ public static class CommandHandler
         }
 
         // Handle command interpretation
-        var commandName = commandParts.First();
-        var commandArguments = commandParts.Skip(1).ToArray();
+        string commandName = commandParts.First();
+        string[] commandArguments = commandParts.Skip(1).ToArray();
 
-        var candidateCommands = new List<(TerminalCommand command, Func<TerminalNode> invoker)>();
+        List<(TerminalCommand Command, Func<TerminalNode> Invoker)> candidateCommands = new ();
 
-        var overloads = TerminalRegistry.GetCommands(commandName).ToArray();
+        TerminalCommand[] overloads = TerminalRegistry.GetCommands(commandName).ToArray();
 
-        var argumentStream = new ArgumentStream(commandArguments);
-        var services = new ServiceCollection(commandArguments, argumentStream, terminal);
+        ArgumentStream argumentStream = new (commandArguments);
+        ServiceCollection services = new (commandArguments, argumentStream, terminal);
 
         // Evaluate candidates
         for (int i = 0; i < overloads.Length; i++)
         {
-            var registeredCommand = overloads[i];
+            TerminalCommand registeredCommand = overloads[i];
 
             if (!registeredCommand.CheckAllowed())
             {
                 continue;
             }
 
-            if (!registeredCommand.TryCreateInvoker(argumentStream, services, out var invoker))
+            if (!registeredCommand.TryCreateInvoker(argumentStream, services, out Func<object>? invoker))
             {
                 continue;
             }
 
             // A pass-though delegate to execute interactions, and return the response `TerminalNode` or null
-            var passThrough = () => HandleCommandResult(invoker());
+            Func<TerminalNode> passThrough = () => HandleCommandResult(invoker());
 
             candidateCommands.Add((registeredCommand, passThrough));
         }
 
         // Execute candidates
-        var ordered = candidateCommands.OrderByDescending(x => x.command, m_Comparer); // Order candidates descending by priority, then argument count
+        IOrderedEnumerable<(TerminalCommand Command, Func<TerminalNode> Invoker)> ordered = candidateCommands.OrderByDescending(x => x.command, m_Comparer); // Order candidates descending by priority, then argument count
 
         foreach (var (registeredCommand, invoker) in ordered)
         {
-            var result = invoker();
+            TerminalNode? result = invoker();
 
             if (result != null)
             {

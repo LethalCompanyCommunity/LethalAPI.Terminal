@@ -53,7 +53,7 @@ public static class StringConverter
             RegisterFromType(typeof(DefaultStringConverters), replaceExisting: false);
         }
 
-        if (!StringConverters.TryGetValue(type, out var converter))
+        if (!StringConverters.TryGetValue(type, out StringConversionHandler? converter))
         {
             result = null;
             return false;
@@ -99,14 +99,14 @@ public static class StringConverter
     /// <param name="replaceExisting">When <see langword="true"/>, existing converters for types will be replaced.</param>
     public static void RegisterFromType(Type type, object instance = null, bool replaceExisting = true)
     {
-        foreach (var method in type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static))
+        foreach (MethodInfo method in type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static))
         {
             if (method.GetCustomAttribute<StringConverterAttribute>() == null)
             {
                 continue;
             }
 
-            var parameters = method.GetParameters();
+            ParameterInfo[] parameters = method.GetParameters();
 
             if (parameters.Length != 1)
             {
@@ -118,11 +118,9 @@ public static class StringConverter
                 continue;
             }
 
-            var resultingType = method.ReturnType;
+            Type resultingType = method.ReturnType;
 
-            var converter = new StringConversionHandler(
-                (value) => method.Invoke(instance, new object[] { value })
-            );
+            StringConversionHandler converter = (value) => method.Invoke(instance, new object[] { value });
 
             if (replaceExisting || !StringConverters.ContainsKey(resultingType))
             {

@@ -8,6 +8,7 @@
 namespace LethalAPI.TerminalCommands.Models;
 
 using System.Collections.Generic;
+using System.Reflection;
 
 /// <summary>
 /// A local terminal command registry for a mod. Allows all commands registered to an instance to be deregistered.
@@ -37,9 +38,9 @@ public class TerminalModRegistry
     public T RegisterFrom<T>(T instance)
         where T : class
     {
-        foreach (var method in TerminalRegistry.GetCommandMethods<T>())
+        foreach (MethodInfo? method in TerminalRegistry.GetCommandMethods<T>())
         {
-            var commandInstance = TerminalCommand.FromMethod(method, instance);
+            TerminalCommand commandInstance = TerminalCommand.FromMethod(method, instance);
 
             TerminalRegistry.RegisterCommand(commandInstance);
 

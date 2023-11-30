@@ -52,7 +52,7 @@ public class TerminalInteraction : ITerminalInteraction
     /// <param name="handler">The handler to receive the next terminal input.</param>
     public TerminalInteraction(Action<TerminalNode> promptBuilder, Delegate handler)
     {
-        var prompt = ScriptableObject.CreateInstance<TerminalNode>();
+        TerminalNode prompt = ScriptableObject.CreateInstance<TerminalNode>();
         promptBuilder(prompt);
 
         WithPrompt(prompt);
@@ -107,7 +107,7 @@ public class TerminalInteraction : ITerminalInteraction
     /// <returns>Parent terminal interaction.</returns>
     public TerminalInteraction WithPrompt(Action<TerminalNode> promptBuilder)
     {
-        var prompt = ScriptableObject.CreateInstance<TerminalNode>();
+        TerminalNode prompt = ScriptableObject.CreateInstance<TerminalNode>();
         promptBuilder(prompt);
 
         WithPrompt(prompt);
@@ -155,14 +155,14 @@ public class TerminalInteraction : ITerminalInteraction
                 .OrderByDescending(x => x.info.GetParameters().Length)
                 .ToList();
 
-        foreach (var handler in Handlers)
+        foreach (Delegate handler in Handlers)
         {
-            var method = handler.GetMethodInfo();
+            MethodInfo method = handler.GetMethodInfo();
 
             arguments.Reset();
-            if (CommandActivator.TryCreateInvoker(arguments, Services, method, out var invoker))
+            if (CommandActivator.TryCreateInvoker(arguments, Services, method, out Func<object, object> invoker))
             {
-                var result = invoker(handler.Target);
+                object result = invoker(handler.Target);
 
                 if (result != null)
                 {

@@ -81,7 +81,7 @@ public struct ServiceCollection
             return;
         }
 
-        foreach (var service in services)
+        foreach (object? service in services)
         {
             if (service == null)
             {

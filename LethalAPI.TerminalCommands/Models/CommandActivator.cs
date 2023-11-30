@@ -29,27 +29,27 @@ public static class CommandActivator
     /// <returns><see langword="true"/> if the provided arguments and services are sufficient to invoke the command.</returns>
     public static bool TryCreateInvoker(ArgumentStream arguments, ServiceCollection services, MethodInfo method, out Func<object, object> invoker)
     {
-        var commandAttribute = method.GetCustomAttribute<TerminalCommandAttribute>();
+        TerminalCommandAttribute? commandAttribute = method.GetCustomAttribute<TerminalCommandAttribute>();
 
-        var parameters = method.GetParameters();
+        ParameterInfo[] parameters = method.GetParameters();
 
-        var values = new object[parameters.Length];
+        object[] values = new object[parameters.Length];
 
         invoker = null;
 
         for (int i = 0; i < parameters.Length; i++)
         {
-            var parameter = parameters[i];
-            var type = parameter.ParameterType;
+            ParameterInfo parameter = parameters[i];
+            Type type = parameter.ParameterType;
 
-            if (services.TryGetService(type, out var service))
+            if (services.TryGetService(type, out object service))
             {
                 values[i] = service;
                 continue;
             }
             else if (type == typeof(string) && parameter.GetCustomAttribute<RemainingTextAttribute>() != null)
             {
-                if (arguments.TryReadRemaining(out var remaining))
+                if (arguments.TryReadRemaining(out string? remaining))
                 {
                     values[i] = remaining;
                     continue;
@@ -58,7 +58,7 @@ public static class CommandActivator
                 return false;
             }
 
-            if (arguments.TryReadNext(type, out var value))
+            if (arguments.TryReadNext(type, out object? value))
             {
                 values[i] = value;
                 continue;
@@ -96,7 +96,7 @@ public static class CommandActivator
             return null;
         }
 
-        var type = result.GetType();
+        Type type = result.GetType();
 
         if (typeof(TerminalNode).IsAssignableFrom(type))
         {
@@ -108,7 +108,7 @@ public static class CommandActivator
         }
 
         // Convert to auto-text response
-        var response = ScriptableObject.CreateInstance<TerminalNode>();
+        TerminalNode response = ScriptableObject.CreateInstance<TerminalNode>();
         response.displayText = result.ToString() + '\n';
         response.clearPreviousText = clearConsole;
 

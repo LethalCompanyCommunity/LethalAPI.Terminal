@@ -21,8 +21,8 @@ public static class TextUtil
     /// <returns>Resulting string with the minimum padding applied.</returns>
     public static string SetEndPadding(string text, char character, int minPadding)
     {
-        var result = text;
-        var newlineCount = 0;
+        string result = text;
+        int newlineCount = 0;
 
         for (int i = text.Length - 1; i >= 0; i--)
         {
@@ -36,7 +36,7 @@ public static class TextUtil
             }
         }
 
-        var newlinesRequired = minPadding - newlineCount;
+        int newlinesRequired = minPadding - newlineCount;
 
         if (newlinesRequired > 0)
         {
