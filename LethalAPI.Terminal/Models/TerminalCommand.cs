@@ -50,7 +50,7 @@ namespace LethalAPI.LibTerminal.Models
 		/// </summary>
 		public int Priority { get; }
 
-		private ManualLogSource m_LogSource = new ManualLogSource("LethalAPI.TerminalCommands");
+		private ManualLogSource m_LogSource = new ManualLogSource("LethalAPI.Terminal");
 
 		public TerminalCommand(string name, MethodInfo method, object instance, bool clearConsole, string syntax = null, string description = null, int priority = 0)
 		{

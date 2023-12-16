@@ -9,7 +9,7 @@
     <LangVersion>latest</LangVersion>
     <Authors>ShimmyMySherbet, LethalAPI Modding Team</Authors>
     <Company />
-    <RepositoryUrl>https://github.com/LethalCompany/LethalAPI.TerminalCommands</RepositoryUrl>
+    <RepositoryUrl>https://github.com/LethalCompany/LethalAPI.Terminal</RepositoryUrl>
     <PackageTags>LethalCompany LethalCompanyMods</PackageTags>
     <RootNamespace>LethalAPI.LibTerminal</RootNamespace>
   </PropertyGroup>

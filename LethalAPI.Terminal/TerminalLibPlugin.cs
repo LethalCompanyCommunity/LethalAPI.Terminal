@@ -6,7 +6,7 @@ using LethalAPI.LibTerminal.Models;
 namespace LethalAPI.LibTerminal
 {
 	[BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
-	public class TerminalCommandsPlugin : BaseUnityPlugin
+	public class TerminalLibPlugin : BaseUnityPlugin
 	{
 		private Harmony HarmonyInstance = new Harmony(PluginInfo.PLUGIN_GUID);
 
@@ -17,7 +17,7 @@ namespace LethalAPI.LibTerminal
 			Logger.LogInfo($"{PluginInfo.PLUGIN_GUID} is loading...");
 
 			Logger.LogInfo($"Installing patches");
-			HarmonyInstance.PatchAll(typeof(TerminalCommandsPlugin).Assembly);
+			HarmonyInstance.PatchAll(typeof(TerminalLibPlugin).Assembly);
 
 			Logger.LogInfo($"Registering built-in Commands");
 

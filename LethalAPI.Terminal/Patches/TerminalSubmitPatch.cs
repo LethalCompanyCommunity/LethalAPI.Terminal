@@ -21,7 +21,7 @@ namespace LethalAPI.LibTerminal.Patches
 		/// </summary>
 		public static TerminalNode LastNode { get; set; }
 
-		private static ManualLogSource m_LogSource = new ManualLogSource("LethalAPI.TerminalCommands");
+		private static ManualLogSource m_LogSource = new ManualLogSource("LethalAPI.Terminal");
 
 		[HarmonyPrefix]
 		public static void Prefix()
