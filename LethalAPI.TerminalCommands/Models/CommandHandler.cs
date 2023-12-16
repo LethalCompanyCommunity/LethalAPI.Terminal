@@ -59,7 +59,6 @@ namespace LethalAPI.TerminalCommands.Models
 
 			var interactionStream = new ArgumentStream(commandParts);
 
-
 			if (CurrentInterface != null)
 			{
 				// Redirect all terminal input to the current interface
@@ -105,7 +104,7 @@ namespace LethalAPI.TerminalCommands.Models
 					// Return result, or null cascade
 					if (interactionResult != null)
 					{
-						return HandleCommandResult(interactionResult);
+						return HandleCommandResult(interactionResult, terminal);
 					}
 				}
 				catch (Exception ex)
@@ -116,6 +115,29 @@ namespace LethalAPI.TerminalCommands.Models
 			}
 
 			return null;
+		}
+
+		/// <summary>
+		/// Executes a custom command from user input. 
+		/// </summary>
+		/// <param name="arguments">The full arguments to supply to the command</param>
+		/// <param name="terminal">The terminal instance that raised the input</param>
+		/// <returns>A resulting <seealso cref="TerminalNode"/> that represents the immediate response of the command.</returns>
+		/// <remarks>
+		/// Commands may also enter a terminal interaction, which consumes the next terminal input. 
+		/// Interactions can be handled by calling <seealso cref="ExecuteInteractions(ArgumentStream, Terminal)"/>, and only executing this method if it returns null
+		/// </remarks>
+		public static TerminalNode ExecuteCommand(ArgumentStream arguments, Terminal terminal)
+		{
+			arguments.Reset();
+			if (!arguments.TryReadNext(out string commandName))
+			{
+				return null;
+			}
+
+			var commandArguments = new ArgumentStream(arguments.Arguments.Skip(1));
+
+			return ExecuteCommand(commandName, commandArguments, terminal);
 		}
 
 		/// <summary>
@@ -157,7 +179,7 @@ namespace LethalAPI.TerminalCommands.Models
 				}
 
 				// A pass-though delegate to execute interactions, and return the response `TerminalNode` or null
-				var passThrough = () => HandleCommandResult(invoker());
+				var passThrough = () => HandleCommandResult(invoker(), terminal);
 
 				candidateCommands.Add((registeredCommand, passThrough));
 			}
@@ -183,7 +205,7 @@ namespace LethalAPI.TerminalCommands.Models
 		/// </summary>
 		/// <param name="result">Result to parse into a <seealso cref="TerminalNode"/></param>
 		/// <returns><seealso cref="TerminalNode"/> command display response</returns>
-		private static TerminalNode HandleCommandResult(object result)
+		private static TerminalNode HandleCommandResult(object result, Terminal terminal)
 		{
 			if (result is TerminalNode node)
 			{
@@ -194,6 +216,12 @@ namespace LethalAPI.TerminalCommands.Models
 			{
 				SetInteraction(interaction);
 				return interaction.Prompt;
+			}
+
+			if (result is ITerminalInterface terminalInterface)
+			{
+				SetInterface(terminalInterface);
+				return terminalInterface.GetSplashScreen(terminal);
 			}
 
 			return ScriptableObject.CreateInstance<TerminalNode>()
