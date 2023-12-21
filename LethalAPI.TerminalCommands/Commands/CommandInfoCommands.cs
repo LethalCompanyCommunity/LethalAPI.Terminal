@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -37,6 +37,9 @@ namespace LethalAPI.TerminalCommands.Commands
             builder.AppendLine("> SCAN");
             builder.AppendLine("To scan for the number of items left on the current planet");
             builder.AppendLine();
+            builder.AppendLine(">TRANSMIT [message]");
+			builder.AppendLine("Transmit a message with the signal translator");
+			builder.AppendLine();
 
             // Dynamically discovered commands
             // Get all methods from the current type

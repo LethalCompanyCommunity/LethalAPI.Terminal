@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection;
-using BepInEx.Logging;
 using LethalAPI.TerminalCommands.Attributes;
 using LethalAPI.TerminalCommands.Interfaces;
 using UnityEngine;
@@ -12,7 +11,6 @@ namespace LethalAPI.TerminalCommands.Models
 	/// </summary>
 	public static class CommandActivator
 	{
-
 		/// <summary>
 		/// Attempts to create a command invoker from a MethodInfo
 		/// </summary>
@@ -58,7 +56,7 @@ namespace LethalAPI.TerminalCommands.Models
 					continue;
 				}
 
-                return false;
+				return false;
 			}
 
 			arguments.Reset();
@@ -99,6 +97,10 @@ namespace LethalAPI.TerminalCommands.Models
 			else if (typeof(ITerminalInteraction).IsAssignableFrom(type))
 			{
 				return result; // Return terminal interaction
+			}
+			else if (typeof(ITerminalInterface).IsAssignableFrom(type))
+			{
+				return result; // Return new terminal interface
 			}
 
 			// Convert to auto-text response
