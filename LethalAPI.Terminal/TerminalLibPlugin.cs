@@ -5,8 +5,8 @@ using LethalAPI.LibTerminal.Models;
 
 namespace LethalAPI.LibTerminal
 {
-	[BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
-	public class TerminalLibPlugin : BaseUnityPlugin
+    [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
+	internal class TerminalLibPlugin : BaseUnityPlugin
 	{
 		private Harmony HarmonyInstance = new Harmony(PluginInfo.PLUGIN_GUID);
 

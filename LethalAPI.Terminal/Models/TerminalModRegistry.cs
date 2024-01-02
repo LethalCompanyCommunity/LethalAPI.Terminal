@@ -13,6 +13,11 @@ namespace LethalAPI.LibTerminal.Models
 		public List<TerminalCommand> Commands { get; } = new List<TerminalCommand>();
 
 		/// <summary>
+		/// String converters registered to this instance
+		/// </summary>
+		public List<RegisteredStringConverter> StringConverters { get; } = new List<RegisteredStringConverter>();
+
+		/// <summary>
 		/// Creates a new instance of the specified type, and registers all commands from it
 		/// </summary>
 		/// <typeparam name="T">The type to register commands from</typeparam>
@@ -40,25 +45,27 @@ namespace LethalAPI.LibTerminal.Models
 				}
 			}
 
-			StringConverter.RegisterFrom(instance);
+			StringConverters.AddRange(StringConverter.RegisterFrom(instance));
 
 			return instance;
 		}
 
 		/// <summary>
-		/// De-registers all commands that were previously registered to this container.
+		/// De-registers all commands and string converters that were previously registered to this container.
 		/// </summary>
 		public void Deregister()
 		{
-			if (Commands == null)
-			{
-				return;
-			}
-
 			for (int i = 0; i < Commands.Count; i++)
 			{
 				TerminalRegistry.Deregister(Commands[i]);
 			}
+			Commands.Clear();
+
+			for (int i = 0; i < StringConverters.Count; i++)
+			{
+				StringConverter.Deregister(StringConverters[i]);
+			}
+			StringConverters.Clear();
 		}
 	}
 }

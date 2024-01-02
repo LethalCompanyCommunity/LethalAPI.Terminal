@@ -7,10 +7,10 @@ using UnityEngine;
 
 namespace LethalAPI.LibTerminal.Models
 {
-	/// <summary>
-	/// Handles terminal command execution
-	/// </summary>
-	public static class CommandHandler
+    /// <summary>
+    /// Handles terminal command execution
+    /// </summary>
+    public static class CommandHandler
 	{
 		/// <summary>
 		/// The current interaction depth.
