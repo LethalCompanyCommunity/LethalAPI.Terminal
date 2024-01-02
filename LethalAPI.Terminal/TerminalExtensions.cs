@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using LethalAPI.LibTerminal.Patches;
 using UnityEngine;
 using UnityEngine.Video;
 
@@ -68,6 +69,34 @@ namespace LethalAPI.LibTerminal
 			terminal.videoPlayer.url = url;
 
 			terminal.videoPlayer.enabled = true;
+		}
+
+		/// <summary>
+		/// Gets the last loaded terminal node, or the terminal node that is currently being loaded.
+		/// </summary>
+		/// <remarks>
+		/// Differs from <seealso cref="Terminal.currentNode"/> in that this will also provide the node that is currently being loaded,
+		/// and not just the last node that was loaded.
+		/// </remarks>
+		/// <returns>The last loaded terminal node</returns>
+		public static TerminalNode GetLastLoadedNode()
+		{
+			// Exposes the last loaded node from the internal patch
+			return LoadNewNodePatch.LastLoadedNode;
+		}
+
+		/// <summary>
+		/// Gets the last loaded terminal node, or the terminal node that is currently being loaded.
+		/// </summary>
+		/// <remarks>
+		/// Differs from <seealso cref="Terminal.currentNode"/> in that this will also provide the node that is currently being loaded,
+		/// and not just the last node that was loaded.
+		/// </remarks>
+		/// <returns>The last loaded terminal node</returns>
+		public static TerminalNode GetLastLoadedNode(this Terminal terminal)
+		{
+			// Exposes the last loaded node from the internal patch
+			return LoadNewNodePatch.LastLoadedNode ?? terminal.currentNode;
 		}
 	}
 }

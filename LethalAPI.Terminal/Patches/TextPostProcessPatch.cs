@@ -23,11 +23,13 @@ namespace LethalAPI.LibTerminal.Patches
 		{
 			__state = null;
 
-			if (CommandHandler.CurrentInterface == null)
+			if (CommandHandler.CurrentInterface == null || CommandHandler.CurrentInterface.APITextPostProcessing)
 			{
-				modifiedDisplayText = TextUtil.SetEndPadding(modifiedDisplayText.TrimStart('\n', ' '), '\n', 2);
+				modifiedDisplayText = TextUtil.PostProcessResponse(__instance, modifiedDisplayText);
 				return true;
 			}
+
+			// Current interface is not null, pass text processing onto the current interface
 
 			var runVanilla = ProcessInterface(CommandHandler.CurrentInterface, ref modifiedDisplayText, __instance);
 

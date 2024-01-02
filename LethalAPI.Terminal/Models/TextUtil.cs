@@ -6,6 +6,33 @@
 	public static class TextUtil
 	{
 		/// <summary>
+		/// Performs the default LethalAPI.Terminal response text post processing.
+		/// </summary>
+		/// <remarks>
+		/// This method allows you perform the default text post processing inside of <seealso cref="Interfaces.ITerminalInterface.PreProcessText(Terminal, string)"/>,
+		/// when <seealso cref="Interfaces.ITerminalInterface.APITextPostProcessing"/> is set to <see langword="false"/>.
+		/// </remarks>
+		/// <param name="terminal">The terminal instance the text is being processed for</param>
+		/// <param name="message">The terminal text to post process</param>
+		/// <returns>Response text to write to the terminal screen</returns>
+		public static string PostProcessResponse(Terminal terminal, string message)
+		{
+			if (terminal.GetLastLoadedNode()?.clearPreviousText ?? false)
+			{
+				// Previous node cleared the screen, set padding to 2 to prevent clipping with credits count
+				message = message.SetStartPadding('\n', 2);
+			}
+			else
+			{
+				message = message.TrimStart('\n', ' ');
+			}
+
+			message = SetEndPadding(message, '\n', 2);
+
+			return message;
+		}
+
+		/// <summary>
 		/// Applies a minimum trailing character count to the end of a string, padding the end with the specified character until it reaches the specified number of trailing characters
 		/// </summary>
 		/// <param name="text">Text to apply minimum padding to</param>
