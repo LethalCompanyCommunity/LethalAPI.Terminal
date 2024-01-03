@@ -9,13 +9,9 @@ namespace LethalAPI.TerminalCommands.Patches
 	[HarmonyPatch(typeof(Terminal), "BeginUsingTerminal")]
 	internal static class BeginUsingTerminalPatch
 	{
-        private static TimeHelper timeHelper;
-
         [HarmonyPostfix]
 		public static void Postfix(Terminal __instance)
 		{
-            //timeHelper ??= new TimeHelper();
-
             var terminalInterface = CommandHandler.CurrentInterface;
 			if (terminalInterface == null)
 			{
