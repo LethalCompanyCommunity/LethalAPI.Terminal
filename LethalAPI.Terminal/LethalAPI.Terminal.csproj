@@ -12,6 +12,8 @@
     <RepositoryUrl>https://github.com/LethalCompany/LethalAPI.Terminal</RepositoryUrl>
     <PackageTags>LethalCompany LethalCompanyMods</PackageTags>
     <RootNamespace>LethalAPI.LibTerminal</RootNamespace>
+    <Nullable>enable</Nullable>
+    <WarningsAsErrors>nullable</WarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
