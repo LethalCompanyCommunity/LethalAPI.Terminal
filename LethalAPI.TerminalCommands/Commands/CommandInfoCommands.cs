@@ -453,27 +453,19 @@ namespace LethalAPI.TerminalCommands.Commands
         [TerminalCommand("Door", clearText: false), CommandInfo("Toggle the door")]
         public string ToggleDoorCommand()
         {
-            if(StartOfRound.Instance.hangarDoorsClosed)
-            {
-                return OpenCommand();
-            }
-            return CloseCommand();
+            return StartOfRound.Instance.hangarDoorsClosed ? OpenCommand() : CloseCommand();
         }
 
         [TerminalCommand("Close", clearText: false), CommandInfo("Close the door")]
         public string CloseCommand()
         {
             Console.WriteLine("Closing Door");
-
             var canUse = CanUseDoor();
-            if (canUse != null)
-                return canUse;
+            if (canUse != null) return canUse;
 
-            InteractTrigger trigger = GameObject.Find("StopButton").GetComponentInChildren<InteractTrigger>();
-            trigger.onInteract.Invoke(GameNetworkManager.Instance.localPlayerController);
-
-            var door = UnityEngine.Object.FindObjectsOfType<HangarShipDoor>().FirstOrDefault();
-            //door.PlayDoorAnimation(true);
+            TriggerInteract("StopButton");
+            var door = FindHangarShipDoor();
+            door.PlayDoorAnimation(true);
             return $"Closing Door. Door power: {GetDoorPower(door.doorPower)}";
         }
 
@@ -481,16 +473,12 @@ namespace LethalAPI.TerminalCommands.Commands
         public string OpenCommand()
         {
             Console.WriteLine("Opening Door");
-
             var canUse = CanUseDoor();
-            if (canUse != null)
-                return canUse;
+            if (canUse != null) return canUse;
 
-            InteractTrigger trigger = GameObject.Find("StartButton").GetComponentInChildren<InteractTrigger>();
-            trigger.onInteract.Invoke(GameNetworkManager.Instance.localPlayerController);
-
-            var door = UnityEngine.Object.FindObjectsOfType<HangarShipDoor>().FirstOrDefault();
-            //door.PlayDoorAnimation(false);
+            TriggerInteract("StartButton");
+            var door = FindHangarShipDoor();
+            door.PlayDoorAnimation(false);
             return $"Opening Door. Door power: {GetDoorPower(door.doorPower)}";
         }
 
@@ -590,24 +578,6 @@ namespace LethalAPI.TerminalCommands.Commands
             return Buffer(BuildPlayerStatus(selectedPlayer));
         }
 
-        private string BuildPlayerStatus(PlayerControllerB player)
-        {
-            var sb = new StringBuilder();
-            sb.AppendLine($"/// {player.playerUsername} ///");
-
-            if (!player.isPlayerDead)
-            {
-                sb.AppendLine($"Health: {player.health}%");
-            }
-            if (player.isPlayerDead)
-            {
-                sb.AppendLine($"Cause of death: {player.causeOfDeath}");
-            }
-
-            sb.AppendLine();
-            return sb.ToString();
-        }
-
         [TerminalCommand("Lights", clearText: false), CommandInfo("Toggle the lights.")]
         public string LightsCommand()
         {
@@ -628,13 +598,13 @@ namespace LethalAPI.TerminalCommands.Commands
             return Buffer("Inverse Teleporter Cooldown reset.");
         }
 
-        [TerminalCommand("Reset", clearText: false), CommandInfo("Shortcut for ResetInverse.")]
+        [TerminalCommand("Reset", clearText: false, showHelp: false), CommandInfo("Shortcut for ResetInverse.")]
         public string ResetCommand()
         {
             return ResetInverseCommand();
         }
 
-        [TerminalCommand("Scramble", clearText: false), CommandInfo("Reset then activate inverse.")]
+        [TerminalCommand("Scramble", clearText: false), CommandInfo("Reset then activate inverse teleporter.")]
         public string ScrambleCommand()
         {
             ResetInverseCommand();
@@ -704,6 +674,24 @@ namespace LethalAPI.TerminalCommands.Commands
             return null;
         }
 
+        private string BuildPlayerStatus(PlayerControllerB player)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"/// {player.playerUsername} ///");
+
+            if (!player.isPlayerDead)
+            {
+                sb.AppendLine($"Health: {player.health}%");
+            }
+            if (player.isPlayerDead)
+            {
+                sb.AppendLine($"Cause of death: {player.causeOfDeath}");
+            }
+
+            sb.AppendLine();
+            return sb.ToString();
+        }
+
         private string CanUseDoor()
         {
             if (StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.shipIsLeaving)
@@ -715,6 +703,17 @@ namespace LethalAPI.TerminalCommands.Commands
         private string GetDoorPower(float doorPower)
         {
             return string.Format("{0:0\\%}", doorPower * 100);
+        }
+
+        private void TriggerInteract(string buttonName)
+        {
+            InteractTrigger trigger = GameObject.Find(buttonName).GetComponentInChildren<InteractTrigger>();
+            trigger.onInteract.Invoke(GameNetworkManager.Instance.localPlayerController);
+        }
+
+        private HangarShipDoor FindHangarShipDoor()
+        {
+            return UnityEngine.Object.FindObjectsOfType<HangarShipDoor>().FirstOrDefault();
         }
 
         private string Buffer(string input)
