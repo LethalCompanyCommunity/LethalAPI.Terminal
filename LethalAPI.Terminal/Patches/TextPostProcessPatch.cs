@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using System;
+using HarmonyLib;
 using LethalAPI.LibTerminal.Interfaces;
 using LethalAPI.LibTerminal.Models;
 
@@ -25,6 +26,7 @@ namespace LethalAPI.LibTerminal.Patches
 
 			if (CommandHandler.CurrentInterface == null || CommandHandler.CurrentInterface.APITextPostProcessing)
 			{
+				Console.WriteLine("Run text post process");
 				modifiedDisplayText = TextUtil.PostProcessResponse(__instance, modifiedDisplayText);
 				return true;
 			}
@@ -57,11 +59,6 @@ namespace LethalAPI.LibTerminal.Patches
 
 		private static bool ProcessInterface(ITerminalInterface terminalInterface, ref string modifiedDisplayText, Terminal terminal)
 		{
-			if (terminalInterface.APITextPostProcessing)
-			{
-				modifiedDisplayText = TextUtil.SetEndPadding(modifiedDisplayText.TrimStart('\n', ' '), '\n', 2);
-			}
-
 			modifiedDisplayText = terminalInterface.PreProcessText(terminal, modifiedDisplayText);
 
 			return terminalInterface.VanillaTextPostProcessing;

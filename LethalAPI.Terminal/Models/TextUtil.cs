@@ -17,7 +17,7 @@
 		/// <returns>Response text to write to the terminal screen</returns>
 		public static string PostProcessResponse(Terminal terminal, string message)
 		{
-			if (terminal.GetLastLoadedNode()?.clearPreviousText ?? false)
+			if (terminal.GetLastLoadedNode()?.clearPreviousText ?? true)
 			{
 				// Previous node cleared the screen, set padding to 2 to prevent clipping with credits count
 				message = message.SetStartPadding('\n', 2);
