@@ -16,18 +16,18 @@ namespace LethalAPI.TerminalCommands
 		{
 			Logger.LogInfo($"{PluginInfo.PLUGIN_GUID} is loading...");
 
-			Logger.LogInfo($"Installing patches");
+            Logger.LogInfo($"Installing patches");
 			HarmonyInstance.PatchAll(typeof(TerminalCommandsPlugin).Assembly);
 
-			Logger.LogInfo($"Registering built-in Commands");
+			Logger.LogInfo($"Registering built-in Commands");            
 
-			// Create registry for the Terminals API
-			Terminal = TerminalRegistry.CreateTerminalRegistry();
+            // Create registry for the Terminals API
+            Terminal = TerminalRegistry.CreateTerminalRegistry();
 
 			// Register commands, don't care about the instance
 			Terminal.RegisterFrom<CommandInfoCommands>();
 
-			DontDestroyOnLoad(this);
+            DontDestroyOnLoad(this);
 
 			Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
 		}

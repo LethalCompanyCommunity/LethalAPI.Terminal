@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using LethalAPI.TerminalCommands.Helpers;
 using LethalAPI.TerminalCommands.Models;
 namespace LethalAPI.TerminalCommands.Patches
 {
@@ -8,10 +9,14 @@ namespace LethalAPI.TerminalCommands.Patches
 	[HarmonyPatch(typeof(Terminal), "BeginUsingTerminal")]
 	internal static class BeginUsingTerminalPatch
 	{
-		[HarmonyPostfix]
+        private static TimeHelper timeHelper;
+
+        [HarmonyPostfix]
 		public static void Postfix(Terminal __instance)
 		{
-			var terminalInterface = CommandHandler.CurrentInterface;
+            //timeHelper ??= new TimeHelper();
+
+            var terminalInterface = CommandHandler.CurrentInterface;
 			if (terminalInterface == null)
 			{
 				return;

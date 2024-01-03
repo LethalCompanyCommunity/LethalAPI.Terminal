@@ -3,10 +3,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using BepInEx;
-using DunGen;
 using GameNetcodeStuff;
 using LethalAPI.TerminalCommands.Attributes;
-using LethalAPI.TerminalCommands.Interactions;
+using LethalAPI.TerminalCommands.Helpers;
 using LethalAPI.TerminalCommands.Models;
 using UnityEngine;
 
@@ -37,9 +36,9 @@ namespace LethalAPI.TerminalCommands.Commands
             builder.AppendLine("> SCAN");
             builder.AppendLine("To scan for the number of items left on the current planet");
             builder.AppendLine();
-            builder.AppendLine(">TRANSMIT [message]");
-			builder.AppendLine("Transmit a message with the signal translator");
-			builder.AppendLine();
+            builder.AppendLine("> TRANSMIT [message]");
+            builder.AppendLine("Transmit a message with the signal translator");
+            builder.AppendLine();
 
             // Dynamically discovered commands
             // Get all methods from the current type
@@ -53,6 +52,11 @@ namespace LethalAPI.TerminalCommands.Commands
                 {
                     // Skip the CommandList method itself
                     if (method.Name.Equals(nameof(CommandList), StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+
+                    if(!commandAttr.ShowHelp)
                     {
                         continue;
                     }
@@ -106,6 +110,11 @@ namespace LethalAPI.TerminalCommands.Commands
         //[TeleporterUnlocked]
         public string TeleportCommand(PlayerControllerB player)
         {
+            if (player == null)
+            {
+                return Buffer("Crew member not found!");
+            }
+
             Console.WriteLine("Teleporting");
 
             var teleporter = UnityEngine.Object.FindObjectsOfType<ShipTeleporter>().Where(t => !t.isInverseTeleporter).FirstOrDefault();
@@ -161,34 +170,164 @@ namespace LethalAPI.TerminalCommands.Commands
             return Buffer("Have a safe trip!");
         }
 
-        [TerminalCommand("Detonate", clearText: false), CommandInfo("Detonates all landmines")]
-        public string DetonateLandmineCommand()
+        [TerminalCommand("GetMines", clearText: true), CommandInfo("Lists all landmines")]
+        public string GetMines()
         {
-            var landmines = UnityEngine.Object.FindObjectsOfType<Landmine>();
-            foreach (var landmine in landmines)
+            var sb = new StringBuilder();
+            var terminalAccessibleObjects = UnityEngine.Object.FindObjectsOfType<TerminalAccessibleObject>();
+            foreach (var tao in terminalAccessibleObjects)
             {
-                if(landmine.hasExploded)
-                    continue;
+                if (tao.name == "Landmine")
+                {
+                    sb.AppendLine(tao.objectCode);
+                }
+            }
+            return Buffer(sb.ToString());
+        }
+
+        [TerminalCommand("GetTurrets", clearText: true), CommandInfo("Lists all turrets")]
+        public string GetTurrets()
+        {
+            var sb = new StringBuilder();
+            var terminalAccessibleObjects = UnityEngine.Object.FindObjectsOfType<TerminalAccessibleObject>();
+            foreach (var tao in terminalAccessibleObjects)
+            {
+                if (tao.name == "TurretScript")
+                {
+                    sb.AppendLine(tao.objectCode);
+                }
+            }
+            return Buffer(sb.ToString());
+        }
+
+        [TerminalCommand("Detonate", clearText: true), CommandInfo("Detonates designated landmine(s)", "[All / Mine Id]")]
+        public string DetonateLandmineCommand(string code)
+        {
+            if (string.IsNullOrEmpty(code))
+            {
+                return Buffer("No valid identifier provided!");
+            }
+
+            var terminalAccessibleObjects = UnityEngine.Object.FindObjectsOfType<TerminalAccessibleObject>();
+            var landmines = UnityEngine.Object.FindObjectsOfType<Landmine>();
+            var selectedObject = terminalAccessibleObjects.Where(tao => tao.objectCode.ToLower() == code.ToLower()).FirstOrDefault();
+            if (selectedObject != null)
+            {
+                var landmine = landmines.Where(l => l.NetworkObjectId == selectedObject.NetworkObjectId).FirstOrDefault();
+
+                if (landmine.hasExploded)
+                {
+                    return Buffer($"{code} has already detonated!");
+                }
 
                 landmine.ExplodeMineServerRpc();
                 landmine.Detonate();
+
+                return Buffer($"Kaboom! {code} has been detonated!");
             }
-            return Buffer($"Kaboom! Detonating {landmines.Count()} landmines!");
+            if (code.ToLower() == "all")
+            {
+                int count = 0;
+                foreach (var landmine in landmines)
+                {
+                    if (landmine.hasExploded)
+                    {
+                        continue;
+                    }
+
+                    count++;
+
+                    landmine.ExplodeMineServerRpc();
+                    landmine.Detonate();
+                }
+                if (count > 0)
+                {
+                    return Buffer($"Kaboom! Detonating {count} landmines!");
+                }
+                else
+                {
+                    return Buffer("There were no mines to detonate!");
+                }
+            }
+            return Buffer($"Landmine {code} not found!");
         }
 
-        [TerminalCommand("Time", clearText: true), CommandInfo("Tells time")]
+        //public void SetItemInElevator(bool droppedInShipRoom, bool droppedInElevator, GrabbableObject gObject)
+        //{
+        //    gObject.isInElevator = droppedInElevator;
+        //    if (gObject.isInShipRoom == droppedInShipRoom)
+        //    {
+        //        return;
+        //    }
+        //    gObject.isInShipRoom = droppedInShipRoom;
+        //    if (!gObject.scrapPersistedThroughRounds)
+        //    {
+        //        if (droppedInShipRoom)
+        //        {
+        //            RoundManager.Instance.scrapCollectedInLevel += gObject.scrapValue;
+        //            StartOfRound.Instance.gameStats.allPlayerStats[playerClientId].profitable += gObject.scrapValue;
+        //            RoundManager.Instance.CollectNewScrapForThisRound(gObject);
+        //            gObject.OnBroughtToShip();
+        //            if (gObject.itemProperties.isScrap && Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, gObject.transform.position) < 12f)
+        //            {
+        //                HUDManager.Instance.DisplayTip("Got scrap!", "To sell, use the terminal to route the ship to the company building.", isWarning: false, useSave: true, "LCTip_SellScrap");
+        //            }
+        //        }
+        //        else
+        //        {
+        //            if (gObject.scrapPersistedThroughRounds)
+        //            {
+        //                return;
+        //            }
+        //            RoundManager.Instance.scrapCollectedInLevel -= gObject.scrapValue;
+        //            StartOfRound.Instance.gameStats.allPlayerStats[playerClientId].profitable -= gObject.scrapValue;
+        //        }
+        //        HUDManager.Instance.SetQuota(RoundManager.Instance.scrapCollectedInLevel);
+        //    }
+        //    if (droppedInShipRoom)
+        //    {
+        //        StartOfRound.Instance.currentShipItemCount++;
+        //    }
+        //    else
+        //    {
+        //        StartOfRound.Instance.currentShipItemCount--;
+        //    }
+        //}
+
+        //[TerminalCommand("Personalize", clearText: false), CommandInfo("Colors players on the map")]
+        //public string PersonalizeCommand()
+        //{
+        //    var players = UnityEngine.Object.FindObjectsOfType<PlayerControllerB>();
+
+        //    //StartOfRound.Instance.mapScreen.
+
+        //    StartOfRound.Instance.mapScreen.radarTargets.ForEach(target =>
+        //    {
+        //        target.
+        //    });
+
+        //    foreach (var player in players)
+        //    {
+        //        player.mapRadarDotAnimator.
+        //        player.map
+        //    }
+        //    return null;
+        //}
+
+        //[TerminalCommand("Time", clearText: true), CommandInfo("Tells time")]
         public string TimeCommand()
         {
-            var time = GameObject.Find("Box").GetComponentByName("TimeNumber");
+            var time = new TimeHelper().GetTime();
 
-            Console.WriteLine("Time is hard");
+            if(string.IsNullOrEmpty(time))
+            {
+                return Buffer("There are no clocks in interstellar space.");
+            }
 
-            Console.WriteLine($"time: {time}");
-
-            return Buffer($"time: {time}");
+            return Buffer($"Time: {time}");
         }
 
-        [TerminalCommand("Clock", clearText: true), CommandInfo("Tells time")]
+        //[TerminalCommand("Clock", clearText: true), CommandInfo("Tells time")]
         public string ClockCommand()
         {
             //Console.WriteLine("Detonating:", landmine.GetInstanceID());
@@ -263,16 +402,62 @@ namespace LethalAPI.TerminalCommands.Commands
             return Buffer($"The time is: {sb.ToString()}");
         }
 
-        [TerminalCommand("Berserk", clearText: true)]
-        public string TurretBerserkCommand()
+        [TerminalCommand("Berserk", clearText: true), CommandInfo("Makes designated turret(s) go berserk", "[All / Turret Id]")]
+        public string TurretBerserkCommand(string code)
         {
-            //Console.WriteLine("Detonating:", landmine.GetInstanceID());
-            var turrets = UnityEngine.Object.FindObjectsOfType<Turret>();
-            foreach (var turret in turrets)
+            if (string.IsNullOrEmpty(code))
             {
-                turret.SetToModeClientRpc(((int)TurretMode.Berserk));
+                return Buffer("No valid identifier provided!");
             }
-            return Buffer($"Danger! {turrets.Count()} turrets have gone berserk!");
+
+            var player = ((int)GameNetworkManager.Instance.localPlayerController.playerClientId);
+            var terminalAccessibleObjects = UnityEngine.Object.FindObjectsOfType<TerminalAccessibleObject>();
+            var turrets = UnityEngine.Object.FindObjectsOfType<Turret>();
+            var selectedObject = terminalAccessibleObjects.Where(tao => tao.objectCode.ToLower() == code.ToLower()).FirstOrDefault();
+            if (selectedObject != null)
+            {
+                var turret = turrets.Where(l => l.NetworkObjectId == selectedObject.NetworkObjectId).FirstOrDefault();
+                var isBerserk = turret.turretMode == TurretMode.Berserk;
+
+                if (isBerserk)
+                {
+                    turret.SetToModeClientRpc((int)TurretMode.Detection);
+                    return Buffer($"{code} has calmed down.");
+                }
+
+                turret.EnterBerserkModeServerRpc(player);
+
+                return Buffer($"Danger! {code} has gone berserk!");
+            }
+            if (code.ToLower() == "all")
+            {
+                int count = 0;
+                foreach (var turret in turrets)
+                {
+                    count++;
+
+                    turret.EnterBerserkModeServerRpc(player);
+                }
+                if (count > 0)
+                {
+                    return Buffer($"Danger! {count} turrets have gone berserk!");
+                }
+                else
+                {
+                    return Buffer("There were no turrets found!");
+                }
+            }
+            return Buffer($"Turret {code} not found!");
+        }
+
+        [TerminalCommand("Door", clearText: false), CommandInfo("Toggle the door")]
+        public string ToggleDoorCommand()
+        {
+            if(StartOfRound.Instance.hangarDoorsClosed)
+            {
+                return OpenCommand();
+            }
+            return CloseCommand();
         }
 
         [TerminalCommand("Close", clearText: false), CommandInfo("Close the door")]
@@ -348,7 +533,7 @@ namespace LethalAPI.TerminalCommands.Commands
             var props = GameObject.FindGameObjectsWithTag("PhysicsProp");
             Console.WriteLine($"Props: {props.Length}");
             StringBuilder sb = new StringBuilder();
-            foreach(var prop in props)
+            foreach (var prop in props)
             {
                 sb.AppendLine($"prop: {prop.name}");
             }
@@ -364,7 +549,7 @@ namespace LethalAPI.TerminalCommands.Commands
             Console.WriteLine($"Unlockable count: {unlockables.unlockables.Count}");
             Console.WriteLine($"Unlockables: {unlockables.unlockables}");
             var sb = new StringBuilder();
-            foreach(var unlockableItem in unlockables.unlockables)
+            foreach (var unlockableItem in unlockables.unlockables)
             {
                 sb.AppendLine();
                 sb.AppendLine($"unlockableName: {unlockableItem.unlockableName}");
@@ -380,9 +565,47 @@ namespace LethalAPI.TerminalCommands.Commands
                 sb.AppendLine($"spawnPrefab: {unlockableItem.spawnPrefab}");
                 sb.AppendLine();
             }
-
             return Buffer(sb.ToString());
+        }
 
+        [TerminalCommand("Status", clearText: true), CommandInfo("Get status of all crewmembers.")]
+        public string StatusCommand()
+        {
+            var players = UnityEngine.Object.FindObjectsOfType<PlayerControllerB>();
+            var sb = new StringBuilder();
+
+            foreach (var player in players)
+            {
+                if (!player.playerUsername.StartsWith("Player #"))
+                {
+                    sb.AppendLine(BuildPlayerStatus(player));
+                }
+            }
+            return Buffer(sb.ToString());
+        }
+
+        [TerminalCommand("Status", clearText: true), CommandInfo("Get status of selected crewmembers.", "[Player name]")]
+        public string StatusCommand(PlayerControllerB selectedPlayer)
+        {
+            return Buffer(BuildPlayerStatus(selectedPlayer));
+        }
+
+        private string BuildPlayerStatus(PlayerControllerB player)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"/// {player.playerUsername} ///");
+
+            if (!player.isPlayerDead)
+            {
+                sb.AppendLine($"Health: {player.health}%");
+            }
+            if (player.isPlayerDead)
+            {
+                sb.AppendLine($"Cause of death: {player.causeOfDeath}");
+            }
+
+            sb.AppendLine();
+            return sb.ToString();
         }
 
         [TerminalCommand("Lights", clearText: false), CommandInfo("Toggle the lights.")]
@@ -405,26 +628,38 @@ namespace LethalAPI.TerminalCommands.Commands
             return Buffer("Inverse Teleporter Cooldown reset.");
         }
 
+        [TerminalCommand("Reset", clearText: false), CommandInfo("Shortcut for ResetInverse.")]
+        public string ResetCommand()
+        {
+            return ResetInverseCommand();
+        }
+
+        [TerminalCommand("Scramble", clearText: false), CommandInfo("Reset then activate inverse.")]
+        public string ScrambleCommand()
+        {
+            ResetInverseCommand();
+            return InverseTeleportCommand();
+        }
+
         [TerminalCommand("Clear", clearText: true), CommandInfo("Clear the console.")]
         public string ClearCommand()
         {
             return Buffer("");
         }
 
-        [TerminalCommand("GiveMoney", clearText: true), CommandInfo("Makes you a dirty cheater")]
+        [TerminalCommand("GiveMoney", clearText: true, showHelp: false), CommandInfo("Makes you a dirty cheater", "[Amount]")]
         //[AllowedCaller(Models.Enums.AllowedCaller.Host)]
-        public string GiveMoneyCommand()
+        public string GiveMoneyCommand(int amount)
         {
             var terminal = UnityEngine.Object.FindObjectOfType<Terminal>();
 
-            terminal.groupCredits += 9999;
+            terminal.groupCredits += amount;
 
-            return Buffer("Cheater!");
+            return Buffer($"${amount} was added, cheater!");
         }
 
         private void Teleport(ShipTeleporter teleporter)
         {
-            //teleporter.PressTeleportButtonOnLocalClient();
             teleporter.buttonTrigger.onInteract.Invoke(GameNetworkManager.Instance.localPlayerController);
             return;
         }
@@ -433,9 +668,38 @@ namespace LethalAPI.TerminalCommands.Commands
         {
             if (teleporter is null)
                 return "There is no teleporter to use.";
-            
+
             if (!teleporter.buttonTrigger.interactable)
+            {
+                try
+                {
+                    // Get the Type object corresponding to ShipTeleporter
+                    Type type = typeof(ShipTeleporter);
+
+                    // Retrieve the FieldInfo for the private field 'cooldownTime'
+                    FieldInfo fieldInfo = type.GetField("cooldownTime", BindingFlags.NonPublic | BindingFlags.Instance);
+
+                    if (fieldInfo != null)
+                    {
+                        // Get the value of the private field 'cooldownTime'
+                        int cooldownTimeValue = (int)fieldInfo.GetValue(teleporter);
+
+                        Console.WriteLine("Cooldown Time: " + cooldownTimeValue);
+
+                        return $"The teleporter is on cooldown for {cooldownTimeValue}.";
+                    }
+                    else
+                    {
+                        Console.WriteLine("Field 'cooldownTime' not found.");
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Field 'cooldownTime' not found.");
+                }
+
                 return $"The teleporter is on cooldown.";
+            }
 
             return null;
         }
@@ -452,7 +716,7 @@ namespace LethalAPI.TerminalCommands.Commands
         {
             return string.Format("{0:0\\%}", doorPower * 100);
         }
-        
+
         private string Buffer(string input)
         {
             var buffer = new StringBuilder();
@@ -460,8 +724,8 @@ namespace LethalAPI.TerminalCommands.Commands
             buffer.AppendLine();
             buffer.AppendLine();
             buffer.AppendLine(input);
+            Console.WriteLine(buffer.ToString());
             return buffer.ToString();
         }
-
     }
 }
