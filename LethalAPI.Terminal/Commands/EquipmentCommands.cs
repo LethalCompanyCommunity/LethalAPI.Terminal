@@ -9,86 +9,68 @@ namespace LethalAPI.LibTerminal.Commands
 {
     internal class EquipmentCommands
     {
-        [TerminalCommand("Teleport", clearText: false), CommandInfo("Teleport the specified member of the crew", "[Player Name]")]
-        //[TeleporterUnlocked]
-        public string TeleportCommand(PlayerControllerB player)
-        {
-            if (player == null)
-            {
-                return MiscHelper.Buffer("Crew member not found!");
-            }
-
-            Console.WriteLine("Teleporting");
-
-            var teleporter = UnityEngine.Object.FindObjectsOfType<ShipTeleporter>().Where(t => !t.isInverseTeleporter).FirstOrDefault();
-
-            var canUse = CanUseTeleporter(teleporter);
-            if (canUse != null)
-                return MiscHelper.Buffer(canUse);
-
-            var temp = StartOfRound.Instance.mapScreen.targetedPlayer;
-
-            StartOfRound.Instance.mapScreen.targetedPlayer = player;
-
-            Teleport(teleporter);
-
-            StartOfRound.Instance.mapScreen.targetedPlayer = temp;
-
-            return MiscHelper.Buffer($"Teleporting {player.playerUsername}...");
-        }
-
-        [TerminalCommand("Teleport", clearText: false), CommandInfo("Teleport the selected member of the crew")]
-        //[TeleporterUnlocked]
+        [TerminalCommand("Teleport", clearText: false, showHelp: false), CommandInfo("Teleport the specified member of the crew", "[Player Name]")]
         public string TeleportCommand()
         {
+            return TeleportCommand(null);
+        }
+
+        [TerminalCommand("Teleport", clearText: false), CommandInfo("Teleport the specified member of the crew", "[Player Name]")]
+        public string TeleportCommand(PlayerControllerB player = null)
+        {
             Console.WriteLine("Teleporting");
 
-            var teleporter = UnityEngine.Object.FindObjectsOfType<ShipTeleporter>().Where(t => !t.isInverseTeleporter).FirstOrDefault();
-
+            var teleporter = FindTeleporter(false);
             var canUse = CanUseTeleporter(teleporter);
             if (canUse != null)
                 return MiscHelper.Buffer(canUse);
 
-            var player = StartOfRound.Instance.mapScreen.targetedPlayer;
+            // If a specific player was provided but not found, return an error message.
+            if (player == null && StartOfRound.Instance.mapScreen.targetedPlayer == null)
+            {
+                return MiscHelper.Buffer("No player selected or found to teleport.");
+            }
 
-            Teleport(teleporter);
+            if (player == null)
+            {
+                player = StartOfRound.Instance.mapScreen.targetedPlayer;
+                Teleport(teleporter);
+            }
+            else
+            {
+                var temp = StartOfRound.Instance.mapScreen.targetedPlayer;
+                StartOfRound.Instance.mapScreen.targetedPlayer = player;
+                Teleport(teleporter);
+                StartOfRound.Instance.mapScreen.targetedPlayer = temp;
+            }
 
             return MiscHelper.Buffer($"Teleporting {player.playerUsername}...");
         }
 
         [TerminalCommand("Inverse", clearText: false), CommandInfo("Start the inverse teleporter")]
-        //[InverseTeleporterUnlocked]
         public string InverseTeleportCommand()
         {
             Console.WriteLine("Inverse Teleporting");
 
-            var inverse = UnityEngine.Object.FindObjectsOfType<ShipTeleporter>().Where(t => t.isInverseTeleporter).FirstOrDefault();
-
-            var canUse = CanUseTeleporter(inverse);
+            var inverseTeleporter = FindTeleporter(true);
+            var canUse = CanUseTeleporter(inverseTeleporter);
             if (canUse != null)
                 return MiscHelper.Buffer(canUse);
 
-            Teleport(inverse);
-
+            Teleport(inverseTeleporter);
             return MiscHelper.Buffer("Have a safe trip!");
         }
 
         [TerminalCommand("ResetInverse", clearText: false), CommandInfo("Resets the inverse teleporter cooldown. DO NOT ABUSE.")]
         public string ResetInverseCommand()
         {
-            var inverse = UnityEngine.Object.FindObjectsOfType<ShipTeleporter>().Where(t => t.isInverseTeleporter).FirstOrDefault();
-
-            inverse.buttonTrigger.currentCooldownValue = 0;
-            inverse.buttonTrigger.interactable = true;
-
+            var inverseTeleporter = FindTeleporter(true);
+            ResetCooldown(inverseTeleporter);
             return MiscHelper.Buffer("Inverse Teleporter Cooldown reset.");
         }
 
         [TerminalCommand("Reset", clearText: false, showHelp: false), CommandInfo("Shortcut for ResetInverse.")]
-        public string ResetCommand()
-        {
-            return ResetInverseCommand();
-        }
+        public string ResetCommand() => ResetInverseCommand();
 
         [TerminalCommand("Scramble", clearText: false), CommandInfo("Reset then activate inverse teleporter.")]
         public string ScrambleCommand()
@@ -97,10 +79,21 @@ namespace LethalAPI.LibTerminal.Commands
             return InverseTeleportCommand();
         }
 
+        private ShipTeleporter FindTeleporter(bool isInverse)
+        {
+            return UnityEngine.Object.FindObjectsOfType<ShipTeleporter>()
+                   .FirstOrDefault(t => t.isInverseTeleporter == isInverse);
+        }
+
         private void Teleport(ShipTeleporter teleporter)
         {
             teleporter.buttonTrigger.onInteract.Invoke(GameNetworkManager.Instance.localPlayerController);
-            return;
+        }
+
+        private void ResetCooldown(ShipTeleporter teleporter)
+        {
+            teleporter.buttonTrigger.currentCooldownValue = 0;
+            teleporter.buttonTrigger.interactable = true;
         }
 
         private string CanUseTeleporter(ShipTeleporter teleporter)
@@ -110,37 +103,27 @@ namespace LethalAPI.LibTerminal.Commands
 
             if (!teleporter.buttonTrigger.interactable)
             {
-                try
+                var cooldownTimeValue = GetPrivateFieldValue<int>(teleporter, "cooldownTime");
+                if (cooldownTimeValue != default)
                 {
-                    // Get the Type object corresponding to ShipTeleporter
-                    Type type = typeof(ShipTeleporter);
-
-                    // Retrieve the FieldInfo for the private field 'cooldownTime'
-                    FieldInfo fieldInfo = type.GetField("cooldownTime", BindingFlags.NonPublic | BindingFlags.Instance);
-
-                    if (fieldInfo != null)
-                    {
-                        // Get the value of the private field 'cooldownTime'
-                        int cooldownTimeValue = (int)fieldInfo.GetValue(teleporter);
-
-                        Console.WriteLine("Cooldown Time: " + cooldownTimeValue);
-
-                        return $"The teleporter is on cooldown for {cooldownTimeValue}.";
-                    }
-                    else
-                    {
-                        Console.WriteLine("Field 'cooldownTime' not found.");
-                    }
+                    Console.WriteLine("Cooldown Time: " + cooldownTimeValue);
+                    return $"The teleporter is on cooldown for {cooldownTimeValue}.";
                 }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Field 'cooldownTime' not found.");
-                }
-
-                return $"The teleporter is on cooldown.";
+                Console.WriteLine("Field 'cooldownTime' not found.");
+                return "The teleporter is on cooldown.";
             }
 
             return null;
+        }
+
+        private T GetPrivateFieldValue<T>(object instance, string fieldName)
+        {
+            FieldInfo field = instance.GetType().GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
+            if (field != null)
+            {
+                return (T)field.GetValue(instance);
+            }
+            return default;
         }
     }
 }

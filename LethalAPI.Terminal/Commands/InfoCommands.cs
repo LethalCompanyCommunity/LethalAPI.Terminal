@@ -172,14 +172,11 @@ namespace LethalAPI.LibTerminal.Commands
             var sb = new StringBuilder();
             sb.AppendLine($"/// {player.playerUsername} ///");
 
-            if (!player.isPlayerDead)
-            {
-                sb.AppendLine($"Health: {player.health}%");
-            }
-            if (player.isPlayerDead)
-            {
-                sb.AppendLine($"Cause of death: {player.causeOfDeath}");
-            }
+            sb.AppendLine(
+                !player.isPlayerDead ?
+                $"Health: {player.health}%" :
+                $"Cause of death: {player.causeOfDeath}"
+            );
 
             sb.AppendLine();
             return sb.ToString();
