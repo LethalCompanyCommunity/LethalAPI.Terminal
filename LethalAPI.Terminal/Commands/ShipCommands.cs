@@ -55,20 +55,26 @@ namespace LethalAPI.LibTerminal.Commands
             return $"Opening Door. Door power: {GetDoorPower(door.doorPower)}";
         }
 
-        [TerminalCommand("GTFO", clearText: false), CommandInfo("GET ME OUTTA HERE!")]
-        public string GTFOCommand()
+        [TerminalCommand("Launch", clearText: false), CommandInfo("Launch the ship")]
+        public string LaunchCommand()
         {
             if (!StartOfRound.Instance.shipHasLanded)
                 return MiscHelper.Buffer("You need to land first!");
 
-            Console.WriteLine("GTFO-ing");
             InteractTrigger trigger = GameObject.Find("StartGameLever").GetComponentInChildren<InteractTrigger>();
             var lever = UnityEngine.Object.FindObjectOfType<StartMatchLever>();
             trigger.onInteract.Invoke(GameNetworkManager.Instance.localPlayerController);
             lever.EndGame();
             lever.PlayLeverPullEffectsServerRpc(false);
 
-            return MiscHelper.Buffer("RUN AWAY!!!");
+            return MiscHelper.Buffer("Launching the ship...");
+        }
+
+        [TerminalCommand("GTFO", clearText: false, showHelp: false), CommandInfo("GET ME OUTTA HERE!")]
+        public string GTFOCommand()
+        {
+            LaunchCommand();
+            return MiscHelper.Buffer("RUN AWAY!!!1!!");
         }
 
         [TerminalCommand("Land", clearText: false), CommandInfo("Land the ship")]

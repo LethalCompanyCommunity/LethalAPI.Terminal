@@ -1,41 +1,22 @@
 ﻿using LethalAPI.LibTerminal.Attributes;
 using LethalAPI.LibTerminal.Helpers;
+using System;
 using System.Linq;
 using System.Text;
+using Unity.Netcode;
 
 namespace LethalAPI.LibTerminal.Commands
 {
     internal class EntityCommands
     {
         [TerminalCommand("ListMines", clearText: true), CommandInfo("Lists all landmines")]
-        public string ListMines()
-        {
-            var sb = new StringBuilder();
-            var terminalAccessibleObjects = UnityEngine.Object.FindObjectsOfType<TerminalAccessibleObject>();
-            foreach (var tao in terminalAccessibleObjects)
-            {
-                if (tao.name == "Landmine")
-                {
-                    sb.AppendLine(tao.objectCode);
-                }
-            }
-            return MiscHelper.Buffer(sb.ToString());
-        }
+        public string ListMines() => ListObjectsByName("Landmine");
 
         [TerminalCommand("ListTurrets", clearText: true), CommandInfo("Lists all turrets")]
-        public string ListTurrets()
-        {
-            var sb = new StringBuilder();
-            var terminalAccessibleObjects = UnityEngine.Object.FindObjectsOfType<TerminalAccessibleObject>();
-            foreach (var tao in terminalAccessibleObjects)
-            {
-                if (tao.name == "TurretScript")
-                {
-                    sb.AppendLine(tao.objectCode);
-                }
-            }
-            return MiscHelper.Buffer(sb.ToString());
-        }
+        public string ListTurrets() => ListObjectsByName("TurretScript");
+
+        [TerminalCommand("ListDoors", clearText: true), CommandInfo("Lists all facility doors")]
+        public string ListDoors() => ListObjectsByName("BigDoor", true);
 
         [TerminalCommand("Detonate", clearText: true), CommandInfo("Detonates designated landmine(s)", "[All / Mine Id]")]
         public string DetonateLandmineCommand(string code)
@@ -135,6 +116,21 @@ namespace LethalAPI.LibTerminal.Commands
                 }
             }
             return MiscHelper.Buffer($"Turret {code} not found!");
+        }
+
+        private string ListObjectsByName(string objectName, bool startsWith = false)
+        {
+            var sb = new StringBuilder();
+            var terminalAccessibleObjects = UnityEngine.Object.FindObjectsOfType<TerminalAccessibleObject>();
+            foreach (var tao in terminalAccessibleObjects)
+            {
+                bool nameMatches = startsWith ? tao.name.StartsWith(objectName) : tao.name == objectName;
+                if (nameMatches)
+                {
+                    sb.AppendLine(tao.objectCode);
+                }
+            }
+            return MiscHelper.Buffer(sb.ToString());
         }
     }
 }

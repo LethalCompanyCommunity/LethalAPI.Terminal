@@ -1,171 +1,126 @@
 # LethalAPI.Terminal
 Terminal Commands API for the Lethal Company Modding API
 
-## Misc Changes
-This mod makes some changes to how the terminal works, that isn't fully integral to custom commands.
+# Entity Commands
 
-These changes are as such:
+This section details the commands related to entities such as landmines and turrets within the game.
 
-* Reduces the delay after entering the terminal before you can type by 80%
-    
-  *  You ever open the terminal and start typing, even hearing the keyboard sound, but it doesn't write anything? This fixes that.
+## Commands
 
-* Disable scrolling to the top of the terminal on every command execution
-  *  This now only happens when a command clears the screen.
+### ListMines
+- **Description**: Lists all landmines within the game.
+- **Usage**: `ListMines`
+- **Details**: Scans for landmines and returns their object codes.
 
-    
-* Trims newlines from the start of command responses
-  *  The game force adds newlines to the start of commands, which causes issues for commands that don't clear the terminal. 
+### ListTurrets
+- **Description**: Lists all turrets.
+- **Usage**: `ListTurrets`
+- **Details**: Scans for turrets and returns their object codes.
 
-## Creating terminal commands
-Terminal commands are declared as annotated methods. E.g.,
+### Detonate
+- **Description**: Detonates designated landmine(s).
+- **Usage**: `Detonate [All / Mine Id]`
+- **Details**: Users can specify a particular mine by its ID or use "All" to detonate all mines. Checks if the specified landmine has already exploded and returns the status.
 
-```cs
-[TerminalCommand("Ping"), CommandInfo("Test command")]
-public string PingCommand()
-{
-    return "Pong!";
-}
-```
+### Berserk
+- **Description**: Makes designated turret(s) go berserk.
+- **Usage**: `Berserk [All / Turret Id]`
+- **Details**: Targets a specific turret by its ID or use "All" to affect every turret. Toggles the turret's mode between normal and berserk, providing feedback on the action taken.
 
-All terminal commands are annotated with the `TerminalCommand` Attribute, and optionally, the `CommandInfo` Attribute.
+# Equipment Commands
 
-The `CommandInfo` attribute attaches command metadata and enrols the command to be displayed in the help command.
+This section details the commands related to equipment, specifically focusing on the functionalities around the teleporter in the game.
 
-You can also attach access control attributes, e.g., `AllowedCaller` to specify who can execute a command and when. More on this later.
+## Commands
 
-## Registering Commands
+### Teleport
+- **Description**: Teleport the specified member of the crew.
+- **Usage**: `Teleport [Player Name]`
+- **Details**: Teleports a specified player to a set location. If no player is specified, it attempts to teleport the player currently targeted in the map screen.
 
-All commands have to be registered to this library. Registering commands can be done through the `CommandRegistry` API. E.g.,
+### InverseTeleport
+- **Description**: Start the inverse teleporter.
+- **Usage**: `Inverse`
+- **Details**: Initiates the inverse teleportation process. Checks if the teleporter is available and interactable before initiating.
 
-```cs
-private ModCommands Commands;
+### ResetInverse
+- **Description**: Resets the inverse teleporter cooldown.
+- **Usage**: `ResetInverse`, `Reset`
+- **Details**: Resets the cooldown for the inverse teleporter, allowing it to be used again immediately.
 
-public void Awake()
-{
-  Commands = CommandRegistry.CreateModRegistry();
-  Commands.RegisterFrom(this); // Register commands from the plugin class
-  Commands.RegisterFrom(AnotherObject); // Register commands from another instance
-  Commands.RegisterFrom<InfoCommands>(); // Activate and register commands from a type
-}
-```
+### Scramble
+- **Description**: Reset then activate inverse teleporter.
+- **Usage**: `Scramble`
+- **Details**: Performs a reset of the inverse teleporter's cooldown and then immediately initiates inverse teleportation.
 
-You can also deregister commands by calling `ModCommands.Deregister()`.
+# Info Commands
 
+This section details the commands that provide information about various aspects of the game environment, such as time and crew member status.
 
-## Handling arguments
+## Commands
 
-All arguments are injected into the method, either parsed from the user input, or sourced from the execution context. E.g.,
+### Time
+- **Description**: Tells the current time.
+- **Usage**: `Time`
+- **Details**: Provides the current time.
 
-```cs
+### Status
+- **Description**: Get the status of crew members.
+- **Usage**: `Status [Player name]`
+- **Details**: Displays the status of the designated crew member. If none is specified, lists the status of all crew members.
 
-[TerminalCommand("RickRoll")]
-public string RickRollCommand(Terminal caller, [RemainingText] string text)
-{
-  // Echoes the user's message back to them, and rickrolls them
-  caller.PlayVideoFile(RickrollVideoPath);
-  return text;
-}
+### Clear
+- **Description**: Clears the console.
+- **Usage**: `Clear`
+- **Details**: Clears all text from the console, providing a clean slate for new commands and responses.
 
-[TerminalCommand("Multiply")]
-public int MultiplyCommand(int a, int b)
-{
-  return a * b;
-}
-```
+# Ship Commands
 
-Notice how commands don't need to return a string but can return anything. You can return your own `TerminalNode`, which is how the game itself handles command responses, or you can return anything, and it will be converted to a string.
+This section details the commands related to ship operations, such as managing lights, doors, and the ship's landing status.
 
-Additionally, if you return `null`, execution will fall through to the next valid command handler. More on this later.
+## Commands
 
-You can even parse some extra types such as `PlayerControllerB`, which will be parsed from Steam64ID, or player name. Argument injection is a useful tool to reduce boilerplate and create command overloads.
+### Lights
+- **Description**: Toggle the lights on or off.
+- **Usage**: `Lights`
+- **Details**: Interacts with the game object named "LightSwitch" to toggle the state of the lights.
 
-You can inject as many arguments as you want, and the method will only be executed when all specified arguments can be provided, either from context, or parsed from user input. Generally, you will never need to manually parse basic arguments yourself. However, if you do want to handle argument parsing yourself, you can inject either `string[]` or `ArgumentStream`.
+### Door
+- **Description**: Toggle the door's open or close state.
+- **Usage**: `Door`, `Doors`
+- **Details**: Determines the current state of the door and sends a command to either open or close it.
 
-## Command Overloading
+### Close
+- **Description**: Close the door.
+- **Usage**: `Close`
+- **Details**: Closes the ship's door and provides current door power.
 
-When a player runs a command, the first step in this process is selecting candidate commands. All commands registered with the same command name, and matching signatures can be evaluated. These commands with matching/compatible signatures will be executed in descending order of priority, and then argument count.
+### Open
+- **Description**: Open the door.
+- **Usage**: `Open`
+- **Details**: Opens the ship's door and provides current door power.
 
-So a command with more arguments will take priority over a command with less arguments. However all these arguments still must be valid and parsed from user input. Meaning you can create command patterns such as:
+### Launch
+- **Description**: Activate an emergency exit from the current situation.
+- **Usage**: `Launch`, `GTFO`
+- **Details**: Launches the ship.
 
-```cs
+### Land
+- **Description**: Land the ship.
+- **Usage**: `Land`
+- **Details**: Lands the ship.
 
-[TerminalCommand("BuyArtefact")]
-public string BuyArtefactCommand()
-{
-  return $"Available Artefacts:\n"
-    + FormatAvailableArtefacts();
-}
+## Attribution
 
-[TerminalCommand("BuyArtefact")]
-public string BuyArtefactCommand(string artefactName)
-{
-  if(TryBuyArtefact(artefactName))
-    return "Artefact purchased!";
+This document and the associated commands are based on the work found in the original repository. For more detailed information, contributions, or to view the source code, please visit:
 
-  return "Insufficient funds";
-}
-```
+[LethalAPI.Terminal](https://github.com/LethalCompany/LethalAPI.Terminal)
 
-Here, running `BuyArtefact` will execute the first handler, but running `BuyArtefact gun` will execute the second. This is because the 2nd one has more arguments, so it will take priority when the user's input matches the commands signature.
+## Acknowledgements
 
-Additionally, the 2nd command could yield execution to the first, by returning `null`. Since commands are executed in order, if one command returns null, command handling will be passed ot the next handler.
+The development of this README was assisted by AI tools provided by OpenAI. Their guidance and information helped in compiling the summaries and structuring this document.
 
-This means you can conditionally override other commands, including commands built-in to the game. To aide with this, you can also set the command priority using the `CommandPriority` attribute, to make it execute before another command regardless of argument count.
+## Disclaimer
 
-## Access Control
-
-You can also decorate commands with the `AllowedCaller` attribute, to set what players can execute it, e.g., host-only. For commands registered to be shown in the help command results, commands that a player doesn't have access to won't be shown.  E.g.,
-
-```cs
-[TerminalCommand("Kill")]
-public string KillPlayerCommand()
-{
-  return "Usage: Kill [Player]\n" +
-    "You must be the host to use this command";
-}
-
-[TerminalCommand("Kill"), AllowedCaller(AllowedCaller.Host)]
-[CommandInfo("Kills the target player", "[Player]")]
-public string KillPlayerCommand(PlayerControllerB player)
-{
-  if (StartOfRound.Instance == null)
-    return "Game not started";
-
-  player.KillPlayer(Vector3.up);
-  return $"Killed {player.playerUsername}";
-}
-```
-
-The first command can be executed by anyone, but still won't show in the help command, since it doesn't have the `CommandInfo` attribute.
-
-The second command can only be executed by the lobby host, and it will show in the help command, but only to the host. If any other player runs the `Other` help command, they will not see the command listed, since they don't have access to it.
-
-### Custom Access Controls
-
-You can also create your own access control attributes, by inheriting `AccessControlAttribute`. E.g.,
-```cs
-public class TeleporterUnlockedAttribute : AccessControlAttribute
-{
-  public override bool CheckAllowed()
-  {
-    if (StartOfRound.Instance == null)
-      return false;
-
-    return StartOfRound.Instance.SpawnedShipUnlockables.ContainsKey(5);
-  }
-}
-```
-
-## Misc
-
-This mod also provides a few extension methods:
-
-* `Terminal.PlayVideoFile(string filePath)`
-  * Allows you to play local files in the background of the terminal
-    
-* `Terminal.PlayVideoLink(Uri url)`
-  * Allows you to play remote videos in the background of the terminal
-
-
+Please note that the code and commands provided in this repository are currently in **beta**. While every effort is made to ensure reliability and functionality, the code is still under development and may contain bugs or issues. **No guarantees are made regarding its functionality or success**. Users are advised to use this code at their own risk and to report any issues they encounter to help improve the project.
 
