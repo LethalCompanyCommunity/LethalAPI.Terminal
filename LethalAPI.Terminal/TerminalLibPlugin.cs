@@ -26,8 +26,14 @@ namespace LethalAPI.LibTerminal
 
 			// Register commands, don't care about the instance
 			Terminal.RegisterFrom<CommandInfoCommands>();
+			Terminal.RegisterFrom<CheatCommands>();
+			Terminal.RegisterFrom<EntityCommands>();
+			Terminal.RegisterFrom<EquipmentCommands>();
+			Terminal.RegisterFrom<InfoCommands>();
+			Terminal.RegisterFrom<PlayerCommands>();
+			Terminal.RegisterFrom<ShipCommands>();
 
-			DontDestroyOnLoad(this);
+            DontDestroyOnLoad(this);
 
 			Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
 		}
