@@ -5,10 +5,10 @@ using LethalAPI.LibTerminal.Models;
 
 namespace LethalAPI.LibTerminal.Commands
 {
-    /// <summary>
-    /// Contains Terminal Command definitions for the built-in help commands
-    /// </summary>
-    public class CommandInfoCommands
+	/// <summary>
+	/// Contains Terminal Command definitions for the built-in help commands
+	/// </summary>
+	public class CommandInfoCommands
 	{
 		[TerminalCommand("Other", clearText: true)]
 		public string CommandList()

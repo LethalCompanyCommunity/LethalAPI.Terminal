@@ -1,9 +1,8 @@
-﻿using LethalAPI.LibTerminal.Models;
-using LethalAPI.LibTerminal.Patches;
-using HarmonyLib;
+﻿using HarmonyLib;
+using LethalAPI.LibTerminal.Models;
 using UnityEngine.Video;
 
-namespace LethalAPI.LibTerminal
+namespace LethalAPI.LibTerminal.Patches
 {
 	/// <summary>
 	/// Patches the method used to parse player commands in the terminal, to redirect commands to the <seealso cref="CommandHandler"/>

@@ -3,10 +3,10 @@ using LethalAPI.LibTerminal.Models.Enums;
 
 namespace LethalAPI.LibTerminal.Attributes
 {
-    /// <summary>
-    /// Specifies what permission level is required for this command
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+	/// <summary>
+	/// Specifies what permission level is required for this command
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
 	public class AllowedCallerAttribute : AccessControlAttribute
 	{
 		/// <summary>

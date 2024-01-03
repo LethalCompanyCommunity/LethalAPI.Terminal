@@ -89,7 +89,6 @@ namespace LethalAPI.LibTerminal.Interactions
 			return this;
 		}
 
-
 		/// <summary>
 		/// Sets the command response. This is the response message to prompt the user for further input
 		/// </summary>
@@ -104,7 +103,6 @@ namespace LethalAPI.LibTerminal.Interactions
 
 			return this;
 		}
-
 
 		/// <summary>
 		/// Sets the command response. This is the response message to prompt the user for further input
