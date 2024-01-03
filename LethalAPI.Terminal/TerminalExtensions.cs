@@ -79,7 +79,7 @@ namespace LethalAPI.LibTerminal
 		/// and not just the last node that was loaded.
 		/// </remarks>
 		/// <returns>The last loaded terminal node</returns>
-		public static TerminalNode GetLastLoadedNode()
+		public static TerminalNode? GetLastLoadedNode()
 		{
 			// Exposes the last loaded node from the internal patch
 			return LoadNewNodePatch.LastLoadedNode;
@@ -93,7 +93,7 @@ namespace LethalAPI.LibTerminal
 		/// and not just the last node that was loaded.
 		/// </remarks>
 		/// <returns>The last loaded terminal node</returns>
-		public static TerminalNode GetLastLoadedNode(this Terminal terminal)
+		public static TerminalNode? GetLastLoadedNode(this Terminal terminal)
 		{
 			// Exposes the last loaded node from the internal patch
 			return LoadNewNodePatch.LastLoadedNode ?? terminal.currentNode;

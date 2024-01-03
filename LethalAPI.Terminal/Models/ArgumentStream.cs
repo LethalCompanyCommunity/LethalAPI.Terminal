@@ -56,14 +56,13 @@ namespace LethalAPI.LibTerminal.Models
 		/// <param name="type">The type to parse the string as</param>
 		/// <param name="value">Resulting object instance</param>
 		/// <returns><see langword="true"/> if the string could be parsed as the specified type</returns>
-		public bool TryReadNext(Type type, out object value)
+		public bool TryReadNext(Type type, out object? value)
 		{
 			if (EndOfStream)
 			{
 				value = null;
 				return false;
 			}
-
 			return StringConverter.TryConvert(Arguments[Index++], type, out value);
 		}
 
@@ -72,7 +71,7 @@ namespace LethalAPI.LibTerminal.Models
 		/// </summary>
 		/// <param name="result">The remaining text in the stream</param>
 		/// <returns><see langword="true"/> if there was next to read, otherwise the end of the stream has been reached</returns>
-		public bool TryReadRemaining(out string result)
+		public bool TryReadRemaining(out string? result)
 		{
 			if (EndOfStream)
 			{

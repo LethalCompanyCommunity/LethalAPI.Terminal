@@ -15,9 +15,9 @@ namespace LethalAPI.LibTerminal
 		/// <param name="node">Terminal node to modify</param>
 		/// <param name="displayText">Text to display to the user, as the response of the command</param>
 		/// <returns>Original terminal node</returns>
-		public static TerminalNode WithDisplayText(this TerminalNode node, object displayText)
+		public static TerminalNode WithDisplayText(this TerminalNode node, object? displayText)
 		{
-			node.displayText = displayText.ToString();
+			node.displayText = displayText?.ToString() ?? string.Empty;
 			return node;
 		}
 

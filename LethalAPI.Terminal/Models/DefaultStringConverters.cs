@@ -134,7 +134,7 @@ namespace LethalAPI.LibTerminal.Models
 				throw new ArgumentException("Game has not started");
 			}
 
-			PlayerControllerB player = null;
+			PlayerControllerB? player = null;
 			if (ulong.TryParse(value, out var steamID))
 			{
 				player = StartOfRound.Instance.allPlayerScripts

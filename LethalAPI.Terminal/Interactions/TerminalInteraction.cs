@@ -19,7 +19,7 @@ namespace LethalAPI.LibTerminal.Interactions
 		/// <summary>
 		/// The prompt displayed to the user
 		/// </summary>
-		public TerminalNode Prompt { get; private set; }
+		public TerminalNode? Prompt { get; private set; }
 
 		/// <summary>
 		/// Services containing the context for the handlers
@@ -137,7 +137,7 @@ namespace LethalAPI.LibTerminal.Interactions
 		/// </summary>
 		/// <param name="arguments">User provided arguments</param>
 		/// <returns>Object representing the response of this interaction, or <see langword="null"/> if execution should fall through to the parent interaction, or command handler</returns>
-		public object HandleTerminalResponse(ArgumentStream arguments)
+		public object? HandleTerminalResponse(ArgumentStream arguments)
 		{
 			// Converts all delegates into a list of Method Info and instances, ordered descending by parameter count (execution order)
 			List<(MethodInfo info, object instance)> handlers =
@@ -151,7 +151,7 @@ namespace LethalAPI.LibTerminal.Interactions
 				var method = handler.GetMethodInfo();
 
 				arguments.Reset();
-				if (CommandActivator.TryCreateInvoker(arguments, Services, method, out var invoker))
+				if (CommandActivator.TryCreateInvoker(arguments, Services, method, out var invoker) && invoker != null)
 				{
 					var result = invoker(handler.Target);
 

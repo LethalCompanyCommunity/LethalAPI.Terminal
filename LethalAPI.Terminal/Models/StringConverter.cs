@@ -38,7 +38,7 @@ namespace LethalAPI.LibTerminal.Models
 		/// <param name="type">The type to parse the string as</param>
 		/// <param name="result">Resulting object instance, or <see langword="null"/></param>
 		/// <returns><see langword="true"/> if the string could be parsed as the specified type</returns>
-		public static bool TryConvert(string value, Type type, out object result)
+		public static bool TryConvert(string value, Type type, out object? result)
 		{
 			if (!m_Initialized)
 			{
@@ -116,7 +116,7 @@ namespace LethalAPI.LibTerminal.Models
 		/// </remarks>
 		/// <param name="type">The class type to register from</param>
 		/// <param name="instance">Class instance, or null if the class is static</param>
-		public static List<RegisteredStringConverter> RegisterFromType(Type type, object instance = null)
+		public static List<RegisteredStringConverter> RegisterFromType(Type type, object? instance = null)
 		{
 			var results = new List<RegisteredStringConverter>();
 			foreach (var method in type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static))

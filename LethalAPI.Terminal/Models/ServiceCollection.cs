@@ -11,7 +11,7 @@ namespace LethalAPI.LibTerminal.Models
 		/// <summary>
 		/// Type -> Service Instance mapping for services registered to this container
 		/// </summary>
-		private Dictionary<Type, object> m_Services = new Dictionary<Type, object>();
+		private Dictionary<Type, object?> m_Services = new Dictionary<Type, object?>();
 
 		/// <summary>
 		/// Creates a new container with the specified services
@@ -35,7 +35,7 @@ namespace LethalAPI.LibTerminal.Models
 		/// <param name="t">Type of the service to fetch</param>
 		/// <param name="service">Service instance, or <see langword="null"/></param>
 		/// <returns><see langword="true"/> if the service could be fetched from the container</returns>
-		public bool TryGetService(Type t, out object service)
+		public bool TryGetService(Type t, out object? service)
 		{
 			if (m_Services == null)
 			{

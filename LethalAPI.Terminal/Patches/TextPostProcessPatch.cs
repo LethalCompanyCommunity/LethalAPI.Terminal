@@ -20,7 +20,7 @@ namespace LethalAPI.LibTerminal.Patches
 	internal static class TextPostProcessPatch
 	{
 		[HarmonyPrefix]
-		public static bool Prefix(Terminal __instance, ref string modifiedDisplayText, ref string __state)
+		public static bool Prefix(Terminal __instance, ref string modifiedDisplayText, ref string? __state)
 		{
 			__state = null;
 
@@ -44,10 +44,10 @@ namespace LethalAPI.LibTerminal.Patches
 		}
 
 		[HarmonyPostfix]
-		public static string Postfix(string __result, Terminal __instance, string __state)
+		public static string? Postfix(string __result, Terminal __instance, string? __state)
 		{
 			// if __state is not null, the vanilla method didn't run.
-			string result = __state ?? __result;
+			var result = __state ?? __result;
 
 			if (CommandHandler.CurrentInterface != null)
 			{

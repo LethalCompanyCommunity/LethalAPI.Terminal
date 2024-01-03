@@ -19,7 +19,7 @@ namespace LethalAPI.LibTerminal.Patches
 		/// <summary>
 		/// Set by the <seealso cref="ParseSentencePatch"/>, to allow the postfix to access the last parsed node
 		/// </summary>
-		public static TerminalNode LastNode { get; set; }
+		public static TerminalNode? LastNode { get; set; }
 
 		private static ManualLogSource m_LogSource = new ManualLogSource("LethalAPI.Terminal");
 

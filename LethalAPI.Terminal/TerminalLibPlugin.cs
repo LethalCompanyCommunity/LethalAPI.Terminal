@@ -10,7 +10,7 @@ namespace LethalAPI.LibTerminal
 	{
 		private Harmony HarmonyInstance = new Harmony(PluginInfo.PLUGIN_GUID);
 
-		private TerminalModRegistry Terminal;
+		private TerminalModRegistry? Terminal;
 
 		private void Awake()
 		{

@@ -21,7 +21,7 @@ namespace LethalAPI.LibTerminal.Interfaces
 		/// <remarks>
 		/// This acts as the command response, and prompt for further information
 		/// </remarks>
-		TerminalNode Prompt { get; }
+		TerminalNode? Prompt { get; }
 
 		/// <summary>
 		/// The service collection that command context will be registered to
@@ -39,6 +39,6 @@ namespace LethalAPI.LibTerminal.Interfaces
 		/// </remarks>
 		/// <param name="arguments">Arguments provided by the user. This is the full argument input, including the first word that is commonly taken as the command name</param>
 		/// <returns>A <seealso cref="TerminalNode"/>, another <seealso cref="ITerminalInteraction"/>, an object that represents the response text from this interaction, or <see langword="null"/></returns>
-		object HandleTerminalResponse(ArgumentStream arguments);
+		object? HandleTerminalResponse(ArgumentStream arguments);
 	}
 }

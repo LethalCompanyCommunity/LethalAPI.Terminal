@@ -11,7 +11,7 @@ namespace LethalAPI.LibTerminal.Patches
 		/// <summary>
 		/// The last loaded terminal node
 		/// </summary>
-		public static TerminalNode LastLoadedNode { get; private set; }
+		public static TerminalNode? LastLoadedNode { get; private set; }
 
 		[HarmonyPrefix]
 		public static void Prefix(TerminalNode node)

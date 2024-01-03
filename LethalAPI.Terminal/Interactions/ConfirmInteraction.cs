@@ -17,7 +17,7 @@ namespace LethalAPI.LibTerminal.Interactions
 		/// <summary>
 		/// Command response/interaction prompt to display to the user
 		/// </summary>
-		public TerminalNode Prompt { get; private set; }
+		public TerminalNode? Prompt { get; private set; }
 
 		/// <summary>
 		/// Services to provide to the interaction handlers
@@ -27,12 +27,12 @@ namespace LethalAPI.LibTerminal.Interactions
 		/// <summary>
 		/// Delegate executed when the action is confirmed
 		/// </summary>
-		public Delegate ConfirmHandler { get; set; }
+		public Delegate? ConfirmHandler { get; set; }
 
 		/// <summary>
 		/// Delegate execution when the action is denied, or an ambiguous response is received
 		/// </summary>
-		public Delegate DenyHandler { get; set; }
+		public Delegate? DenyHandler { get; set; }
 
 		/// <summary>
 		/// Creates en empty confirmation interaction
@@ -234,7 +234,7 @@ namespace LethalAPI.LibTerminal.Interactions
 		/// </summary>
 		/// <param name="arguments">Arguments provided by the user</param>
 		/// <returns>Interaction response, or <see langword="null"/></returns>
-		public object HandleTerminalResponse(ArgumentStream arguments)
+		public object? HandleTerminalResponse(ArgumentStream arguments)
 		{
 			if (!arguments.TryReadNext(out string response))
 			{
@@ -254,14 +254,15 @@ namespace LethalAPI.LibTerminal.Interactions
 		/// </summary>
 		/// <param name="arguments">Arguments provided by the user</param>
 		/// <returns>Response object</returns>
-		private object Confirm(ArgumentStream arguments)
+		private object? Confirm(ArgumentStream arguments)
 		{
 			if (DenyHandler == null)
 			{
 				return string.Empty;
 			}
 
-			if (CommandActivator.TryCreateInvoker(arguments, Services, ConfirmHandler.GetMethodInfo(), out var invoker))
+			if (ConfirmHandler != null && CommandActivator.TryCreateInvoker(arguments, Services, ConfirmHandler.GetMethodInfo(), out var invoker)
+				&& invoker != null)
 			{
 				return invoker(ConfirmHandler.Target);
 			}
@@ -274,14 +275,14 @@ namespace LethalAPI.LibTerminal.Interactions
 		/// </summary>
 		/// <param name="arguments">Arguments provided by the user</param>
 		/// <returns>Response object</returns>
-		private object Deny(ArgumentStream arguments)
+		private object? Deny(ArgumentStream arguments)
 		{
 			if (DenyHandler == null)
 			{
 				return string.Empty;
 			}
 
-			if (CommandActivator.TryCreateInvoker(arguments, Services, DenyHandler.GetMethodInfo(), out var invoker))
+			if (CommandActivator.TryCreateInvoker(arguments, Services, DenyHandler.GetMethodInfo(), out var invoker) && invoker != null)
 			{
 				return invoker(DenyHandler.Target);
 			}
@@ -293,11 +294,14 @@ namespace LethalAPI.LibTerminal.Interactions
 		/// </summary>
 		private void PostprocessPrompt()
 		{
-			var text = Prompt.displayText ?? string.Empty;
+			if (Prompt != null)
+			{
+				var text = Prompt.displayText ?? string.Empty;
 
-			text = TextUtil.SetEndPadding(text, '\n', 2) + "Please CONFIRM or DENY.\n";
+				text = TextUtil.SetEndPadding(text, '\n', 2) + "Please CONFIRM or DENY.\n";
 
-			Prompt.displayText = text;
+				Prompt.displayText = text;
+			}
 		}
 	}
 }
