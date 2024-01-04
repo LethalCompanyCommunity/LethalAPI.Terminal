@@ -5,7 +5,7 @@ namespace LethalAPI.LibTerminal.Patches
 	/// <summary>
 	/// Patch to catch the last loaded node in the terminal
 	/// </summary>
-	[HarmonyPatch(typeof(Terminal), "LoadNewNode")]
+	[HarmonyPatch(typeof(Terminal), nameof(Terminal.LoadNewNode))]
 	internal static class LoadNewNodePatch
 	{
 		/// <summary>
