@@ -13,7 +13,7 @@ namespace LethalAPI.LibTerminal.Attributes
 	/// String converters may throw <seealso cref="ArgumentException"/> if the string cannot be parsed.
 	/// </para>
 	/// <para>
-	/// String converters must be registered using <seealso cref="Models.TerminalRegistry.RegisterFrom{T}(T)"/>
+	/// String converters must be registered using <seealso cref="TerminalRegistry.RegisterFrom{T}(T)"/>
 	/// </para>
 	/// </remarks>
 	public sealed class StringConverterAttribute : Attribute

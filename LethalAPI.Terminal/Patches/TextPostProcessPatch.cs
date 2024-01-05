@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using System;
+using HarmonyLib;
 using LethalAPI.LibTerminal.Interfaces;
 using LethalAPI.LibTerminal.Models;
 
@@ -19,15 +20,18 @@ namespace LethalAPI.LibTerminal.Patches
 	internal static class TextPostProcessPatch
 	{
 		[HarmonyPrefix]
-		public static bool Prefix(Terminal __instance, ref string modifiedDisplayText, ref string __state)
+		public static bool Prefix(Terminal __instance, ref string modifiedDisplayText, ref string? __state)
 		{
 			__state = null;
 
-			if (CommandHandler.CurrentInterface == null)
+			if (CommandHandler.CurrentInterface == null || CommandHandler.CurrentInterface.APITextPostProcessing)
 			{
-				modifiedDisplayText = TextUtil.SetEndPadding(modifiedDisplayText.TrimStart('\n', ' '), '\n', 2);
+				Console.WriteLine("Run text post process");
+				modifiedDisplayText = TextUtil.PostProcessResponse(__instance, modifiedDisplayText);
 				return true;
 			}
+
+			// Current interface is not null, pass text processing onto the current interface
 
 			var runVanilla = ProcessInterface(CommandHandler.CurrentInterface, ref modifiedDisplayText, __instance);
 
@@ -40,10 +44,10 @@ namespace LethalAPI.LibTerminal.Patches
 		}
 
 		[HarmonyPostfix]
-		public static string Postfix(string __result, Terminal __instance, string __state)
+		public static string? Postfix(string __result, Terminal __instance, string? __state)
 		{
 			// if __state is not null, the vanilla method didn't run.
-			string result = __state ?? __result;
+			var result = __state ?? __result;
 
 			if (CommandHandler.CurrentInterface != null)
 			{
@@ -55,11 +59,6 @@ namespace LethalAPI.LibTerminal.Patches
 
 		private static bool ProcessInterface(ITerminalInterface terminalInterface, ref string modifiedDisplayText, Terminal terminal)
 		{
-			if (terminalInterface.APITextPostProcessing)
-			{
-				modifiedDisplayText = TextUtil.SetEndPadding(modifiedDisplayText.TrimStart('\n', ' '), '\n', 2);
-			}
-
 			modifiedDisplayText = terminalInterface.PreProcessText(terminal, modifiedDisplayText);
 
 			return terminalInterface.VanillaTextPostProcessing;

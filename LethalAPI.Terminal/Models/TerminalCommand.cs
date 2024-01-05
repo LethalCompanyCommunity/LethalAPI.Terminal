@@ -38,12 +38,12 @@ namespace LethalAPI.LibTerminal.Models
 		/// <summary>
 		/// Optional command syntax
 		/// </summary>
-		public string Syntax { get; }
+		public string? Syntax { get; }
 
 		/// <summary>
 		/// Optional command description. This value being set enrols the command to be shown in help commands
 		/// </summary>
-		public string Description { get; }
+		public string? Description { get; }
 
 		/// <summary>
 		/// Command execution priority, with a default of 0.
@@ -52,7 +52,7 @@ namespace LethalAPI.LibTerminal.Models
 
 		private ManualLogSource m_LogSource = new ManualLogSource("LethalAPI.Terminal");
 
-		public TerminalCommand(string name, MethodInfo method, object instance, bool clearConsole, string syntax = null, string description = null, int priority = 0)
+		public TerminalCommand(string name, MethodInfo method, object instance, bool clearConsole, string? syntax = null, string? description = null, int priority = 0)
 		{
 			Name = name;
 			Method = method;
@@ -89,12 +89,12 @@ namespace LethalAPI.LibTerminal.Models
 		/// <param name="instance">Object instance to execute the command in</param>
 		/// <param name="overrideName">Optional command name override</param>
 		/// <returns>Terminal command instance</returns>
-		public static TerminalCommand FromMethod(MethodInfo info, object instance, string overrideName = null)
+		public static TerminalCommand FromMethod(MethodInfo info, object instance, string? overrideName = null)
 		{
 			var clear = false;
-			string syntax = null;
-			string description = null;
-			string name = overrideName;
+			string? syntax = null;
+			string? description = null;
+			string? name = overrideName;
 			int priority = 0;
 
 			var command = info.GetCustomAttribute<TerminalCommandAttribute>();
@@ -117,6 +117,11 @@ namespace LethalAPI.LibTerminal.Models
 				priority = priorityValue.Priority;
 			}
 
+			if (name == null)
+			{
+				throw new ArgumentException("No override name provided, and command name could not be resolved from method");
+			}
+
 			return new TerminalCommand(name, info, instance, clear, syntax, description, priority);
 		}
 
@@ -127,10 +132,10 @@ namespace LethalAPI.LibTerminal.Models
 		/// <param name="terminal">Terminal instance that raised the command</param>
 		/// <param name="invoker">Delegate that executes the command using the specified arguments</param>
 		/// <returns><see langword="true"/> if the provided arguments match the signature for this command, and could be parsed correctly.</returns>
-		public bool TryCreateInvoker(ArgumentStream arguments, ServiceCollection services, out Func<object> invoker)
+		public bool TryCreateInvoker(ArgumentStream arguments, ServiceCollection services, out Func<object?>? invoker)
 		{
 
-			if (CommandActivator.TryCreateInvoker(arguments, services, Method, out var activatedInvoker))
+			if (CommandActivator.TryCreateInvoker(arguments, services, Method, out var activatedInvoker) && activatedInvoker != null)
 			{
 				invoker = () => activatedInvoker(Instance);
 				return true;

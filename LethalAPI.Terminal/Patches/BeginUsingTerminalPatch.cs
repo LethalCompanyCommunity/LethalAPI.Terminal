@@ -5,7 +5,7 @@ namespace LethalAPI.LibTerminal.Patches
 	/// <summary>
 	/// Loads the splash screen node of the current <seealso cref="Interfaces.ITerminalInterface"/>, so long as one is active.
 	/// </summary>
-	[HarmonyPatch(typeof(Terminal), "BeginUsingTerminal")]
+	[HarmonyPatch(typeof(Terminal), nameof(Terminal.BeginUsingTerminal))]
 	internal static class BeginUsingTerminalPatch
 	{
 		[HarmonyPostfix]

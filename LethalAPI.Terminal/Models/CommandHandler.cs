@@ -28,7 +28,7 @@ namespace LethalAPI.LibTerminal.Models
 		/// <summary>
 		/// The current terminal interface all terminal input is being redirected to, or <see langword="null"/> if no interface is overriding the terminal system
 		/// </summary>
-		public static ITerminalInterface CurrentInterface { get; private set; }
+		public static ITerminalInterface? CurrentInterface { get; private set; }
 
 		/// <summary>
 		/// The interaction stack, for handling interaction layers
@@ -51,7 +51,7 @@ namespace LethalAPI.LibTerminal.Models
 		/// <param name="command">The terminal command input</param>
 		/// <param name="terminal">Terminal instance that raised the command</param>
 		/// <returns>A <seealso cref="TerminalNode"/> response, or <see langword="null"/> if execution should fall-through to the game's command handler</returns>
-		public static TerminalNode HandleCommandInput(string command, Terminal terminal)
+		public static TerminalNode? HandleCommandInput(string command, Terminal terminal)
 		{
 			// Split terminal input into parts
 			var matches = m_SplitRegex.Matches(command.Trim());
@@ -87,7 +87,7 @@ namespace LethalAPI.LibTerminal.Models
 		/// <param name="arguments">Full user input arguments, including the first word/'command name'</param>
 		/// <param name="terminal">The terminal instance that raised the input</param>
 		/// <returns>A <seealso cref="TerminalNode"/> representing a response from an interaction, or null if the input should be parsed as a command</returns>
-		public static TerminalNode ExecuteInteractions(ArgumentStream arguments, Terminal terminal)
+		public static TerminalNode? ExecuteInteractions(ArgumentStream arguments, Terminal terminal)
 		{
 			while (m_Interactions.Count > 0)
 			{
@@ -128,7 +128,7 @@ namespace LethalAPI.LibTerminal.Models
 		/// Commands may also enter a terminal interaction, which consumes the next terminal input. 
 		/// Interactions can be handled by calling <seealso cref="ExecuteInteractions(ArgumentStream, Terminal)"/>, and only executing this method if it returns null
 		/// </remarks>
-		public static TerminalNode ExecuteCommand(ArgumentStream arguments, Terminal terminal)
+		public static TerminalNode? ExecuteCommand(ArgumentStream arguments, Terminal terminal)
 		{
 			arguments.Reset();
 			if (!arguments.TryReadNext(out string commandName))
@@ -152,7 +152,7 @@ namespace LethalAPI.LibTerminal.Models
 		/// Commands may also enter a terminal interaction, which consumes the next terminal input. 
 		/// Interactions can be handled by calling <seealso cref="ExecuteInteractions(ArgumentStream, Terminal)"/>, and only executing this method if it returns null
 		/// </remarks>
-		public static TerminalNode ExecuteCommand(string commandName, ArgumentStream arguments, Terminal terminal)
+		public static TerminalNode? ExecuteCommand(string commandName, ArgumentStream arguments, Terminal terminal)
 		{
 			// Handle command interpretation
 
@@ -174,7 +174,7 @@ namespace LethalAPI.LibTerminal.Models
 				}
 
 				arguments.Reset();
-				if (!registeredCommand.TryCreateInvoker(arguments, services, out var invoker))
+				if (!registeredCommand.TryCreateInvoker(arguments, services, out var invoker) || invoker == null)
 				{
 					continue;
 				}
@@ -206,7 +206,7 @@ namespace LethalAPI.LibTerminal.Models
 		/// </summary>
 		/// <param name="result">Result to parse into a <seealso cref="TerminalNode"/></param>
 		/// <returns><seealso cref="TerminalNode"/> command display response</returns>
-		private static TerminalNode HandleCommandResult(object result, Terminal terminal)
+		private static TerminalNode? HandleCommandResult(object? result, Terminal terminal)
 		{
 			if (result is TerminalNode node)
 			{

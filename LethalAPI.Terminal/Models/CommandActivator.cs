@@ -19,13 +19,13 @@ namespace LethalAPI.LibTerminal.Models
 		/// <param name="method">Method info that represents the terminal command</param>
 		/// <param name="invoker">Resulting invoker for the terminal command</param>
 		/// <returns><see langword="true"/> if the provided arguments and services are sufficient to invoke the command</returns>
-		public static bool TryCreateInvoker(ArgumentStream arguments, ServiceCollection services, MethodInfo method, out Func<object, object> invoker)
+		public static bool TryCreateInvoker(ArgumentStream arguments, ServiceCollection services, MethodInfo method, out Func<object, object?>? invoker)
 		{
 			var commandAttribute = method.GetCustomAttribute<TerminalCommandAttribute>();
 
 			var parameters = method.GetParameters();
 
-			var values = new object[parameters.Length];
+			var values = new object?[parameters.Length];
 
 			invoker = null;
 
@@ -41,7 +41,7 @@ namespace LethalAPI.LibTerminal.Models
 				}
 				else if (type == typeof(string) && parameter.GetCustomAttribute<RemainingTextAttribute>() != null)
 				{
-					if (arguments.TryReadRemaining(out var remaining))
+					if (arguments.TryReadRemaining(out var remaining) && remaining != null)
 					{
 						values[i] = remaining;
 						continue;
@@ -50,7 +50,7 @@ namespace LethalAPI.LibTerminal.Models
 					return false;
 				}
 
-				if (arguments.TryReadNext(type, out var value))
+				if (arguments.TryReadNext(type, out var value) && value != null)
 				{
 					values[i] = value;
 					continue;
@@ -69,7 +69,7 @@ namespace LethalAPI.LibTerminal.Models
 		/// </summary>
 		/// <param name="arguments">Arguments used to execute this command. Must precisely match the parameters of <seealso cref="Method"/></param>
 		/// <returns>Resulting <seealso cref="TerminalNode"/> response, an <seealso cref="Interfaces.ITerminalInteraction"/>, or <see langword="null"/></returns>
-		private static object ExecuteCommand(MethodInfo method, object instance, object[] arguments, bool clearConsole)
+		private static object? ExecuteCommand(MethodInfo method, object instance, object?[] arguments, bool clearConsole)
 		{
 			object result;
 			try

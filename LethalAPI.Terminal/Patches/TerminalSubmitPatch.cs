@@ -8,18 +8,18 @@ using UnityEngine;
 namespace LethalAPI.LibTerminal.Patches
 {
 	/// <summary>
-	/// Patches the submit method of the Terminal to modify its auto-scroll behaviour
+	/// Patches the submit method of the Terminal to modify its auto-scroll behavior
 	/// </summary>
 	/// <remarks>
 	/// By default, the game always scrolls to the top on command execution, this patch makes it so it only scrolls to the top on terminal clearance
 	/// </remarks>
-	[HarmonyPatch(typeof(Terminal), "OnSubmit")]
+	[HarmonyPatch(typeof(Terminal), nameof(Terminal.OnSubmit))]
 	internal static class TerminalSubmitPatch
 	{
 		/// <summary>
 		/// Set by the <seealso cref="ParseSentencePatch"/>, to allow the postfix to access the last parsed node
 		/// </summary>
-		public static TerminalNode LastNode { get; set; }
+		public static TerminalNode? LastNode { get; set; }
 
 		private static ManualLogSource m_LogSource = new ManualLogSource("LethalAPI.Terminal");
 

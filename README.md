@@ -169,3 +169,6 @@ This mod also provides a few extension methods:
 
 
 
+  ## Building
+
+  Building this projects requires the `LC_REFERENCES` environment variable, containing the path to the *'Lethal Company_Data\Managed'* folder inside your installation of Lethal Company.

@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using LethalAPI.LibTerminal.Attributes;
+using LethalAPI.LibTerminal.Models;
 
-namespace LethalAPI.LibTerminal.Models
+namespace LethalAPI.LibTerminal
 {
 	/// <summary>
 	/// Manages instances of terminal commands
@@ -28,15 +29,7 @@ namespace LethalAPI.LibTerminal.Models
 		{
 			var token = new TerminalModRegistry();
 
-			foreach (var method in GetCommandMethods<T>())
-			{
-				var command = TerminalCommand.FromMethod(method, instance);
-				RegisterCommand(command);
-
-				token.Commands.Add(command);
-			}
-
-			StringConverter.RegisterFrom(instance);
+			token.RegisterFrom(instance);
 
 			return token;
 		}
