@@ -30,7 +30,7 @@ public string PingCommand()
 
 All terminal commands are annotated with the `TerminalCommand` Attribute, and optionally, the `CommandInfo` Attribute.
 
-The `CommandInfo` attribute attaches command metadata and enrols the command to be displayed in the help command.
+The `CommandInfo` attribute attaches command metadata and enrolls the command to be displayed in the help command.
 
 You can also attach access control attributes, e.g., `AllowedCaller` to specify who can execute a command and when. More on this later.
 
@@ -39,18 +39,18 @@ You can also attach access control attributes, e.g., `AllowedCaller` to specify 
 All commands have to be registered to this library. Registering commands can be done through the `CommandRegistry` API. E.g.,
 
 ```cs
-private ModCommands Commands;
+private TerminalModRegistry Commands;
 
 public void Awake()
 {
-  Commands = CommandRegistry.CreateModRegistry();
+  Commands = TerminalRegistry.CreateModRegistry();
   Commands.RegisterFrom(this); // Register commands from the plugin class
   Commands.RegisterFrom(AnotherObject); // Register commands from another instance
   Commands.RegisterFrom<InfoCommands>(); // Activate and register commands from a type
 }
 ```
 
-You can also deregister commands by calling `ModCommands.Deregister()`.
+You can also deregister commands by calling `TerminalModRegistry.Deregister()`.
 
 
 ## Handling arguments
@@ -141,7 +141,7 @@ The first command can be executed by anyone, but still won't show in the help co
 
 The second command can only be executed by the lobby host, and it will show in the help command, but only to the host. If any other player runs the `Other` help command, they will not see the command listed, since they don't have access to it.
 
-### Custom Access Controls
+## Custom Access Controls
 
 You can also create your own access control attributes, by inheriting `AccessControlAttribute`. E.g.,
 ```cs
@@ -156,6 +156,107 @@ public class TeleporterUnlockedAttribute : AccessControlAttribute
   }
 }
 ```
+
+## Terminal Interactions
+
+Terminal interactions allow command to prompt the user for more information. Generally, they allow the terminal command to handle the next line of input into the terminal.
+You can use an interaction by returning any `ITerminalInteraction` from a terminal command.
+
+While you can implement your own custom terminal interaction by inheriting `ITerminalInteraction`, e.g., to create a multi-line input. There are some pre-existing interaction types you can use.
+
+Every `ITerminalInteraction` has a display message, and then handler to accept the next line of input into the terminal. The display message acts as the initial response of the command/prompt for more input.
+
+### ConfirmInteraction
+
+The following command example demonstrates the Confirm Interaction. It can only be executed by the lobby host, and is used like `Kill [Playername]`.
+
+This block of code will also only execute when the host enters a valid player name/handle into the terminal, and the target player was found. You can create alternate signatures to handle different situations, though such usage is not displayed in these examples.
+
+
+```cs
+[AllowedCaller(AllowedCaller.Host)]
+[TerminalCommand("Kill"), CommandInfo("Kills the target player", "[Target]")]
+public ITerminalInteraction KillPlayerCommand(PlayerControllerB target)
+{
+    return new ConfirmInteraction()
+        .WithPrompt($"Are you sure you want to kill {target.playerUsername}?")
+        .Confirm(() =>
+        {
+            target.KillPlayer(Vector3.up);
+            return $"Killed {target.playerUsername}";
+        })
+        .Deny(() => "Kill aborted.");
+}
+```
+
+Notice how the interaction is built using builder notation. 
+
+* **WithPrompt**: Specifies a `string` or `TerminalNode` that will act as the command response/prompt.
+* **Confirm**: Specifies a delegate to be executed when the user confirms the interaction.
+* **Deny**: Specifies a delegate to be executed when the user inputs anything other than 'Confirm'
+* **WithContext**: Registers any number of services to the interaction, to make available for injection into the confirm/deny delegates.
+
+Both the Confirm and Deny delegates act like a command, where they can return a command response. They can even return further terminal interactions.
+
+The `WithContext()` method isn't displayed in this example, but can be used when you want to move the interaction handlers to their own method, instead of an in-line delegate. 
+It allows you to register any number of object instances, which can be injected into the handlers by object/parameter type, allowing you to pass state from the parent command/previous interaction into the handlers of the interaction. Think of this as dependency injection for methods.
+
+### TerminalInteraction
+
+This interaction type acts as a general purpose interaction. It can have any number handlers registered to it, and will be executed in-order, depending on the player input.
+
+These handlers act like their own commands, where the best handler is selected based on user input. An example of this can be seen below.
+
+```cs
+[AllowedCaller(AllowedCaller.Host)]
+[TerminalCommand("Payday"), CommandInfo("Spawns in credits")]
+public ITerminalInteraction PaydayCommand(Terminal terminal)
+{
+    return new TerminalInteraction()
+        .WithPrompt("How many credits would you like?")
+        .WithHandler(PaydayCommand_AddCredits)  // Ran when the user enters a valid int
+        .WithHandler(PaydayCommand_HandleFail)  // Ran all other times
+        .WithContext(terminal);
+}
+
+private string PaydayCommand_AddCredits(Terminal terminal, int credits)
+{
+    terminal.groupCredits += credits;
+    terminal.SyncGroupCreditsServerRpc(terminal.groupCredits, terminal.numberOfItemsInDropship);
+
+    return $"Added {credits} to your account. New balance: {terminal.groupCredits}";
+}
+
+private string PaydayCommand_HandleFail([RemainingText] string message)
+{
+    return $"'{message}' is not a valid amount of credits.";
+}
+```
+This is also an example of terminal interactions with handler methods instead of in-line delegates.
+
+In this example, the interaction is prompting the user to input a number of credits. If the user enters a valid `int`, the `PaydayCommand_AddCredits` handler will be executed.
+If the user does not enter a valid number, the `PaydayCommand_HandleFail` will be executed, as it can accept any text input.
+
+You will also notice the use of `WithContext` in the builder notation. This registers the `Terminal` instance to the interaction, allowing it to be injected into the handlers. The AddCredits handler makes use of this, as it requires the terminal instance to modify the number of group credits.
+
+
+## Terminal Interfaces
+
+This library also allows you to create custom terminal interfaces. These custom interfaces allow you to completely overhaul the terminal, without breaking support with other mods.
+
+An example use case for this, is to overhaul the terminal to create a Bash-like command line, with text post processing to add text to the left of the user's input area. And since the terminal interface even allows you to handle all terminal input and output, it would even be possible to create pipes, to reroute the output of one command into the input of another.
+
+Custom terminal interfaces inherit `ITerminalInterface`, and provide full control over the terminal. Including:
+* Command response text post processing
+* The initial message when you enter a terminal
+* Enable/Disable Lethal Company command response post processing
+* Enable/Disable This library's custom command response post processing
+
+ While this feature is powerful, it will also not be of use for the majority of mods. Also, this should only be used when you want to overhaul and the look or feel of the terminal, and should not be used in place of Terminal Interactions.
+
+ Since these custom interfaces also receives all terminal input, if you implement it, you also need to implement command handling. Though, this is easily achieved using the APIs exposed in the `CommandHandler` class.
+
+ For more documentation, see the code comments on [`ITerminalInterface`](https://github.com/LethalCompany/LethalAPI.Terminal/blob/development/LethalAPI.Terminal/Interfaces/ITerminalInterface.cs)
 
 ## Misc
 
