@@ -38,6 +38,11 @@ namespace LethalAPI.LibTerminal.Interactions
 		{
 		}
 
+		public TerminalInteraction(string prompt)
+		{
+			WithPrompt(prompt);
+		}
+
 		/// <summary>
 		/// Creates an interaction with the specified prompt and handler
 		/// </summary>
