@@ -63,6 +63,15 @@ namespace LethalAPI.LibTerminal.Interactions
 
 			Handlers.Add(handler);
 		}
+		
+		/// <summary>
+		/// Creates an interaction with the specified prompt
+		/// </summary>
+		/// <param name="prompt">Prompt to display to the user</param>
+		public TerminalInteraction(string prompt)
+		{
+			WithPrompt(prompt);
+		}
 
 		/// <summary>
 		/// Adds a number of services to the container used to invoke the handlers.
