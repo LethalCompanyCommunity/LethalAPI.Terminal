@@ -69,7 +69,7 @@ namespace LethalAPI.LibTerminal.Models
 		/// </summary>
 		/// <param name="arguments">Arguments used to execute this command. Must precisely match the parameters of <seealso cref="Method"/></param>
 		/// <returns>Resulting <seealso cref="TerminalNode"/> response, an <seealso cref="Interfaces.ITerminalInteraction"/>, or <see langword="null"/></returns>
-		private static object? ExecuteCommand(MethodInfo method, object instance, object?[] arguments, bool clearConsole)
+		public static object? ExecuteCommand(MethodInfo method, object instance, object?[] arguments, bool clearConsole)
 		{
 			object result;
 			try
