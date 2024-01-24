@@ -74,15 +74,26 @@ namespace LethalAPI.LibTerminal.Models
         /// <returns><see langword="true"/> if the player can execute the command</returns>
         public bool CheckAllowed()
         {
-            var accessControl = Method.GetCustomAttributes<AccessControlAttribute>();
+            var methodAccessControl = Method.GetCustomAttributes<AccessControlAttribute>();
 
-            foreach (var attribute in accessControl)
+            foreach (var attribute in methodAccessControl)
             {
                 if (!attribute.CheckAllowed())
                 {
                     return false;
                 }
             }
+
+            var typeAccessControl = Method.DeclaringType.GetCustomAttributes<AccessControlAttribute>();
+
+            foreach (var attribute in typeAccessControl)
+            {
+                if (!attribute.CheckAllowed())
+                {
+                    return false;
+                }
+            }
+
             return true;
         }
 
