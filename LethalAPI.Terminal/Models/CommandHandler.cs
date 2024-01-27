@@ -208,6 +208,11 @@ namespace LethalAPI.LibTerminal.Models
 		/// <returns><seealso cref="TerminalNode"/> command display response</returns>
 		private static TerminalNode? HandleCommandResult(object? result, Terminal terminal)
 		{
+			if (result is null)
+			{
+				return null;
+			}
+			
 			if (result is TerminalNode node)
 			{
 				return node;
