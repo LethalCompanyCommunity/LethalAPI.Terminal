@@ -179,7 +179,7 @@ namespace LethalAPI.LibTerminal.Models
 					continue;
 				}
 
-				// A pass-though delegate to execute interactions, and return the response `TerminalNode` or null
+				// A pass-through delegate to execute interactions, and return the response `TerminalNode` or null
 				var passThrough = () => HandleCommandResult(invoker(), terminal);
 
 				candidateCommands.Add((registeredCommand, passThrough));
@@ -208,6 +208,11 @@ namespace LethalAPI.LibTerminal.Models
 		/// <returns><seealso cref="TerminalNode"/> command display response</returns>
 		private static TerminalNode? HandleCommandResult(object? result, Terminal terminal)
 		{
+			if (result is null)
+			{
+				return null;
+			}
+			
 			if (result is TerminalNode node)
 			{
 				return node;
