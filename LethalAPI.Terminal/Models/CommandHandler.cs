@@ -62,7 +62,7 @@ namespace LethalAPI.LibTerminal.Models
 			if (CurrentInterface != null)
 			{
 				// Redirect all terminal input to the current interface
-				return CurrentInterface.HandleInput(terminal, interactionStream);
+				return CurrentInterface.HandleInput(terminal, interactionStream, command);
 			}
 
 			// Handle interactions if any

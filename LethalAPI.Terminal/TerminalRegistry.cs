@@ -180,7 +180,17 @@ namespace LethalAPI.LibTerminal
         /// <returns>Enumerable of valid terminal command methods</returns>
         public static IEnumerable<MethodInfo> GetCommandMethods<T>()
         {
-            foreach (var method in typeof(T).GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+            return GetCommandMethods(typeof(T));
+        }
+
+        /// <summary>
+        /// Enumerates all methods decorated with <seealso cref="TerminalCommandAttribute"/> from a type
+        /// </summary>
+        /// <param name="type">The type to enumerate command methods from</param>
+        /// <returns>Enumerable of valid terminal command methods</returns>
+        public static IEnumerable<MethodInfo> GetCommandMethods(Type type)
+        {
+            foreach (var method in type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
             {
                 if (method.GetCustomAttribute<TerminalCommandAttribute>() == null)
                 {

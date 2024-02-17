@@ -54,7 +54,7 @@ namespace LethalAPI.LibTerminal.Interfaces
 		/// If These methods both return null, the user input was not handled in an interaction or command.
 		/// </para>
 		/// </remarks>
-		TerminalNode HandleInput(Terminal instance, ArgumentStream arguments);
+		TerminalNode HandleInput(Terminal instance, ArgumentStream arguments, string rawInput);
 
 		/// <summary>
 		/// <para>
